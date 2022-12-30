@@ -8,7 +8,7 @@ host = "localhost"
 user = "postgres"
 password = "vishal26"
 database = 'tastytreats'
-#account_img_dir = './test_img/account'
+#hotels_img_dir = './img/hotels'
 
 
 con = psycopg2.connect(user=user, password=password, host=host, port=port)
@@ -43,7 +43,13 @@ cur.execute('CREATE TABLE customers (\
             points VARCHAR(30)\
             );')
 
-
+cur.execute('CREATE TABLE cards(\
+            id SERIAL PRIMARY KEY, \
+            customer_id INT NOT NULL,\
+            FOREIGN KEY (customer_id) REFERENCES customers (id),\
+            card_number VARCHAR(16),\
+            card_expiry VARCHAR(4)\
+            );')
 
 # Enter dummy data here
 print('\nInserting dummy data ...')
