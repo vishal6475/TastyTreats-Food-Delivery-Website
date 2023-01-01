@@ -50,6 +50,36 @@ cur.execute('CREATE TABLE cards(\
             card_number VARCHAR(16),\
             card_expiry VARCHAR(4)\
             );')
+    
+    
+cur.execute('CREATE TABLE hotels (\
+            id SERIAL PRIMARY KEY,\
+            name VARCHAR(100),\
+            addr_1 VARCHAR(100),\
+            addr_2 VARCHAR(100),\
+            city VARCHAR(20),\
+            state VARCHAR(20),\
+            pincode VARCHAR(4),\
+            open_time TEXT,\
+            close_time TEXT,\
+            delivery_fee float8,\
+            min_order float8,\
+            points TEXT\
+            );')
+    
+    
+cur.execute('CREATE TABLE items (\
+            id SERIAL PRIMARY KEY,\
+            hotel_id INT NOT NULL,\
+            FOREIGN KEY (hotel_id) REFERENCES hotels (id),\
+            category VARCHAR(50),\
+            sequence_no INT, \
+            name VARCHAR(50),\
+            description VARCHAR(50),\
+            price float8,\
+            veg VARCHAR(1),\
+            photo TEXT \
+            );')
 
 # Enter dummy data here
 print('\nInserting dummy data ...')
