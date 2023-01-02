@@ -41,15 +41,29 @@ cur.execute('CREATE TABLE customers (\
             location VARCHAR(50),\
             profile_pic TEXT,\
             token VARCHAR(16),\
-            points VARCHAR(30)\
+            points float8\
             );')
 
 cur.execute('CREATE TABLE cards(\
             id SERIAL PRIMARY KEY, \
             customer_id INT NOT NULL,\
             FOREIGN KEY (customer_id) REFERENCES customers (id),\
+            customer_name VARCHAR(100),\
             card_number VARCHAR(16),\
             card_expiry VARCHAR(4),\
+            primary1 VARCHAR(1)\
+            );')
+
+cur.execute('CREATE TABLE addresses(\
+            id SERIAL PRIMARY KEY, \
+            customer_id INT NOT NULL,\
+            FOREIGN KEY (customer_id) REFERENCES customers (id),\
+            unit_no TEXT,\
+            addr_1 TEXT,\
+            addr_2 TEXT,\
+            city VARCHAR(20),\
+            state VARCHAR(20),\
+            pincode VARCHAR(4),\
             primary1 VARCHAR(1)\
             );')
     

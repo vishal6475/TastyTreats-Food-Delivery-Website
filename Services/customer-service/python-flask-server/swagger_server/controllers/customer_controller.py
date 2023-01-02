@@ -1,5 +1,6 @@
 import connexion
 import six
+import secrets
 import psycopg2
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT 
 
@@ -15,6 +16,11 @@ from swagger_server.models.invalid_input_error import InvalidInputError  # noqa:
 from swagger_server.models.unexpected_service_error import UnexpectedServiceError  # noqa: E501
 from swagger_server import util
 
+port = 5432
+host = "localhost"
+user = "postgres"
+db_password = "vishal26"
+database = 'tastytreats'
 
 def create_customer(body=None):  # noqa: E501
     """Create customer
@@ -30,45 +36,43 @@ def create_customer(body=None):  # noqa: E501
     try:
         if connexion.request.is_json:
             body = Customer.from_dict(connexion.request.get_json())  # noqa: E501
-        return 'do some magic!'
 
-    except Exception as e:
-        # catch any unexpected runtime error and return as 500 error 
-        error = UnexpectedServiceError(code="500", type="UnexpectedServiceError", message=str(e))
-        return error, 500, {'Access-Control-Allow-Origin': '*'}
+        print('Creating', body)
+        
+        if (body.email == None or body.first_name == None or body.last_name == None or body.password == None):
+            error = InvalidInputError(code=400, type="InvalidInputError", 
+                    message="The following mandatory fields were not provided: email or first name or last name or password")
+            return error, 400, {'Access-Control-Allow-Origin': '*'}
 
 
-def create_customer(id=None, first_name=None, last_name=None, email=None, password=None, mobile_no=None, location=None, profile_pic=None, token=None, points=None):  # noqa: E501
-    """Create customer
+        con = psycopg2.connect(database= database, user='postgres', password=db_password, host=host, port=port)
+        con.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
+        cur = con.cursor()
 
-     # noqa: E501
+        cur.execute("SELECT * FROM customers where email = '"+str(body.email.replace("'", "''"))+"';")
 
-    :param id: 
-    :type id: int
-    :param first_name: 
-    :type first_name: str
-    :param last_name: 
-    :type last_name: str
-    :param email: 
-    :type email: str
-    :param password: 
-    :type password: str
-    :param mobile_no: 
-    :type mobile_no: str
-    :param location: 
-    :type location: str
-    :param profile_pic: 
-    :type profile_pic: str
-    :param token: 
-    :type token: str
-    :param points: 
-    :type points: float
+        record = cur.fetchone()
+        if record != None:
+            error = InvalidInputError(code=409, type="InvalidInputError", 
+                    message="The provided email address already exists in database.")
+            cur.close()
+            con.close()
+            return error, 400, {'Access-Control-Allow-Origin': '*'}
 
-    :rtype: Customer
-    """
+        body.points = str(0.0) #New users will have 0 reward points
+        body.token = secrets.token_hex(8)
 
-    try:
-        return 'do some magic!'
+        insert_string = "INSERT INTO customers VALUES (default, %s,%s,%s,%s,%s,%s,%s,%s,%s) RETURNING id;"
+        cur.execute(insert_string, (body.first_name, body.last_name, body.email, \
+            body.password, body.mobile_no, body.location, body.profile_pic, \
+            body.token, body.points))        
+        body.account_id = cur.fetchone()[0]
+
+        cur.close()
+        con.close()            
+        return body, 201, {'Access-Control-Allow-Origin': '*'}
+
+
 
     except Exception as e:
         # catch any unexpected runtime error and return as 500 error 
@@ -86,7 +90,51 @@ def get_addresses_by_id(customer_id):  # noqa: E501
 
     :rtype: AddressList
     """
-    return 'do some magic!'
+    
+    try:
+        con = psycopg2.connect(database= database, user='postgres', password=db_password, host=host, port=port)
+        con.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
+        cur = con.cursor()
+
+        cur.execute('SELECT * FROM customers where id = ' + str(customer_id))
+        record = cur.fetchone()
+        if record == None:
+            error = CustomerNotFoundError(code=404, type="CustomerNotFoundError", 
+                    message="The following Customer ID does not exist: " + str(customer_id))
+            cur.close()
+            con.close()
+            return error, 404, {'Access-Control-Allow-Origin': '*'}
+
+        cur.execute('SELECT * FROM addresses where customer_id = ' + str(customer_id))
+        records = cur.fetchall()
+        address_list = []
+        for record in records:
+            address = dict()
+            address['id'] = int(record[0])
+            address['customer_id'] = int(record[1])
+            address['unit_no'] = str(record[2])
+            address['addr_1'] = str(record[3])
+            address['addr_2'] = str(record[4])
+            address['city'] = str(record[5])
+            address['state'] = str(record[6])
+            address['pincode'] = str(record[7])
+            address['primary1'] = str(record[8])
+
+            for item in address.keys():
+                if address[item] == "None":
+                    address[item] = ""  
+
+            address_list.append(address)
+
+        cur.close()
+        con.close()
+        return address_list, 200, {'Access-Control-Allow-Origin': '*'}
+
+    except Exception as e:
+        # catch any unexpected runtime error and return as 500 error 
+        error = UnexpectedServiceError(code="500", type="UnexpectedServiceError", message=str(e))
+        return error, 500, {'Access-Control-Allow-Origin': '*'}
+
 
 
 def get_card_by_id(customer_id):  # noqa: E501
@@ -101,7 +149,40 @@ def get_card_by_id(customer_id):  # noqa: E501
     """
     
     try:
-        return 'do some magic!'
+        con = psycopg2.connect(database= database, user='postgres', password=db_password, host=host, port=port)
+        con.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
+        cur = con.cursor()
+
+        cur.execute('SELECT * FROM customers where id = ' + str(customer_id))
+        record = cur.fetchone()
+        if record == None:
+            error = CustomerNotFoundError(code=404, type="CustomerNotFoundError", 
+                    message="The following Customer ID does not exist: " + str(customer_id))
+            cur.close()
+            con.close()
+            return error, 404, {'Access-Control-Allow-Origin': '*'}
+
+        cur.execute('SELECT * FROM cards where customer_id = ' + str(customer_id))
+        records = cur.fetchall()
+        cards_list = []
+        for record in records:
+            card = dict()
+            card['id'] = int(record[0])
+            card['customer_id'] = int(record[1])
+            card['customer_name'] = str(record[2])
+            card['card_number'] = str(record[3])
+            card['card_expiry'] = str(record[4])
+            card['primary1'] = str(record[5])
+
+            for item in card.keys():
+                if card[item] == "None":
+                    card[item] = ""  
+
+            cards_list.append(card)
+
+        cur.close()
+        con.close()
+        return cards_list, 200, {'Access-Control-Allow-Origin': '*'}
 
     except Exception as e:
         # catch any unexpected runtime error and return as 500 error 
@@ -121,7 +202,39 @@ def get_customer_by_id(customer_id):  # noqa: E501
     """
     
     try:
-        return 'do some magic!'
+        con = psycopg2.connect(database= database, user='postgres', password=db_password, host=host, port=port)
+        con.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
+        cur = con.cursor()
+
+        cur.execute('SELECT * FROM customers where id = ' + str(customer_id))
+        record = cur.fetchone()
+        if record != None:
+            customer = dict()
+            customer['id'] = int(record[0])
+            customer['first_name'] = str(record[1])
+            customer['last_name'] = str(record[2])
+            customer['email'] = str(record[3])
+            customer['password'] = str(record[4])
+            customer['mobile_no'] = str(record[5])
+            customer['location'] = str(record[6])
+            customer['profile_pic'] = str(record[7])
+            customer['token'] = str(record[8])
+            customer['points'] = float(record[9])
+
+            for item in customer.keys():
+                if customer[item] == "None":
+                    customer[item] = ""  
+
+            cur.close()
+            con.close()
+            return customer, 200, {'Access-Control-Allow-Origin': '*'}
+
+        else:
+            error = CustomerNotFoundError(code=404, type="CustomerNotFoundError", 
+                    message="The following Customer ID does not exist: " + str(customer_id))
+            cur.close()
+            con.close()
+            return error, 404, {'Access-Control-Allow-Origin': '*'}
 
     except Exception as e:
         # catch any unexpected runtime error and return as 500 error 
@@ -143,7 +256,51 @@ def login_customer(email, password):  # noqa: E501
     """
 
     try:
-        return 'do some magic!'
+        con = psycopg2.connect(database= database, user='postgres', password=db_password, host=host, port=port)
+        con.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
+        cur = con.cursor()
+
+        cur.execute("SELECT * FROM customers where email = '"+str(email.replace("'", "''"))+"';")
+        record = cur.fetchone()
+        if record != None:
+            if password != str(record[4]):
+                error = InvalidInputError(code=403, type="InvalidInputError", 
+                    message="The password does not match the provided email: " + str(email))
+                cur.close()
+                con.close()
+                return error, 400, {'Access-Control-Allow-Origin': '*'}
+
+            new_token = secrets.token_hex(8)
+
+            customer = dict()
+            customer['id'] = int(record[0])
+            customer['first_name'] = str(record[1])
+            customer['last_name'] = str(record[2])
+            customer['email'] = str(record[3])
+            customer['password'] = str(record[4])
+            customer['mobile_no'] = str(record[5])
+            customer['location'] = str(record[6])
+            customer['profile_pic'] = str(record[7])
+            customer['token'] = new_token
+            customer['points'] = float(record[9])
+
+            for item in customer.keys():
+                if customer[item] == "None":
+                    customer[item] = ""  
+
+            update_string = "UPDATE customers set token = '" + str(new_token) + "'"                
+            cur.execute(update_string)
+
+            cur.close()
+            con.close()
+            return customer, 200, {'Access-Control-Allow-Origin': '*'}
+
+        else:
+            error = InvalidInputError(code=403, type="InvalidInputError", 
+                    message="The following email does not exist: " + str(email))
+            cur.close()
+            con.close()
+            return error, 400, {'Access-Control-Allow-Origin': '*'}
 
     except Exception as e:
         # catch any unexpected runtime error and return as 500 error 
@@ -163,7 +320,45 @@ def logout_customer(email):  # noqa: E501
     """
     
     try:
-        return 'do some magic!'
+        con = psycopg2.connect(database= database, user='postgres', password=db_password, host=host, port=port)
+        con.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
+        cur = con.cursor()
+
+        cur.execute("SELECT * FROM customers where email = '"+str(email.replace("'", "''"))+"';")
+        record = cur.fetchone()
+        if record != None:
+            new_token = ''
+
+            customer = dict()
+            customer['id'] = int(record[0])
+            customer['first_name'] = str(record[1])
+            customer['last_name'] = str(record[2])
+            customer['email'] = str(record[3])
+            customer['password'] = str(record[4])
+            customer['mobile_no'] = str(record[5])
+            customer['location'] = str(record[6])
+            customer['profile_pic'] = str(record[7])
+            customer['token'] = new_token
+            customer['points'] = float(record[9])
+
+            for item in customer.keys():
+                if customer[item] == "None":
+                    customer[item] = ""  
+
+            update_string = "UPDATE customers set token = '" + str(new_token) + "'"                
+            cur.execute(update_string)
+
+            cur.close()
+            con.close()
+            return customer, 200, {'Access-Control-Allow-Origin': '*'}
+
+        else:
+            error = InvalidInputError(code=403, type="InvalidInputError", 
+                    message="The following email does not exist: " + str(email))
+            cur.close()
+            con.close()
+            return error, 400, {'Access-Control-Allow-Origin': '*'}
+
 
     except Exception as e:
         # catch any unexpected runtime error and return as 500 error 
