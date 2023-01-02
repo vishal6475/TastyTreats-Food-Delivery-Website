@@ -1,0 +1,539 @@
+openapi: 3.0.3
+info:
+  title: Swagger TastyTreat Restaurant API (OpenAPI 3.0)
+  description: |-
+    This is a swagger model for TastyTreat Restaurant API
+  termsOfService: http://swagger.io/terms/
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.11
+tags:
+  - name: customer
+    description: Account operations for customers
+paths:
+  /customer:
+    post:
+      tags:
+        - customer
+      summary: Create customer
+      operationId: createCustomer
+      requestBody:
+        description: Created customer object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Customer'
+          application/xml:
+            schema:
+              $ref: '#/components/schemas/Customer'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Customer'
+      responses:
+        '201':
+          description: Customer has been created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Customer'
+        '400':
+          description: Invalid input details provided.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InvalidInputError"
+        '500':
+          description: Unexpected failure in the service layer.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnexpectedServiceError"
+  /customer/login:
+    get:
+      tags:
+        - customer
+      summary: Logs a customer into the system
+      description: This logs a customer into the system and returns authorized token
+      operationId: loginCustomer
+      parameters:
+        - name: email
+          in: query
+          description: The email address of a customer
+          required: true
+          schema:
+            type: string
+        - name: password
+          in: query
+          description: The password for login
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Customer logged in successfully.
+          headers:
+            X-Rate-Limit:
+              description: calls per hour allowed by the user
+              schema:
+                type: integer
+                format: int32
+            X-Expires-After:
+              description: date in UTC when token expires
+              schema:
+                type: string
+                format: date-time
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Customer'
+        '400':
+          description: Invalid username/password supplied.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InvalidInputError"
+  /customer/logout:
+    get:
+      tags:
+        - customer
+      summary: Logs out current logged in customer session
+      description: ''
+      operationId: logoutCustomer
+      parameters:
+        - name: email
+          in: query
+          description: The email address of a customer
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Customer has been logged out successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Customer'
+        '400':
+          description: Invalid input details provided.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InvalidInputError"
+        '500':
+          description: Unexpected failure in the service layer.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnexpectedServiceError"
+  /customer/{customer_id}:
+    get:
+      tags:
+        - customer
+      summary: Get customer by customer id
+      description: Retrieve all details of a customer using their id
+      operationId: getCustomerByID
+      parameters:
+        - name: customer_id
+          in: path
+          description: Customer id of a customer
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Customer details retrieved successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Customer'
+        '400':
+          description: Invalid input details provided.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InvalidInputError"
+        '404':
+          description: Customer Not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CustomerNotFoundError"
+        '500':
+          description: Unexpected failure in the service layer.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnexpectedServiceError"
+    put:
+      tags:
+        - customer
+      summary: Update customer
+      description: This can only be done by the logged in customer.
+      operationId: updateCustomer
+      parameters:
+        - name: customer_id
+          in: path
+          description: Customer id of a customer
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Update an existent customer in the database
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Customer'
+      responses:
+        '200':
+          description: Customer details updated successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Customer'
+        '400':
+          description: Invalid input details provided.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InvalidInputError"
+        '404':
+          description: Customer Not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CustomerNotFoundError"
+        '500':
+          description: Unexpected failure in the service layer.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnexpectedServiceError"
+  /customer/{customer_id}/address:
+    get:
+      tags:
+        - customer
+      summary: Get all customer addresses by customer id
+      operationId: getAddressesByID
+      parameters:
+        - name: customer_id
+          in: path
+          description: Customer id of a customer
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Customer address details retrieved successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AddressList'
+        '400':
+          description: Invalid input details provided.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InvalidInputError"
+        '404':
+          description: No customer address found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AddressNotFoundError"
+        '500':
+          description: Unexpected failure in the service layer.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnexpectedServiceError"
+    put:
+      tags:
+        - customer
+      summary: Update customer address
+      description: This can only be done by the logged in customer.
+      operationId: updateAddress
+      parameters:
+        - name: customer_id
+          in: path
+          description: Customer id of a customer
+          required: true
+          schema:
+            type: string
+        - name: address_id
+          in: query
+          description: Address id that needs to be updated
+          required: false
+          schema:
+            type: string
+      requestBody:
+        description: Update an existent customer address in the database
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Address'
+      responses:
+        '200':
+          description: Address details updated successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Address'
+        '400':
+          description: Invalid input details provided.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InvalidInputError"
+        '404':
+          description: Address Not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AddressNotFoundError"
+        '500':
+          description: Unexpected failure in the service layer.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnexpectedServiceError"
+  /customer/{customer_id}/cards:
+    get:
+      tags:
+        - customer
+      summary: Get all customer's cards by customer id
+      operationId: getCardByID
+      parameters:
+        - name: customer_id
+          in: path
+          description: Customer id of a customer
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: All card details retrieved successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CardList'
+        '400':
+          description: Invalid input details provided.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InvalidInputError"
+        '500':
+          description: Unexpected failure in the service layer.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnexpectedServiceError"
+    put:
+      tags:
+        - customer
+      summary: Update card details
+      description: This can only be done by the logged in customer.
+      operationId: updateCard
+      parameters:
+        - name: customer_id
+          in: path
+          description: Customer id of a customer
+          required: true
+          schema:
+            type: string
+        - name: card_id
+          in: query
+          description: Card id that needs to be updated
+          required: false
+          schema:
+            type: string
+      requestBody:
+        description: Update an existent customer's card details in the database
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Card'
+      responses:
+        '200':
+          description: Customer's card details updated successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Card'
+        '400':
+          description: Invalid input details provided.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InvalidInputError"
+        '404':
+          description: Card Not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CardNotFoundError"
+        '500':
+          description: Unexpected failure in the service layer.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnexpectedServiceError"
+components:
+  schemas:
+    Customer:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10
+        firstName:
+          type: string
+          example: 'Alex'
+        lastName:
+          type: string
+          example: 'Holl'
+        email:
+          type: string
+          example: 'alex@gmail.com'
+        password:
+          type: string
+          example: '123456'
+        mobile_no:
+          type: string
+          example: '+61-469306295'
+        location:
+          type: string
+          example: 'Sydney'
+        profile_pic:
+          type: string
+          example: 'profile_pic_key'
+        token:
+          type: string
+          example: 'unique_token_code'
+        points:
+          type: number
+          example: 200.8
+      xml:
+        name: customer
+    AddressList:
+      type: array
+      items:
+        $ref: "#/components/schemas/Address"
+    Address:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 25
+        cust_id:
+          type: integer
+          format: int64
+          example: 10
+        unit_no:
+          type: string
+          example: '7/9'
+        addr_1:
+          type: string
+          example: 'Churchill Avenue'
+        addr_2:
+          type: string
+          example: 'Strathfield'
+        city:
+          type: string
+          example: 'Sydney'
+        state:
+          type: string
+          example: 'NSW'
+        pincode:
+          type: string
+          example: '2135'
+        primary:
+          type: string
+          example: 'Y'
+    CardList:
+      type: array
+      items:
+        $ref: "#/components/schemas/Card"
+    Card:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 2
+        cust_id:
+          type: integer
+          format: int64
+          example: 10
+        cust_name:
+          type: string
+          example: 'Alex Holl'
+        card_number:
+          type: string
+          example: '"1111222233334444"'
+        card_expiry:
+          type: string
+          example: 'MMYY'
+        primary:
+          type: string
+          example: 'Y'
+    ApiResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        type:
+          type: string
+        message:
+          type: string
+      xml:
+        name: '##default'
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        type:
+          type: string
+        message:
+          type: string
+    InvalidInputError:
+      allOf:
+        - $ref: "#/components/schemas/Error"
+      example:
+        code: 400
+        type: InvalidInputError
+        message: "The following mandatory fields were not provided: %field_name_1%, %field_name_2%"
+    CustomerNotFoundError:
+      allOf:
+        - $ref: "#/components/schemas/Error"
+      example:
+        code: 404
+        type: CustomerNotFoundError
+        message: "The following Customer does not exist: %customer_id%"
+    AddressNotFoundError:
+      allOf:
+        - $ref: "#/components/schemas/Error"
+      example:
+        code: 404
+        type: AddressNotFoundError
+        message: "The following Address does not exist: %address_id%"
+    CardNotFoundError:
+      allOf:
+        - $ref: "#/components/schemas/Error"
+      example:
+        code: 404
+        type: CardNotFoundError
+        message: "The following Card does not exist: %card_id%"
+    UnexpectedServiceError:
+      allOf:
+        - $ref: "#/components/schemas/Error"
+      example:
+        code: 500
+        type: UnexpectedServiceError
+        message: "The following unexpected runtime error has occurred: %error%" 
+        

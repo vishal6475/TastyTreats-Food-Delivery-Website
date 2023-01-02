@@ -36,10 +36,11 @@ cur.execute('CREATE TABLE customers (\
             first_name VARCHAR(50),\
             last_name VARCHAR(50),\
             email VARCHAR(50),\
+            password VARCHAR(50),\
             mobile_no VARCHAR(20),\
             location VARCHAR(50),\
-            password VARCHAR(50),\
             profile_pic TEXT,\
+            token VARCHAR(16),\
             points VARCHAR(30)\
             );')
 
@@ -48,7 +49,8 @@ cur.execute('CREATE TABLE cards(\
             customer_id INT NOT NULL,\
             FOREIGN KEY (customer_id) REFERENCES customers (id),\
             card_number VARCHAR(16),\
-            card_expiry VARCHAR(4)\
+            card_expiry VARCHAR(4),\
+            primary VARCHAR()\
             );')
     
     
