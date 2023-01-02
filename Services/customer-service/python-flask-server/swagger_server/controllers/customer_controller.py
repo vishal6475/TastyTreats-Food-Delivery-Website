@@ -1,5 +1,7 @@
 import connexion
 import six
+import psycopg2
+from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT 
 
 from swagger_server.models.address import Address  # noqa: E501
 from swagger_server.models.address_list import AddressList  # noqa: E501
@@ -24,9 +26,16 @@ def create_customer(body=None):  # noqa: E501
 
     :rtype: Customer
     """
-    if connexion.request.is_json:
-        body = Customer.from_dict(connexion.request.get_json())  # noqa: E501
-    return 'do some magic!'
+
+    try:
+        if connexion.request.is_json:
+            body = Customer.from_dict(connexion.request.get_json())  # noqa: E501
+        return 'do some magic!'
+
+    except Exception as e:
+        # catch any unexpected runtime error and return as 500 error 
+        error = UnexpectedServiceError(code="500", type="UnexpectedServiceError", message=str(e))
+        return error, 500, {'Access-Control-Allow-Origin': '*'}
 
 
 def create_customer(id=None, first_name=None, last_name=None, email=None, password=None, mobile_no=None, location=None, profile_pic=None, token=None, points=None):  # noqa: E501
@@ -57,13 +66,20 @@ def create_customer(id=None, first_name=None, last_name=None, email=None, passwo
 
     :rtype: Customer
     """
-    return 'do some magic!'
+
+    try:
+        return 'do some magic!'
+
+    except Exception as e:
+        # catch any unexpected runtime error and return as 500 error 
+        error = UnexpectedServiceError(code="500", type="UnexpectedServiceError", message=str(e))
+        return error, 500, {'Access-Control-Allow-Origin': '*'}
 
 
 def get_addresses_by_id(customer_id):  # noqa: E501
     """Get all customer addresses by customer id
 
-     # noqa: E501
+    Returns a list of addresses. # noqa: E501
 
     :param customer_id: Customer id of a customer
     :type customer_id: str
@@ -76,14 +92,21 @@ def get_addresses_by_id(customer_id):  # noqa: E501
 def get_card_by_id(customer_id):  # noqa: E501
     """Get all customer&#x27;s cards by customer id
 
-     # noqa: E501
+    Returns a list of cards. Returns an empty array if no card exists. # noqa: E501
 
     :param customer_id: Customer id of a customer
     :type customer_id: str
 
     :rtype: CardList
     """
-    return 'do some magic!'
+    
+    try:
+        return 'do some magic!'
+
+    except Exception as e:
+        # catch any unexpected runtime error and return as 500 error 
+        error = UnexpectedServiceError(code="500", type="UnexpectedServiceError", message=str(e))
+        return error, 500, {'Access-Control-Allow-Origin': '*'}
 
 
 def get_customer_by_id(customer_id):  # noqa: E501
@@ -96,7 +119,14 @@ def get_customer_by_id(customer_id):  # noqa: E501
 
     :rtype: Customer
     """
-    return 'do some magic!'
+    
+    try:
+        return 'do some magic!'
+
+    except Exception as e:
+        # catch any unexpected runtime error and return as 500 error 
+        error = UnexpectedServiceError(code="500", type="UnexpectedServiceError", message=str(e))
+        return error, 500, {'Access-Control-Allow-Origin': '*'}
 
 
 def login_customer(email, password):  # noqa: E501
@@ -111,7 +141,14 @@ def login_customer(email, password):  # noqa: E501
 
     :rtype: Customer
     """
-    return 'do some magic!'
+
+    try:
+        return 'do some magic!'
+
+    except Exception as e:
+        # catch any unexpected runtime error and return as 500 error 
+        error = UnexpectedServiceError(code="500", type="UnexpectedServiceError", message=str(e))
+        return error, 500, {'Access-Control-Allow-Origin': '*'}
 
 
 def logout_customer(email):  # noqa: E501
@@ -124,7 +161,14 @@ def logout_customer(email):  # noqa: E501
 
     :rtype: Customer
     """
-    return 'do some magic!'
+    
+    try:
+        return 'do some magic!'
+
+    except Exception as e:
+        # catch any unexpected runtime error and return as 500 error 
+        error = UnexpectedServiceError(code="500", type="UnexpectedServiceError", message=str(e))
+        return error, 500, {'Access-Control-Allow-Origin': '*'}
 
 
 def update_address(customer_id, body=None, address_id=None):  # noqa: E501
@@ -141,9 +185,16 @@ def update_address(customer_id, body=None, address_id=None):  # noqa: E501
 
     :rtype: Address
     """
-    if connexion.request.is_json:
-        body = Address.from_dict(connexion.request.get_json())  # noqa: E501
-    return 'do some magic!'
+
+    try:
+        if connexion.request.is_json:
+            body = Customer.from_dict(connexion.request.get_json())  # noqa: E501
+        return 'do some magic!'
+
+    except Exception as e:
+        # catch any unexpected runtime error and return as 500 error 
+        error = UnexpectedServiceError(code="500", type="UnexpectedServiceError", message=str(e))
+        return error, 500, {'Access-Control-Allow-Origin': '*'}
 
 
 def update_card(customer_id, body=None, card_id=None):  # noqa: E501
@@ -160,9 +211,16 @@ def update_card(customer_id, body=None, card_id=None):  # noqa: E501
 
     :rtype: Card
     """
-    if connexion.request.is_json:
-        body = Card.from_dict(connexion.request.get_json())  # noqa: E501
-    return 'do some magic!'
+
+    try:
+        if connexion.request.is_json:
+            body = Customer.from_dict(connexion.request.get_json())  # noqa: E501
+        return 'do some magic!'
+
+    except Exception as e:
+        # catch any unexpected runtime error and return as 500 error 
+        error = UnexpectedServiceError(code="500", type="UnexpectedServiceError", message=str(e))
+        return error, 500, {'Access-Control-Allow-Origin': '*'}
 
 
 def update_customer(customer_id, body=None):  # noqa: E501
@@ -177,6 +235,13 @@ def update_customer(customer_id, body=None):  # noqa: E501
 
     :rtype: Customer
     """
-    if connexion.request.is_json:
-        body = Customer.from_dict(connexion.request.get_json())  # noqa: E501
-    return 'do some magic!'
+
+    try:
+        if connexion.request.is_json:
+            body = Customer.from_dict(connexion.request.get_json())  # noqa: E501
+        return 'do some magic!'
+
+    except Exception as e:
+        # catch any unexpected runtime error and return as 500 error 
+        error = UnexpectedServiceError(code="500", type="UnexpectedServiceError", message=str(e))
+        return error, 500, {'Access-Control-Allow-Origin': '*'}

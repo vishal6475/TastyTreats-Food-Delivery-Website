@@ -50,7 +50,7 @@ cur.execute('CREATE TABLE cards(\
             FOREIGN KEY (customer_id) REFERENCES customers (id),\
             card_number VARCHAR(16),\
             card_expiry VARCHAR(4),\
-            primary VARCHAR()\
+            primary1 VARCHAR(1)\
             );')
     
     

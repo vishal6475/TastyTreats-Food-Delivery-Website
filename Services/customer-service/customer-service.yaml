@@ -3,11 +3,9 @@ info:
   title: Swagger TastyTreat Restaurant API (OpenAPI 3.0)
   description: |-
     This is a swagger model for TastyTreat Restaurant API
-  termsOfService: http://swagger.io/terms/
-  license:
-    name: Apache 2.0
-    url: http://www.apache.org/licenses/LICENSE-2.0.html
   version: 1.0.11
+servers:
+  - url: http://localhost:8080/v1
 tags:
   - name: customer
     description: Account operations for customers
@@ -214,6 +212,7 @@ paths:
       tags:
         - customer
       summary: Get all customer addresses by customer id
+      description: Returns a list of addresses.
       operationId: getAddressesByID
       parameters:
         - name: customer_id
@@ -302,6 +301,7 @@ paths:
       tags:
         - customer
       summary: Get all customer's cards by customer id
+      description: Returns a list of cards. Returns an empty array if no card exists.
       operationId: getCardByID
       parameters:
         - name: customer_id
