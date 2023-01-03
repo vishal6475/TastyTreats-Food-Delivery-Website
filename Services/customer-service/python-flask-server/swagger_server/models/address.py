@@ -14,13 +14,13 @@ class Address(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, id: int=None, cust_id: int=None, unit_no: str=None, addr_1: str=None, addr_2: str=None, city: str=None, state: str=None, pincode: str=None, primary: str=None):  # noqa: E501
+    def __init__(self, id: int=None, customer_id: int=None, unit_no: str=None, addr_1: str=None, addr_2: str=None, city: str=None, state: str=None, pincode: str=None, primary1: str=None):  # noqa: E501
         """Address - a model defined in Swagger
 
         :param id: The id of this Address.  # noqa: E501
         :type id: int
-        :param cust_id: The cust_id of this Address.  # noqa: E501
-        :type cust_id: int
+        :param customer_id: The customer_id of this Address.  # noqa: E501
+        :type customer_id: int
         :param unit_no: The unit_no of this Address.  # noqa: E501
         :type unit_no: str
         :param addr_1: The addr_1 of this Address.  # noqa: E501
@@ -33,41 +33,41 @@ class Address(Model):
         :type state: str
         :param pincode: The pincode of this Address.  # noqa: E501
         :type pincode: str
-        :param primary: The primary of this Address.  # noqa: E501
-        :type primary: str
+        :param primary1: The primary1 of this Address.  # noqa: E501
+        :type primary1: str
         """
         self.swagger_types = {
             'id': int,
-            'cust_id': int,
+            'customer_id': int,
             'unit_no': str,
             'addr_1': str,
             'addr_2': str,
             'city': str,
             'state': str,
             'pincode': str,
-            'primary': str
+            'primary1': str
         }
 
         self.attribute_map = {
             'id': 'id',
-            'cust_id': 'cust_id',
+            'customer_id': 'customer_id',
             'unit_no': 'unit_no',
             'addr_1': 'addr_1',
             'addr_2': 'addr_2',
             'city': 'city',
             'state': 'state',
             'pincode': 'pincode',
-            'primary': 'primary'
+            'primary1': 'primary1'
         }
         self._id = id
-        self._cust_id = cust_id
+        self._customer_id = customer_id
         self._unit_no = unit_no
         self._addr_1 = addr_1
         self._addr_2 = addr_2
         self._city = city
         self._state = state
         self._pincode = pincode
-        self._primary = primary
+        self._primary1 = primary1
 
     @classmethod
     def from_dict(cls, dikt) -> 'Address':
@@ -102,25 +102,25 @@ class Address(Model):
         self._id = id
 
     @property
-    def cust_id(self) -> int:
-        """Gets the cust_id of this Address.
+    def customer_id(self) -> int:
+        """Gets the customer_id of this Address.
 
 
-        :return: The cust_id of this Address.
+        :return: The customer_id of this Address.
         :rtype: int
         """
-        return self._cust_id
+        return self._customer_id
 
-    @cust_id.setter
-    def cust_id(self, cust_id: int):
-        """Sets the cust_id of this Address.
+    @customer_id.setter
+    def customer_id(self, customer_id: int):
+        """Sets the customer_id of this Address.
 
 
-        :param cust_id: The cust_id of this Address.
-        :type cust_id: int
+        :param customer_id: The customer_id of this Address.
+        :type customer_id: int
         """
 
-        self._cust_id = cust_id
+        self._customer_id = customer_id
 
     @property
     def unit_no(self) -> str:
@@ -249,22 +249,22 @@ class Address(Model):
         self._pincode = pincode
 
     @property
-    def primary(self) -> str:
-        """Gets the primary of this Address.
+    def primary1(self) -> str:
+        """Gets the primary1 of this Address.
 
 
-        :return: The primary of this Address.
+        :return: The primary1 of this Address.
         :rtype: str
         """
-        return self._primary
+        return self._primary1
 
-    @primary.setter
-    def primary(self, primary: str):
-        """Sets the primary of this Address.
+    @primary1.setter
+    def primary1(self, primary1: str):
+        """Sets the primary1 of this Address.
 
 
-        :param primary: The primary of this Address.
-        :type primary: str
+        :param primary1: The primary1 of this Address.
+        :type primary1: str
         """
 
-        self._primary = primary
+        self._primary1 = primary1

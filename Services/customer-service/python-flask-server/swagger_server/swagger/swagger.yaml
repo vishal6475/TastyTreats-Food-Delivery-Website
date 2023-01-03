@@ -6,25 +6,19 @@ info:
 servers:
 - url: http://localhost:8080/v1
 tags:
-- name: customer
+- name: customers
   description: Account operations for customers
 paths:
-  /customer:
+  /customers:
     post:
       tags:
-      - customer
+      - customers
       summary: Create customer
       operationId: create_customer
       requestBody:
         description: Created customer object
         content:
           application/json:
-            schema:
-              $ref: '#/components/schemas/Customer'
-          application/xml:
-            schema:
-              $ref: '#/components/schemas/Customer'
-          application/x-www-form-urlencoded:
             schema:
               $ref: '#/components/schemas/Customer'
       responses:
@@ -46,11 +40,11 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UnexpectedServiceError'
-      x-openapi-router-controller: swagger_server.controllers.customer_controller
-  /customer/login:
+      x-openapi-router-controller: swagger_server.controllers.customers_controller
+  /customers/login:
     get:
       tags:
-      - customer
+      - customers
       summary: Logs a customer into the system
       description: This logs a customer into the system and returns authorized token
       operationId: login_customer
@@ -99,11 +93,11 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/InvalidInputError'
-      x-openapi-router-controller: swagger_server.controllers.customer_controller
-  /customer/logout:
+      x-openapi-router-controller: swagger_server.controllers.customers_controller
+  /customers/logout:
     get:
       tags:
-      - customer
+      - customers
       summary: Logs out current logged in customer session
       description: ""
       operationId: logout_customer
@@ -135,11 +129,11 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UnexpectedServiceError'
-      x-openapi-router-controller: swagger_server.controllers.customer_controller
-  /customer/{customer_id}:
+      x-openapi-router-controller: swagger_server.controllers.customers_controller
+  /customers/{customer_id}:
     get:
       tags:
-      - customer
+      - customers
       summary: Get customer by customer id
       description: Retrieve all details of a customer using their id
       operationId: get_customer_by_id
@@ -177,10 +171,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UnexpectedServiceError'
-      x-openapi-router-controller: swagger_server.controllers.customer_controller
+      x-openapi-router-controller: swagger_server.controllers.customers_controller
     put:
       tags:
-      - customer
+      - customers
       summary: Update customer
       description: This can only be done by the logged in customer.
       operationId: update_customer
@@ -194,7 +188,7 @@ paths:
         schema:
           type: string
       requestBody:
-        description: Update an existent customer in the database
+        description: Update an existing customer in the database
         content:
           application/json:
             schema:
@@ -224,11 +218,11 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UnexpectedServiceError'
-      x-openapi-router-controller: swagger_server.controllers.customer_controller
-  /customer/{customer_id}/address:
+      x-openapi-router-controller: swagger_server.controllers.customers_controller
+  /customers/{customer_id}/addresses:
     get:
       tags:
-      - customer
+      - customers
       summary: Get all customer addresses by customer id
       description: Returns a list of addresses.
       operationId: get_addresses_by_id
@@ -266,12 +260,13 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UnexpectedServiceError'
-      x-openapi-router-controller: swagger_server.controllers.customer_controller
+      x-openapi-router-controller: swagger_server.controllers.customers_controller
     put:
       tags:
-      - customer
+      - customers
       summary: Update customer address
-      description: This can only be done by the logged in customer.
+      description: "If address_id is not provided, it creates a new address entry.\
+        \ Otherwise it updates the existing address in the database."
       operationId: update_address
       parameters:
       - name: customer_id
@@ -321,14 +316,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UnexpectedServiceError'
-      x-openapi-router-controller: swagger_server.controllers.customer_controller
-  /customer/{customer_id}/cards:
+      x-openapi-router-controller: swagger_server.controllers.customers_controller
+  /customers/{customer_id}/cards:
     get:
       tags:
-      - customer
+      - customers
       summary: Get all customer's cards by customer id
       description: Returns a list of cards. Returns an empty array if no card exists.
-      operationId: get_card_by_id
+      operationId: get_cards_by_id
       parameters:
       - name: customer_id
         in: path
@@ -357,12 +352,13 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UnexpectedServiceError'
-      x-openapi-router-controller: swagger_server.controllers.customer_controller
+      x-openapi-router-controller: swagger_server.controllers.customers_controller
     put:
       tags:
-      - customer
+      - customers
       summary: Update card details
-      description: This can only be done by the logged in customer.
+      description: "If card_id is not provided, it creates a new card entry. Otherwise\
+        \ it updates the existing card in the database."
       operationId: update_card
       parameters:
       - name: customer_id
@@ -412,7 +408,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UnexpectedServiceError'
-      x-openapi-router-controller: swagger_server.controllers.customer_controller
+      x-openapi-router-controller: swagger_server.controllers.customers_controller
 components:
   schemas:
     Customer:
@@ -473,7 +469,7 @@ components:
           type: integer
           format: int64
           example: 25
-        cust_id:
+        customer_id:
           type: integer
           format: int64
           example: 10
@@ -495,7 +491,7 @@ components:
         pincode:
           type: string
           example: "2135"
-        primary:
+        primary1:
           type: string
           example: "Y"
       example:
@@ -506,8 +502,8 @@ components:
         unit_no: 7/9
         id: 25
         state: NSW
-        cust_id: 10
-        primary: "Y"
+        primary1: "Y"
+        customer_id: 10
     CardList:
       type: array
       items:
@@ -519,29 +515,29 @@ components:
           type: integer
           format: int64
           example: 2
-        cust_id:
+        customer_id:
           type: integer
           format: int64
           example: 10
-        cust_name:
+        customer_name:
           type: string
           example: Alex Holl
         card_number:
           type: string
-          example: '"1111222233334444"'
+          example: "1111222233334444"
         card_expiry:
           type: string
           example: MMYY
-        primary:
+        primary1:
           type: string
           example: "Y"
       example:
-        card_number: '"1111222233334444"'
-        cust_name: Alex Holl
+        card_number: "1111222233334444"
         id: 2
-        cust_id: 10
+        customer_name: Alex Holl
+        primary1: "Y"
+        customer_id: 10
         card_expiry: MMYY
-        primary: "Y"
     ApiResponse:
       type: object
       properties:

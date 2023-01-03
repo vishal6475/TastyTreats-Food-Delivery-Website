@@ -14,45 +14,45 @@ class Card(Model):
 
     Do not edit the class manually.
     """
-    def __init__(self, id: int=None, cust_id: int=None, cust_name: str=None, card_number: str=None, card_expiry: str=None, primary: str=None):  # noqa: E501
+    def __init__(self, id: int=None, customer_id: int=None, customer_name: str=None, card_number: str=None, card_expiry: str=None, primary1: str=None):  # noqa: E501
         """Card - a model defined in Swagger
 
         :param id: The id of this Card.  # noqa: E501
         :type id: int
-        :param cust_id: The cust_id of this Card.  # noqa: E501
-        :type cust_id: int
-        :param cust_name: The cust_name of this Card.  # noqa: E501
-        :type cust_name: str
+        :param customer_id: The customer_id of this Card.  # noqa: E501
+        :type customer_id: int
+        :param customer_name: The customer_name of this Card.  # noqa: E501
+        :type customer_name: str
         :param card_number: The card_number of this Card.  # noqa: E501
         :type card_number: str
         :param card_expiry: The card_expiry of this Card.  # noqa: E501
         :type card_expiry: str
-        :param primary: The primary of this Card.  # noqa: E501
-        :type primary: str
+        :param primary1: The primary1 of this Card.  # noqa: E501
+        :type primary1: str
         """
         self.swagger_types = {
             'id': int,
-            'cust_id': int,
-            'cust_name': str,
+            'customer_id': int,
+            'customer_name': str,
             'card_number': str,
             'card_expiry': str,
-            'primary': str
+            'primary1': str
         }
 
         self.attribute_map = {
             'id': 'id',
-            'cust_id': 'cust_id',
-            'cust_name': 'cust_name',
+            'customer_id': 'customer_id',
+            'customer_name': 'customer_name',
             'card_number': 'card_number',
             'card_expiry': 'card_expiry',
-            'primary': 'primary'
+            'primary1': 'primary1'
         }
         self._id = id
-        self._cust_id = cust_id
-        self._cust_name = cust_name
+        self._customer_id = customer_id
+        self._customer_name = customer_name
         self._card_number = card_number
         self._card_expiry = card_expiry
-        self._primary = primary
+        self._primary1 = primary1
 
     @classmethod
     def from_dict(cls, dikt) -> 'Card':
@@ -87,46 +87,46 @@ class Card(Model):
         self._id = id
 
     @property
-    def cust_id(self) -> int:
-        """Gets the cust_id of this Card.
+    def customer_id(self) -> int:
+        """Gets the customer_id of this Card.
 
 
-        :return: The cust_id of this Card.
+        :return: The customer_id of this Card.
         :rtype: int
         """
-        return self._cust_id
+        return self._customer_id
 
-    @cust_id.setter
-    def cust_id(self, cust_id: int):
-        """Sets the cust_id of this Card.
+    @customer_id.setter
+    def customer_id(self, customer_id: int):
+        """Sets the customer_id of this Card.
 
 
-        :param cust_id: The cust_id of this Card.
-        :type cust_id: int
+        :param customer_id: The customer_id of this Card.
+        :type customer_id: int
         """
 
-        self._cust_id = cust_id
+        self._customer_id = customer_id
 
     @property
-    def cust_name(self) -> str:
-        """Gets the cust_name of this Card.
+    def customer_name(self) -> str:
+        """Gets the customer_name of this Card.
 
 
-        :return: The cust_name of this Card.
+        :return: The customer_name of this Card.
         :rtype: str
         """
-        return self._cust_name
+        return self._customer_name
 
-    @cust_name.setter
-    def cust_name(self, cust_name: str):
-        """Sets the cust_name of this Card.
+    @customer_name.setter
+    def customer_name(self, customer_name: str):
+        """Sets the customer_name of this Card.
 
 
-        :param cust_name: The cust_name of this Card.
-        :type cust_name: str
+        :param customer_name: The customer_name of this Card.
+        :type customer_name: str
         """
 
-        self._cust_name = cust_name
+        self._customer_name = customer_name
 
     @property
     def card_number(self) -> str:
@@ -171,22 +171,22 @@ class Card(Model):
         self._card_expiry = card_expiry
 
     @property
-    def primary(self) -> str:
-        """Gets the primary of this Card.
+    def primary1(self) -> str:
+        """Gets the primary1 of this Card.
 
 
-        :return: The primary of this Card.
+        :return: The primary1 of this Card.
         :rtype: str
         """
-        return self._primary
+        return self._primary1
 
-    @primary.setter
-    def primary(self, primary: str):
-        """Sets the primary of this Card.
+    @primary1.setter
+    def primary1(self, primary1: str):
+        """Sets the primary1 of this Card.
 
 
-        :param primary: The primary of this Card.
-        :type primary: str
+        :param primary1: The primary1 of this Card.
+        :type primary1: str
         """
 
-        self._primary = primary
+        self._primary1 = primary1

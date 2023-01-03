@@ -7,25 +7,19 @@ info:
 servers:
   - url: http://localhost:8080/v1
 tags:
-  - name: customer
+  - name: customers
     description: Account operations for customers
 paths:
-  /customer:
+  /customers:
     post:
       tags:
-        - customer
+        - customers
       summary: Create customer
       operationId: createCustomer
       requestBody:
         description: Created customer object
         content:
           application/json:
-            schema:
-              $ref: '#/components/schemas/Customer'
-          application/xml:
-            schema:
-              $ref: '#/components/schemas/Customer'
-          application/x-www-form-urlencoded:
             schema:
               $ref: '#/components/schemas/Customer'
       responses:
@@ -47,10 +41,10 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/UnexpectedServiceError"
-  /customer/login:
+  /customers/login:
     get:
       tags:
-        - customer
+        - customers
       summary: Logs a customer into the system
       description: This logs a customer into the system and returns authorized token
       operationId: loginCustomer
@@ -91,10 +85,10 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/InvalidInputError"
-  /customer/logout:
+  /customers/logout:
     get:
       tags:
-        - customer
+        - customers
       summary: Logs out current logged in customer session
       description: ''
       operationId: logoutCustomer
@@ -124,10 +118,10 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/UnexpectedServiceError"
-  /customer/{customer_id}:
+  /customers/{customer_id}:
     get:
       tags:
-        - customer
+        - customers
       summary: Get customer by customer id
       description: Retrieve all details of a customer using their id
       operationId: getCustomerByID
@@ -165,7 +159,7 @@ paths:
                 $ref: "#/components/schemas/UnexpectedServiceError"
     put:
       tags:
-        - customer
+        - customers
       summary: Update customer
       description: This can only be done by the logged in customer.
       operationId: updateCustomer
@@ -177,7 +171,7 @@ paths:
           schema:
             type: string
       requestBody:
-        description: Update an existent customer in the database
+        description: Update an existing customer in the database
         content:
           application/json:
             schema:
@@ -207,10 +201,10 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/UnexpectedServiceError"
-  /customer/{customer_id}/address:
+  /customers/{customer_id}/addresses:
     get:
       tags:
-        - customer
+        - customers
       summary: Get all customer addresses by customer id
       description: Returns a list of addresses.
       operationId: getAddressesByID
@@ -248,9 +242,9 @@ paths:
                 $ref: "#/components/schemas/UnexpectedServiceError"
     put:
       tags:
-        - customer
+        - customers
       summary: Update customer address
-      description: This can only be done by the logged in customer.
+      description: If address_id is not provided, it creates a new address entry. Otherwise it updates the existing address in the database.
       operationId: updateAddress
       parameters:
         - name: customer_id
@@ -296,13 +290,13 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/UnexpectedServiceError"
-  /customer/{customer_id}/cards:
+  /customers/{customer_id}/cards:
     get:
       tags:
-        - customer
+        - customers
       summary: Get all customer's cards by customer id
       description: Returns a list of cards. Returns an empty array if no card exists.
-      operationId: getCardByID
+      operationId: getCardsByID
       parameters:
         - name: customer_id
           in: path
@@ -331,9 +325,9 @@ paths:
                 $ref: "#/components/schemas/UnexpectedServiceError"
     put:
       tags:
-        - customer
+        - customers
       summary: Update card details
-      description: This can only be done by the logged in customer.
+      description: If card_id is not provided, it creates a new card entry. Otherwise it updates the existing card in the database.
       operationId: updateCard
       parameters:
         - name: customer_id
@@ -428,7 +422,7 @@ components:
           type: integer
           format: int64
           example: 25
-        cust_id:
+        customer_id:
           type: integer
           format: int64
           example: 10
@@ -450,7 +444,7 @@ components:
         pincode:
           type: string
           example: '2135'
-        primary:
+        primary1:
           type: string
           example: 'Y'
     CardList:
@@ -464,20 +458,20 @@ components:
           type: integer
           format: int64
           example: 2
-        cust_id:
+        customer_id:
           type: integer
           format: int64
           example: 10
-        cust_name:
+        customer_name:
           type: string
           example: 'Alex Holl'
         card_number:
           type: string
-          example: '"1111222233334444"'
+          example: '1111222233334444'
         card_expiry:
           type: string
           example: 'MMYY'
-        primary:
+        primary1:
           type: string
           example: 'Y'
     ApiResponse:
