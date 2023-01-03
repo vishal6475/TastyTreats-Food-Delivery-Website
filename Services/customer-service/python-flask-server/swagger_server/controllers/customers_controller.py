@@ -137,7 +137,7 @@ def get_addresses_by_id(customer_id):  # noqa: E501
 
 
 
-def get_card_by_id(customer_id):  # noqa: E501
+def get_cards_by_id(customer_id):  # noqa: E501
     """Get all customer&#x27;s cards by customer id
 
     Returns a list of cards. Returns an empty array if no card exists. # noqa: E501
