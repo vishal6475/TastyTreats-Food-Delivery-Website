@@ -390,7 +390,7 @@ def update_address(customer_id, body=None, address_id=None):  # noqa: E501
                     message="The following mandatory fields were not provided: unit_no or addr_1 or city or state or pincode")
             return error, 400, {'Access-Control-Allow-Origin': '*'}        
         if body.addr_2 == None: body.addr_2 = ''
-        if body.primary == None or body.primary == '': body.primary = 'N'
+        if body.primary1 == None or body.primary1 == '': body.primary1 = 'N'
 
         con = psycopg2.connect(database= database, user='postgres', password=db_password, host=host, port=port)
         con.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
@@ -409,11 +409,11 @@ def update_address(customer_id, body=None, address_id=None):  # noqa: E501
         if address_id == None:  # to add a new address 
             cur.execute('SELECT * FROM addresses where customer_id = ' + str(customer_id))
             record = cur.fetchone()
-            if record == None: body.primary = 'Y'
+            if record == None: body.primary1 = 'Y'
 
             insert_string = "INSERT INTO addresses VALUES (default, %s,%s,%s,%s,%s,%s,%s,%s) RETURNING id;"
             cur.execute(insert_string, (customer_id, body.unit_no, body.addr_1, body.addr_2, body.city, body.state, \
-                body.pincode, body.primary))
+                body.pincode, body.primary1))
             addr_id = cur.fetchone()[0]
         else: # to update the address details if it already exists
             cur.execute('SELECT * FROM addresses where id = ' + str(address_id) + ' and customer_id = ' + str(customer_id))
@@ -428,7 +428,7 @@ def update_address(customer_id, body=None, address_id=None):  # noqa: E501
             update_string = "UPDATE addresses set unit_no=%s, addr_1=%s, addr_2=%s, city=%s, state=%s, pincode=%s, \
                 primary1=%s where id = %s and customer_id = %s  RETURNING id;"
             cur.execute(update_string, (body.unit_no, body.addr_1, body.addr_2, body.city, body.state, body.pincode, \
-                body.primary, address_id, customer_id))
+                body.primary1, address_id, customer_id))
             cust_id = cur.fetchone()[0]
         
         cur.close()
@@ -460,11 +460,11 @@ def update_card(customer_id, body=None, card_id=None):  # noqa: E501
         if connexion.request.is_json:
             body = Card.from_dict(connexion.request.get_json())  # noqa: E501
         
-        if (body.cust_name == None or body.card_number == None or body.card_expiry == None):
+        if (body.customer_name == None or body.card_number == None or body.card_expiry == None):
             error = InvalidInputError(code=400, type="InvalidInputError", 
                     message="The following mandatory fields were not provided: customer name or number or expiry")
             return error, 400, {'Access-Control-Allow-Origin': '*'}
-        if body.primary == None or body.primary == '': body.primary = 'N'
+        if body.primary1 == None or body.primary1 == '': body.primary1 = 'N'
 
         con = psycopg2.connect(database= database, user='postgres', password=db_password, host=host, port=port)
         con.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
@@ -483,10 +483,10 @@ def update_card(customer_id, body=None, card_id=None):  # noqa: E501
         if card_id == None:  # to add a new card
             cur.execute('SELECT * FROM cards where customer_id = ' + str(customer_id))
             record = cur.fetchone()
-            if record == None: body.primary = 'Y'
+            if record == None: body.primary1 = 'Y'
 
             insert_string = "INSERT INTO cards VALUES (default, %s,%s,%s,%s,%s) RETURNING id;"
-            cur.execute(insert_string, (customer_id, body.cust_name, body.card_number, body.card_expiry, body.primary))
+            cur.execute(insert_string, (customer_id, body.customer_name, body.card_number, body.card_expiry, body.primary1))
             card_id = cur.fetchone()[0]
         else: # to update the card details if it already exists
             cur.execute('SELECT * FROM cards where id = ' + str(card_id) + ' and customer_id = ' + str(customer_id))
@@ -500,7 +500,7 @@ def update_card(customer_id, body=None, card_id=None):  # noqa: E501
 
             update_string = "UPDATE cards set customer_name=%s, card_number=%s, card_expiry=%s, primary1=%s \
             where id = %s and customer_id = %s RETURNING id;"
-            cur.execute(update_string, (body.cust_name, body.card_number, body.card_expiry, body.primary, card_id, customer_id))
+            cur.execute(update_string, (body.customer_name, body.card_number, body.card_expiry, body.primary1, card_id, customer_id))
             cust_id = cur.fetchone()[0]
         
         cur.close()
