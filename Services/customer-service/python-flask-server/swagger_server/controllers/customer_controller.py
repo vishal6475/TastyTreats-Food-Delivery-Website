@@ -383,8 +383,57 @@ def update_address(customer_id, body=None, address_id=None):  # noqa: E501
 
     try:
         if connexion.request.is_json:
-            body = Customer.from_dict(connexion.request.get_json())  # noqa: E501
-        return 'do some magic!'
+            body = Address.from_dict(connexion.request.get_json())  # noqa: E501
+        
+        if (body.unit_no == None or body.addr_1 == None or body.city == None or body.state == None or body.pincode == None):
+            error = InvalidInputError(code=400, type="InvalidInputError", 
+                    message="The following mandatory fields were not provided: unit_no or addr_1 or city or state or pincode")
+            return error, 400, {'Access-Control-Allow-Origin': '*'}        
+        if body.addr_2 == None: body.addr_2 = ''
+        if body.primary == None or body.primary == '': body.primary = 'N'
+
+        con = psycopg2.connect(database= database, user='postgres', password=db_password, host=host, port=port)
+        con.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
+        cur = con.cursor()
+
+        # to check if the customer id exists or not
+        cur.execute('SELECT * FROM customers where id = ' + str(customer_id))
+        record = cur.fetchone()
+        if record == None:
+            error = CustomerNotFoundError(code=404, type="CustomerNotFoundError", 
+                    message="The following Customer ID does not exist: " + str(customer_id))
+            cur.close()
+            con.close()
+            return error, 404, {'Access-Control-Allow-Origin': '*'}
+
+        if address_id == None:  # to add a new address 
+            cur.execute('SELECT * FROM addresses where customer_id = ' + str(customer_id))
+            record = cur.fetchone()
+            if record == None: body.primary = 'Y'
+
+            insert_string = "INSERT INTO addresses VALUES (default, %s,%s,%s,%s,%s,%s,%s,%s) RETURNING id;"
+            cur.execute(insert_string, (customer_id, body.unit_no, body.addr_1, body.addr_2, body.city, body.state, \
+                body.pincode, body.primary))
+            addr_id = cur.fetchone()[0]
+        else: # to update the address details if it already exists
+            cur.execute('SELECT * FROM addresses where id = ' + str(address_id) + ' and customer_id = ' + str(customer_id))
+            record = cur.fetchone()
+            if record == None:
+                error = AddressNotFoundError(code=404, type="AddressNotFoundError", 
+                        message=f"The address ID {address_id} does not exist or does not belong to customer {customer_id}.")
+                cur.close()
+                con.close()
+                return error, 404, {'Access-Control-Allow-Origin': '*'}
+
+            update_string = "UPDATE addresses set unit_no=%s, addr_1=%s, addr_2=%s, city=%s, state=%s, pincode=%s, \
+                primary1=%s where id = %s and customer_id = %s  RETURNING id;"
+            cur.execute(update_string, (body.unit_no, body.addr_1, body.addr_2, body.city, body.state, body.pincode, \
+                body.primary, address_id, customer_id))
+            cust_id = cur.fetchone()[0]
+        
+        cur.close()
+        con.close() 
+        return body, 200, {'Access-Control-Allow-Origin': '*'}
 
     except Exception as e:
         # catch any unexpected runtime error and return as 500 error 
@@ -409,8 +458,55 @@ def update_card(customer_id, body=None, card_id=None):  # noqa: E501
 
     try:
         if connexion.request.is_json:
-            body = Customer.from_dict(connexion.request.get_json())  # noqa: E501
-        return 'do some magic!'
+            body = Card.from_dict(connexion.request.get_json())  # noqa: E501
+        
+        if (body.cust_name == None or body.card_number == None or body.card_expiry == None):
+            error = InvalidInputError(code=400, type="InvalidInputError", 
+                    message="The following mandatory fields were not provided: customer name or number or expiry")
+            return error, 400, {'Access-Control-Allow-Origin': '*'}
+        if body.primary == None or body.primary == '': body.primary = 'N'
+
+        con = psycopg2.connect(database= database, user='postgres', password=db_password, host=host, port=port)
+        con.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
+        cur = con.cursor()
+
+        # to check if the customer id exists or not
+        cur.execute('SELECT * FROM customers where id = ' + str(customer_id))
+        record = cur.fetchone()
+        if record == None:
+            error = CustomerNotFoundError(code=404, type="CustomerNotFoundError", 
+                    message="The following Customer ID does not exist: " + str(customer_id))
+            cur.close()
+            con.close()
+            return error, 404, {'Access-Control-Allow-Origin': '*'}
+
+        if card_id == None:  # to add a new card
+            cur.execute('SELECT * FROM cards where customer_id = ' + str(customer_id))
+            record = cur.fetchone()
+            if record == None: body.primary = 'Y'
+
+            insert_string = "INSERT INTO cards VALUES (default, %s,%s,%s,%s,%s) RETURNING id;"
+            cur.execute(insert_string, (customer_id, body.cust_name, body.card_number, body.card_expiry, body.primary))
+            card_id = cur.fetchone()[0]
+        else: # to update the card details if it already exists
+            cur.execute('SELECT * FROM cards where id = ' + str(card_id) + ' and customer_id = ' + str(customer_id))
+            record = cur.fetchone()
+            if record == None:
+                error = CardNotFoundError(code=404, type="CardNotFoundError", 
+                        message=f"The address ID {card_id} does not exist or does not belong to customer {customer_id}.")
+                cur.close()
+                con.close()
+                return error, 404, {'Access-Control-Allow-Origin': '*'}
+
+            update_string = "UPDATE cards set customer_name=%s, card_number=%s, card_expiry=%s, primary1=%s \
+            where id = %s and customer_id = %s RETURNING id;"
+            cur.execute(update_string, (body.cust_name, body.card_number, body.card_expiry, body.primary, card_id, customer_id))
+            cust_id = cur.fetchone()[0]
+        
+        cur.close()
+        con.close() 
+        return body, 200, {'Access-Control-Allow-Origin': '*'}
+        
 
     except Exception as e:
         # catch any unexpected runtime error and return as 500 error 
@@ -434,7 +530,76 @@ def update_customer(customer_id, body=None):  # noqa: E501
     try:
         if connexion.request.is_json:
             body = Customer.from_dict(connexion.request.get_json())  # noqa: E501
-        return 'do some magic!'
+        
+        con = psycopg2.connect(database= database, user='postgres', password=db_password, host=host, port=port)
+        con.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
+        cur = con.cursor()
+
+        # to check if the customer id exists or not
+        cur.execute('SELECT * FROM customers where id = ' + str(customer_id))
+        record = cur.fetchone()
+        if record == None:
+            error = CustomerNotFoundError(code=404, type="CustomerNotFoundError", 
+                    message="The following Customer ID does not exist: " + str(customer_id))
+            cur.close()
+            con.close()
+            return error, 404, {'Access-Control-Allow-Origin': '*'}
+
+        if body.email != None:
+            cur.execute("SELECT * FROM customers where email = '"+str(body.email.replace("'", "''"))+"' and id !="+str(customer_id)+";")
+
+            record = cur.fetchone()
+            if record != None:
+                error = InvalidInputError(code=409, type="InvalidInputError", 
+                        message="The provided email address already exists in database.")
+                cur.close()
+                con.close()
+                return error, 400, {'Access-Control-Allow-Origin': '*'}
+
+        update_string = "UPDATE customers set "
+        update_list = list()
+
+        if body.first_name != None: 
+            update_string += " first_name=%s,"
+            update_list.append(body.first_name)
+
+        if body.last_name != None: 
+            update_string += " last_name=%s,"
+            update_list.append(body.last_name)
+
+        if body.email != None: 
+            update_string += " email=%s,"
+            update_list.append(body.email)
+
+        if body.password != None: 
+            update_string += " password=%s,"
+            update_list.append(body.password)
+
+        if body.mobile_no != None: 
+            update_string += " mobile_no=%s,"
+            update_list.append(body.mobile_no)
+
+        if body.location != None: 
+            update_string += " location=%s,"
+            update_list.append(body.location)
+
+        if body.profile_pic != None: 
+            update_string += f" profile_pic='{body.profile_pic}',"
+
+        if body.points != None: 
+            update_string += f" points='{body.points}',"
+
+        if update_string != "UPDATE customers set ":
+            update_string = update_string[:-1]
+            update_string += f" where id = {customer_id} RETURNING id;"
+                
+            cur.execute(update_string, update_list)
+            cust_id = cur.fetchone()[0]
+
+        cur.close()
+        con.close()                    
+        return body, 200, {'Access-Control-Allow-Origin': '*'}
+
 
     except Exception as e:
         # catch any unexpected runtime error and return as 500 error 
