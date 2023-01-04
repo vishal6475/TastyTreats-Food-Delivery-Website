@@ -7,10 +7,8 @@ import { Typography, styled } from '@mui/material';
 
 const AppTitle = styled(Typography)`
   font-family: monospace;
-  font-weight: 700;
-  letter-spacing: .3rem;
-  color: ${({ theme }) => theme.palette.tastytreats.title};
-
+  font-size: 2.2rem;
+  font-weight: 600;
   padding-right: 1rem;
   padding-left: 1rem;
 
@@ -26,6 +24,7 @@ const TastyTreatsAppBar = () => {
   const location = useLocation();
   const context = useContext(StoreContext);
   const [customer] = context.customer;
+  const [open, setOpen] = context.logInModal;
 
  
   useEffect(() => {
@@ -34,10 +33,15 @@ const TastyTreatsAppBar = () => {
     }
   }, [location])
 
-  return (
-    <AppBar id='appbar' position="sticky" sx={{ backgroundColor: 'tastytreats.dark_purple', mb:2, pl:0 }}>
+  const openLoginModal = () => {
+    console.log('Login opened')
+    setOpen(true);
+  }
 
-        <FlexBox justify='space-between'>
+  return (
+    <AppBar id='appbar' position="sticky" sx={{ backgroundColor: 'tastytreats.mediumBlue', minHeight: '7vh', mb:2, pl:0 }}>
+
+        <FlexBox justify='space-between' sx={{ mt:'auto', mb:'auto'}}>
           <FlexBox>
             <AppTitle variant="h4" 
             >
@@ -45,15 +49,23 @@ const TastyTreatsAppBar = () => {
             </AppTitle>
           </FlexBox>
           <FlexBox>
-            {customer
-            ? <Typography variant='h6' sx={{ mt:'auto', mb:'auto', mr:'1rem', color:'#bb1717' }}>
-              { customer.first_name? customer.first_name : '' }
-            </Typography>
-            : ''
-            }
-          </FlexBox>
+            <FlexBox sx={{ mt:'auto', mb:'auto', ml:'1rem', mr:'1rem', pl:'1rem', pr:'1rem',
+              borderRadius: '30px', cursor: 'pointer', '&:hover': {backgroundColor: '#2486DB'} }}
+              onClick={openLoginModal} >
+              <Typography variant='h6' sx={{  }}>
+                Login
+              </Typography>
+            </FlexBox>
+            <FlexBox>
+              {customer
+              ? <Typography variant='h6' sx={{ mt:'auto', mb:'auto', mr:'1rem', color:'#bb1717' }}>
+                { customer.first_name? customer.first_name : '' }
+              </Typography>
+              : ''
+              }
+            </FlexBox>
+          </FlexBox>          
         </FlexBox>
-
     </AppBar>
   );
 };

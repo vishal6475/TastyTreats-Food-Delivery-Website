@@ -6,10 +6,11 @@ export const StoreContext = createContext(null);
 const ContextProvider = ({ children }) => {
   const [redirect, setRedirect] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
+  const [loginOrSignup, setLoginOrSignup] = useState(false);
   const [customer, setAccount] = useState(false);
   const [address, setAddress] = useState([]);
   const [card, setCard] = useState([]);
-  const [LogInModal, setLogInModal] = useState(false);
+  const [logInModal, setLogInModal] = useState(false);
 
   const states = {
     redirect: [redirect, setRedirect],
@@ -17,7 +18,8 @@ const ContextProvider = ({ children }) => {
     customer: [customer, setAccount],
     card: [card, setCard],
     address: [address, setAddress],
-    logInModal: [LogInModal, setLogInModal]
+    logInModal: [logInModal, setLogInModal],
+    loginOrSignup: [loginOrSignup, setLoginOrSignup]
   };
 
   return (

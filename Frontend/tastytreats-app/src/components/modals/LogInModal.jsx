@@ -11,9 +11,11 @@ const LogInModal = () => {
   const navigate = useNavigate();
   const context = useContext(StoreContext);
   const [nextPage, setRedirect] = context.redirect;
-  const [, setLoggedIn] = context.login;
+  const [loggedIn, setLoggedIn] = context.login;
   const [open, setOpen] = context.logInModal;
   const [logInFail, setLogInFail] = useState(null);
+  const [loginOrSignup, setLoginOrSignup] = context.loginOrSignup;
+  
   const [formErrors, setFormErrors] = useState({
     error: false,
     email: null,
@@ -22,6 +24,14 @@ const LogInModal = () => {
 
   const handleClose = () => {
     setOpen(false);
+  }
+
+  const loadLogin = () => {
+    setLoginOrSignup(false);
+  }
+
+  const loadSignup = () => {
+    setLoginOrSignup(true);
   }
 
   const userLogin = () => {
@@ -60,7 +70,21 @@ const LogInModal = () => {
   return (
     <StandardModal open={open} onClose={handleClose} aria-labelledby="login modal" maxWidth='lg'>
       <ModalTitle title='Log into TastyTreats!' close={handleClose} />
-      <ModalBody component="form" noValidate onSubmit={handleSubmit}>
+      <ModalBody component="form" noValidate onSubmit={handleSubmit} justifyContent='center'>
+        <FlexBox sx={{ mb:'2rem'}} justifyContent='center'>
+          <FlexBox onClick={loadLogin}
+          sx={{ pl:'1rem', pr: '1rem', cursor:'pointer', 
+            backgroundColor: loginOrSignup? 'tastytreats.lightGrey': 'tastytreats.mediumBlue', 
+            color: loginOrSignup? 'black' : 'white'}}>
+            Sign in
+          </FlexBox>
+          <FlexBox onClick={loadSignup}
+          sx={{ pl:'1rem', pr: '1rem', cursor:'pointer', 
+            backgroundColor: loginOrSignup? 'tastytreats.mediumBlue' : 'tastytreats.lightGrey', 
+            color:loginOrSignup? 'white' : 'black'}}>
+            Sign up
+          </FlexBox>
+        </FlexBox>
         <TextField
           name="email"
           required

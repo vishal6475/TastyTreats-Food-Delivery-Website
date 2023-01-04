@@ -4,7 +4,7 @@ import CopyrightIcon from '@mui/icons-material/Copyright';
 
 export const StyledFooter = styled('div')`
   display: flex;
-  background-color: ${( {theme} ) => theme.palette.tastytreats.layout};
+  background-color: ${( {theme} ) => theme.palette.tastytreats.mediumBlue};
   color: ${( {theme} ) => theme.palette.tastytreats.title};
   padding-left: 0.5rem;
   padding-right: 0.5rem;
