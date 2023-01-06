@@ -16,7 +16,6 @@ const AppTitle = styled(Typography)`
     padding-right: 0.25rem;
     padding-left: 0.25rem;
   }
-
 `
 
 const TastyTreatsAppBar = () => {
@@ -25,16 +24,10 @@ const TastyTreatsAppBar = () => {
   const context = useContext(StoreContext);
   const [customer] = context.customer;
   const [open, setOpen] = context.logInModal;
+  const [loginOrSignup, setLoginOrSignup] = context.loginOrSignup;
 
- 
-  useEffect(() => {
-    if (
-      location.pathname === '/register') {
-    }
-  }, [location])
-
-  const openLoginModal = () => {
-    console.log('Login opened')
+   const openLoginModal = () => {
+    setLoginOrSignup(false);
     setOpen(true);
   }
 
