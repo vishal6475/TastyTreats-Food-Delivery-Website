@@ -111,6 +111,23 @@ for row in records:
     for j in range(len(row)):
         print(row[j], end=" ")
     print()
+
+
+cur.execute('SELECT * FROM addresses')
+records = cur.fetchall()
+print("\n Addresses details:")
+for row in records:
+    for j in range(len(row)):
+        print(row[j], end=" ")
+    print()
+
+cur.execute('SELECT * FROM cards')
+records = cur.fetchall()
+print("\n Cards details:")
+for row in records:
+    for j in range(len(row)):
+        print(row[j], end=" ")
+    print()    
     
     
 cur.close()
