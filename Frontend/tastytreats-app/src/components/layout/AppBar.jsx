@@ -21,7 +21,8 @@ const AppTitle = styled(Typography)`
 const TastyTreatsAppBar = () => {
   const navigate = useNavigate()
   const location = useLocation();
-  const context = useContext(StoreContext);
+  const context = useContext(StoreContext);  
+  const [address, setAddress] = context.address;
   const [customer] = context.customer;
   const [open, setOpen] = context.logInModal;
   const [loginOrSignup, setLoginOrSignup] = context.loginOrSignup;
@@ -34,31 +35,37 @@ const TastyTreatsAppBar = () => {
   return (
     <AppBar id='appbar' position="sticky" sx={{ backgroundColor: 'tastytreats.mediumBlue', minHeight: '7vh', mb:2, pl:0 }}>
 
-        <FlexBox justify='space-between' sx={{ mt:'auto', mb:'auto'}}>
-          <FlexBox>
-            <AppTitle variant="h4" 
+      <FlexBox justify='space-between' sx={{ mt:'auto', mb:'auto'}}>
+        <FlexBox>
+          <AppTitle variant="h4" 
+          >
+            TastyTreats
+          </AppTitle>
+          <FlexBox sx={{ mt:'auto', mb:'auto', ml:'1rem', mr:'1rem', pl:'1rem', pr:'1rem',
+            borderRadius: '30px', cursor: 'pointer', '&:hover': {backgroundColor: '#2486DB'} }}
             >
-              TastyTreats
-            </AppTitle>
+            {address.split(',')[0]}
+          </FlexBox>
+        </FlexBox>
+        
+        <FlexBox>
+          <FlexBox sx={{ mt:'auto', mb:'auto', ml:'1rem', mr:'1rem', pl:'1rem', pr:'1rem',
+            borderRadius: '30px', cursor: 'pointer', '&:hover': {backgroundColor: '#2486DB'} }}
+            onClick={openLoginModal} >
+            <Typography variant='h6' sx={{  }}>
+              Login
+            </Typography>
           </FlexBox>
           <FlexBox>
-            <FlexBox sx={{ mt:'auto', mb:'auto', ml:'1rem', mr:'1rem', pl:'1rem', pr:'1rem',
-              borderRadius: '30px', cursor: 'pointer', '&:hover': {backgroundColor: '#2486DB'} }}
-              onClick={openLoginModal} >
-              <Typography variant='h6' sx={{  }}>
-                Login
-              </Typography>
-            </FlexBox>
-            <FlexBox>
-              {customer
-              ? <Typography variant='h6' sx={{ mt:'auto', mb:'auto', mr:'1rem', color:'#bb1717' }}>
-                { customer.first_name? customer.first_name : '' }
-              </Typography>
-              : ''
-              }
-            </FlexBox>
-          </FlexBox>          
-        </FlexBox>
+            {customer
+            ? <Typography variant='h6' sx={{ mt:'auto', mb:'auto', mr:'1rem', color:'#bb1717' }}>
+            { customer.first_name? customer.first_name : '' }
+            </Typography>
+            : ''
+            }
+          </FlexBox>
+        </FlexBox>          
+      </FlexBox>
     </AppBar>
   );
 };

@@ -3,6 +3,7 @@ import ContextProvider from './utils/context';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 import TastyTreatsAppBar from './components/layout/AppBar';
+import FirstPage from './pages/FirstPage';
 import HomePage from './pages/HomePage';
 import LogInModal from './components/modals/LogInModal';
 //import RegisterPage from './pages/RegisterPage';
@@ -39,7 +40,8 @@ function App() {
           <TastyTreatsAppBar />
           <div>            
             <Routes>
-              <Route path='/' element={<HomePage/>}/>
+              <Route path='/' element={<FirstPage/>}/>
+              <Route path='/home' element={<HomePage/>}/>
               <Route exact path='/unauthorized' element={<UnauthorizedPage/>}/>
             </Routes>
           </div>
