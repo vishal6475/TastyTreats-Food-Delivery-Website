@@ -9,13 +9,18 @@ import { useRef } from 'react'
 import { useNavigate } from 'react-router';
 
 const ImageBanner = styled('div')`
-  width: 80vw;
-  height: 50vh;
-  margin-left: ${( {ml} ) => ml + 'rem'};
-  margin-right: ${( {mr} ) => mr + 'rem'};
-  margin-bottom: 1rem;
-  background-image: url('../../public/images/blueberry.png');
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  background-image: url('../images/blueberry.png');
   background-size: cover;
+`
+
+const BoxDeliveryAdd = styled('div')`
+  position: relative;
+  width: 20vw;
+  margin-left: 40vw;
 `
 
 
@@ -47,14 +52,11 @@ const FirstPage = () => {
   return (
     <div>
       <ImageBanner id='image-banner'/>
-      
-      <div>FirstPage</div>
-
-      <div>
+      <BoxDeliveryAdd id='textDeliveryAdd'>
         <Autocomplete onPlaceChanged={gotDeliveryAddress}>
           <input type='text' id='delivery-address' placeholder='Enter delivery address' ref={addressRef} />
         </Autocomplete>
-      </div>
+      </BoxDeliveryAdd>
     </div>    
 
   )

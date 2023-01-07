@@ -8,7 +8,7 @@ const ContextProvider = ({ children }) => {
   const [loggedIn, setLoggedIn] = useState(false);
   const [loginOrSignup, setLoginOrSignup] = useState(false);
   const [customer, setAccount] = useState(false);
-  const [address, setAddress] = useState([]);
+  const [address, setAddress] = useState("");
   const [card, setCard] = useState([]);
   const [logInModal, setLogInModal] = useState(false);
 

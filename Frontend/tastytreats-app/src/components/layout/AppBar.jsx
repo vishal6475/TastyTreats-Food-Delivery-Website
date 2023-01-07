@@ -32,8 +32,12 @@ const TastyTreatsAppBar = () => {
     setOpen(true);
   }
 
+  if (address!== null && address.length>0) {
+    document.getElementById('userAddress').innerHTML = address.split(',')[0];
+  }
+
   return (
-    <AppBar id='appbar' position="sticky" sx={{ backgroundColor: 'tastytreats.mediumBlue', minHeight: '7vh', mb:2, pl:0 }}>
+    <AppBar id='appbar' position="sticky" sx={{ backgroundColor: 'tastytreats.mediumBlue', minHeight: '7vh', pl:0 }}>
 
       <FlexBox justify='space-between' sx={{ mt:'auto', mb:'auto'}}>
         <FlexBox>
@@ -43,8 +47,7 @@ const TastyTreatsAppBar = () => {
           </AppTitle>
           <FlexBox sx={{ mt:'auto', mb:'auto', ml:'1rem', mr:'1rem', pl:'1rem', pr:'1rem',
             borderRadius: '30px', cursor: 'pointer', '&:hover': {backgroundColor: '#2486DB'} }}
-            >
-            {address.split(',')[0]}
+            id='userAddress'>            
           </FlexBox>
         </FlexBox>
         
