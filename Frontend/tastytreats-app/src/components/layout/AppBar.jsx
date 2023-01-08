@@ -4,6 +4,8 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { FlexBox, Container } from '../styles/layouts';
 import AppBar from '@mui/material/AppBar';
 import { Typography, styled } from '@mui/material';
+import CustomerMenu from '../customer/CustomerMenu';
+
 
 const AppTitle = styled(Typography)`
   font-family: monospace;
@@ -72,8 +74,9 @@ const TastyTreatsAppBar = () => {
             <Typography variant='h6' sx={{ mt:'auto', mb:'auto', mr:'1rem' }}>
              Hi { customer.first_name? customer.first_name : '' }
             </Typography>
-          </FlexBox>
+          </FlexBox>          
           }
+          {loggedIn && <CustomerMenu/> }
         </FlexBox>          
       </FlexBox>
     </AppBar>

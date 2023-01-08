@@ -101,8 +101,10 @@ const LogInModal = () => {
         
       }
       catch(error) {
-        console.error(error)        
-        setLogInFail(true)
+        console.error(error)   
+        if (error.response?.status === 400) {
+          setLogInFail(true)
+        }     
       }
     }
   }  
