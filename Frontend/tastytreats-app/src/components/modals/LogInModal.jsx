@@ -4,7 +4,9 @@ import { StoreContext } from '../../utils/context';
 import { StandardModal, ModalBody, ModalTitle } from '../styles/modals';
 import { FlexBox } from '../styles/layouts';
 import { Button, TextField, Typography, Grid } from '@mui/material';
+import CustomerAPI from "../../utils/CustomerAPIHelper";
 
+const custAPI = new CustomerAPI();
 
 const LogInModal = () => {
   const navigate = useNavigate();
@@ -14,6 +16,7 @@ const LogInModal = () => {
   const [open, setOpen] = context.logInModal;
   const [logInFail, setLogInFail] = useState(null);
   const [loginOrSignup, setLoginOrSignup] = context.loginOrSignup;
+  const [customer, setCustomer] = context.customer;
   
   const [formErrors, setFormErrors] = useState({
     error: false,
@@ -76,15 +79,30 @@ const LogInModal = () => {
       formErrors.error = true
     }
 
-    if (!formErrors.error) {
-      let param = {
-        'email': email
-      }
+    if (!formErrors.error) {      
       try {
+        let param = {
+          'email': email,
+          'password': password
+        }
+
+
+        const loginResults = await custAPI.login(param)
+        //const loginResults = await CustomerAPI.pp()
+        console.log(loginResults)
+        console.log(loginResults.data)
+        const customer = loginResults.data[0];
+        setCustomer(loginResults.data)
+        setLoggedIn(true)
+        handleClose()
+        
+
+
         
       }
       catch(error) {
-        console.error(error)
+        console.error(error)        
+        setLogInFail(true)
       }
     }
   }  

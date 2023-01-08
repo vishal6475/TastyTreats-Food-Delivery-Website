@@ -19,7 +19,7 @@ from swagger_server import util
 port = 5432
 host = "localhost"
 user = "postgres"
-db_password = "vishal26"
+db_password = "postgrespw"
 database = 'tastytreats'
 
 def create_customer(body=None):  # noqa: E501
@@ -45,7 +45,7 @@ def create_customer(body=None):  # noqa: E501
             return error, 400, {'Access-Control-Allow-Origin': '*'}
 
 
-        con = psycopg2.connect(database= database, user='postgres', password=db_password, host=host, port=port)
+        con = psycopg2.connect(database= database, user=user, password=db_password, host=host, port=port)
         con.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
         cur = con.cursor()
 
@@ -92,7 +92,7 @@ def get_addresses_by_id(customer_id):  # noqa: E501
     """
     
     try:
-        con = psycopg2.connect(database= database, user='postgres', password=db_password, host=host, port=port)
+        con = psycopg2.connect(database= database, user=user, password=db_password, host=host, port=port)
         con.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
         cur = con.cursor()
 
@@ -149,7 +149,7 @@ def get_cards_by_id(customer_id):  # noqa: E501
     """
     
     try:
-        con = psycopg2.connect(database= database, user='postgres', password=db_password, host=host, port=port)
+        con = psycopg2.connect(database= database, user=user, password=db_password, host=host, port=port)
         con.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
         cur = con.cursor()
 
@@ -202,7 +202,7 @@ def get_customer_by_id(customer_id):  # noqa: E501
     """
     
     try:
-        con = psycopg2.connect(database= database, user='postgres', password=db_password, host=host, port=port)
+        con = psycopg2.connect(database= database, user=user, password=db_password, host=host, port=port)
         con.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
         cur = con.cursor()
 
@@ -256,7 +256,7 @@ def login_customer(email, password):  # noqa: E501
     """
 
     try:
-        con = psycopg2.connect(database= database, user='postgres', password=db_password, host=host, port=port)
+        con = psycopg2.connect(database= database, user=user, password=db_password, host=host, port=port)
         con.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
         cur = con.cursor()
 
@@ -320,7 +320,7 @@ def logout_customer(email):  # noqa: E501
     """
     
     try:
-        con = psycopg2.connect(database= database, user='postgres', password=db_password, host=host, port=port)
+        con = psycopg2.connect(database= database, user=user, password=db_password, host=host, port=port)
         con.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
         cur = con.cursor()
 
@@ -392,7 +392,7 @@ def update_address(customer_id, body=None, address_id=None):  # noqa: E501
         if body.addr_2 == None: body.addr_2 = ''
         if body.primary1 == None or body.primary1 == '': body.primary1 = 'N'
 
-        con = psycopg2.connect(database= database, user='postgres', password=db_password, host=host, port=port)
+        con = psycopg2.connect(database= database, user=user, password=db_password, host=host, port=port)
         con.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
         cur = con.cursor()
 
@@ -466,7 +466,7 @@ def update_card(customer_id, body=None, card_id=None):  # noqa: E501
             return error, 400, {'Access-Control-Allow-Origin': '*'}
         if body.primary1 == None or body.primary1 == '': body.primary1 = 'N'
 
-        con = psycopg2.connect(database= database, user='postgres', password=db_password, host=host, port=port)
+        con = psycopg2.connect(database= database, user=user, password=db_password, host=host, port=port)
         con.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
         cur = con.cursor()
 
@@ -531,7 +531,7 @@ def update_customer(customer_id, body=None):  # noqa: E501
         if connexion.request.is_json:
             body = Customer.from_dict(connexion.request.get_json())  # noqa: E501
         
-        con = psycopg2.connect(database= database, user='postgres', password=db_password, host=host, port=port)
+        con = psycopg2.connect(database= database, user=user, password=db_password, host=host, port=port)
         con.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
         cur = con.cursor()
 

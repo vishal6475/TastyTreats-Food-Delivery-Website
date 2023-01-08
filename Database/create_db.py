@@ -6,7 +6,7 @@ from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 port = 5432
 host = "localhost"
 user = "postgres"
-password = "vishal26"
+password = "postgrespw"
 database = 'tastytreats'
 #hotels_img_dir = './img/hotels'
 
@@ -100,7 +100,7 @@ cur.execute('CREATE TABLE items (\
 # Enter dummy data here
 print('\nInserting dummy data ...')
 cur.execute("INSERT INTO customers values(default, 'Vishal', 'Singh', 'vishalsingh6475@gmail.com', \
-            '469717341', 'Sydney', 'Vish', 'uuid', '3000'\
+            'vish', '469717341', 'Sydney', 'pic', 'uuid', '3000'\
             );")
     
 
