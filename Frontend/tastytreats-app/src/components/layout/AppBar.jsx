@@ -27,9 +27,13 @@ const TastyTreatsAppBar = () => {
   const [open, setOpen] = context.logInModal;
   const [loginOrSignup, setLoginOrSignup] = context.loginOrSignup;
 
-   const openLoginModal = () => {
+  const openLoginModal = () => {
     setLoginOrSignup(false);
     setOpen(true);
+  }
+
+  const toFirstPage = () => {    
+    navigate('/'); 
   }
 
   if (address!== null && address.length>0) {
@@ -41,13 +45,15 @@ const TastyTreatsAppBar = () => {
 
       <FlexBox justify='space-between' sx={{ mt:'auto', mb:'auto'}}>
         <FlexBox>
-          <AppTitle variant="h4" 
+          <AppTitle variant="h4"  sx={{ mt:'auto', mb:'auto'}}
           >
             TastyTreats
           </AppTitle>
-          <FlexBox sx={{ mt:'auto', mb:'auto', ml:'1rem', mr:'1rem', pl:'1rem', pr:'1rem',
-            borderRadius: '30px', cursor: 'pointer', '&:hover': {backgroundColor: '#2486DB'} }}
-            id='userAddress'>            
+          <FlexBox sx={{ mt:'auto', mb:'auto', ml:'1rem', mr:'1rem', 
+            pl:'1.5rem', pr:'1.5rem', pt:'0.4rem', pb:'0.4rem',
+            backgroundColor: '#C8C8C8', color: 'black', maxWidth:'30vw',
+            borderRadius: '30px', cursor: 'pointer', '&:hover': {backgroundColor: '#888888'} }}
+            id='userAddress' onClick={toFirstPage}>            
           </FlexBox>
         </FlexBox>
         

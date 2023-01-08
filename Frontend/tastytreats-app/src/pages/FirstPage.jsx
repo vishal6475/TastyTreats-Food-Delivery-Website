@@ -1,6 +1,6 @@
 import { useContext, useState, useEffect } from 'react';
 import { StoreContext } from '../utils/context';
-import { Grid, Typography, styled } from '@mui/material'
+import { Grid, Typography, styled, TextField } from '@mui/material'
 import {
   useJsApiLoader,
   Autocomplete,
@@ -9,8 +9,8 @@ import { useRef } from 'react'
 import { useNavigate } from 'react-router';
 
 const ImageBanner = styled('div')`
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 93vh;
   margin: 0;
   padding: 0;
   background-image: url('../images/blueberry.png');
@@ -18,9 +18,9 @@ const ImageBanner = styled('div')`
 `
 
 const BoxDeliveryAdd = styled('div')`
-  position: relative;
-  width: 20vw;
-  margin-left: 40vw;
+  min-width: 30vw;
+  padding-top: 35vh;
+  padding-left: 35vw;
 `
 
 
@@ -43,20 +43,28 @@ const FirstPage = () => {
   } 
 
   const gotDeliveryAddress = () => {
-    console.log(addressRef.current.value)
-    setAddress(addressRef.current.value)
+    console.log(document.getElementById('delivery-address').value)
+    setAddress(document.getElementById('delivery-address').value + ' Change')
     navigate('/home'); 
   }
 
 
   return (
     <div>
-      <ImageBanner id='image-banner'/>
+      <ImageBanner id='image-banner'>
       <BoxDeliveryAdd id='textDeliveryAdd'>
         <Autocomplete onPlaceChanged={gotDeliveryAddress}>
-          <input type='text' id='delivery-address' placeholder='Enter delivery address' ref={addressRef} />
+          <TextField 
+            id='delivery-address' 
+            name="delivery-address"
+            ref={addressRef}
+            placeholder='Enter delivery address' 
+            required
+            style={{backgroundColor:'white', minWidth: '30vw'}}
+          />
         </Autocomplete>
       </BoxDeliveryAdd>
+      </ImageBanner>
     </div>    
 
   )
