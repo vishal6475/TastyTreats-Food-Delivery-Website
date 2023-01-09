@@ -1,0 +1,749 @@
+openapi: 3.0.3
+info:
+  title: Swagger TastyTreat Restaurant API (OpenAPI 3.0)
+  description: This is a swagger model for TastyTreat Restaurant API
+  version: 1.0.11
+servers:
+- url: http://localhost:8081/v1
+tags:
+- name: stores
+  description: Operations for the stores/restaurants
+- name: orders
+  description: Operations for the orders
+paths:
+  /stores:
+    get:
+      tags:
+      - stores
+      summary: Get all the stores
+      description: Retrieve details of all the stores.
+      operationId: get_stores
+      responses:
+        "200":
+          description: Stores' details retrieved successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StoresList'
+        "400":
+          description: Invalid input details provided.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvalidInputError'
+        "500":
+          description: Unexpected failure in the service layer.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedServiceError'
+      x-openapi-router-controller: swagger_server.controllers.stores_controller
+    post:
+      tags:
+      - stores
+      summary: Create a new store/restaurant
+      operationId: create_store
+      requestBody:
+        description: Creates a store object.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Store'
+      responses:
+        "201":
+          description: Store has been created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Store'
+        "400":
+          description: Invalid input details provided.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvalidInputError'
+        "500":
+          description: Unexpected failure in the service layer.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedServiceError'
+      x-openapi-router-controller: swagger_server.controllers.stores_controller
+  /stores/{store_id}:
+    get:
+      tags:
+      - stores
+      summary: Get a store and its menu by store id
+      description: Retrieve a store's and its menu items using store id
+      operationId: get_store_by_id
+      parameters:
+      - name: store_id
+        in: path
+        description: Store id of a store/restaurant.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Store details retrieved successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Store'
+        "400":
+          description: Invalid input details provided.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvalidInputError'
+        "404":
+          description: Store Not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StoreNotFoundError'
+        "500":
+          description: Unexpected failure in the service layer.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedServiceError'
+      x-openapi-router-controller: swagger_server.controllers.stores_controller
+    put:
+      tags:
+      - stores
+      summary: Update a store
+      description: It updates the details of a store
+      operationId: update_store
+      parameters:
+      - name: store_id
+        in: path
+        description: Store id of a store/restaurant.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        description: Update an existing store in the database.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Store'
+      responses:
+        "200":
+          description: Store details updated successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Store'
+        "400":
+          description: Invalid input details provided.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvalidInputError'
+        "404":
+          description: Store Not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StoreNotFoundError'
+        "500":
+          description: Unexpected failure in the service layer.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedServiceError'
+      x-openapi-router-controller: swagger_server.controllers.stores_controller
+  /stores/{store_id}/category:
+    put:
+      tags:
+      - stores
+      summary: Update a category
+      description: It creates a new category for a store or updates the details of
+        an existing category (if category_id is provided).
+      operationId: update_category
+      parameters:
+      - name: store_id
+        in: path
+        description: Store id of a store/restaurant.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: category_id
+        in: query
+        description: Id of a food category of a store.
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      requestBody:
+        description: Update an existing category in the database
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Category'
+      responses:
+        "200":
+          description: Category details updated successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Category'
+        "400":
+          description: Invalid input details provided.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvalidInputError'
+        "404":
+          description: Category Not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoryNotFoundError'
+        "500":
+          description: Unexpected failure in the service layer.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedServiceError'
+      x-openapi-router-controller: swagger_server.controllers.stores_controller
+  /stores/{store_id}/category/{category_id}/item:
+    put:
+      tags:
+      - stores
+      summary: Update a menu item
+      description: It creates a new menu item for a store or updates the details of
+        an existing item (if item_id is provided).
+      operationId: update_item
+      parameters:
+      - name: store_id
+        in: path
+        description: Store id of a store/restaurant.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: category_id
+        in: path
+        description: Id of a food category of a store.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: item_id
+        in: query
+        description: Id of a food menu item of a store.
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      requestBody:
+        description: Update an existing item in the database
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Item'
+      responses:
+        "200":
+          description: Item details updated successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item'
+        "400":
+          description: Invalid input details provided.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvalidInputError'
+        "404":
+          description: Item Not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ItemNotFoundError'
+        "500":
+          description: Unexpected failure in the service layer.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedServiceError'
+      x-openapi-router-controller: swagger_server.controllers.stores_controller
+  /orders:
+    get:
+      tags:
+      - orders
+      summary: Get all the order details for a customer or a store
+      description: "Returns a list of orders based on customer_id or store_id or both.\
+        \ If no orders found for a given input, it returns an empty array."
+      operationId: get_orders
+      parameters:
+      - name: customer_id
+        in: query
+        description: Customer id of a customer.
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: store_id
+        in: query
+        description: Store id of a store/restaurant.
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: All orders' details retrieved successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrdersList'
+        "400":
+          description: Invalid input details provided.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvalidInputError'
+        "500":
+          description: Unexpected failure in the service layer.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedServiceError'
+      x-openapi-router-controller: swagger_server.controllers.orders_controller
+    post:
+      tags:
+      - orders
+      summary: Create a new order
+      operationId: create_order
+      requestBody:
+        description: Created order object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Order'
+      responses:
+        "201":
+          description: Order has been created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        "400":
+          description: Invalid input details provided.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvalidInputError'
+        "500":
+          description: Unexpected failure in the service layer.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedServiceError'
+      x-openapi-router-controller: swagger_server.controllers.orders_controller
+  /orders/{order_id}:
+    get:
+      tags:
+      - orders
+      summary: Get an order by order id
+      description: Returns an order object based on order id.
+      operationId: get_order_by_id
+      parameters:
+      - name: order_id
+        in: path
+        description: Order id of an order.
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Order details retrieved successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        "400":
+          description: Invalid input details provided.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvalidInputError'
+        "404":
+          description: Order not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderNotFoundError'
+        "500":
+          description: Unexpected failure in the service layer.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnexpectedServiceError'
+      x-openapi-router-controller: swagger_server.controllers.orders_controller
+components:
+  schemas:
+    StoresList:
+      type: array
+      items:
+        $ref: '#/components/schemas/Store'
+    Store:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10
+        name:
+          type: string
+          example: Dominos Strathfield
+        addr_1:
+          type: string
+          example: 187 The Boulevarde
+        addr_2:
+          type: string
+          example: Strathfield
+        city:
+          type: string
+          example: Sydney
+        state:
+          type: string
+          example: NSW
+        pincode:
+          type: string
+          example: "2135"
+        types:
+          type: array
+          items:
+            $ref: '#/components/schemas/Type'
+        open:
+          type: string
+          example: 11:00
+        close:
+          type: string
+          example: 22:30
+        delivery:
+          type: string
+          enum:
+          - "Y"
+          - "N"
+        delivery_fee:
+          type: number
+          example: 5.5
+        min_order:
+          type: number
+          example: 20
+        photo:
+          type: string
+          example: store photo
+      example:
+        pincode: "2135"
+        delivery: "Y"
+        types:
+        - Fast Food
+        - Fast Food
+        city: Sydney
+        photo: store photo
+        delivery_fee: 5.5
+        addr_2: Strathfield
+        addr_1: 187 The Boulevarde
+        name: Dominos Strathfield
+        id: 10
+        state: NSW
+        min_order: 20
+        close: 22:30
+        open: 11:00
+    Type:
+      type: string
+      example: Fast Food
+    CategoriesList:
+      type: array
+      items:
+        $ref: '#/components/schemas/Category'
+    Category:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 2
+        store_id:
+          type: integer
+          format: int64
+          example: 10
+        category:
+          type: string
+          example: Pizzas
+        display_sequence:
+          type: integer
+          format: int64
+          example: 5
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Item'
+      example:
+        store_id: 10
+        id: 2
+        category: Pizzas
+        display_sequence: 5
+        items:
+        - category_id: 2
+          price: 10.5
+          name: Veggie Pizza
+          description: Delicious veggie pizza with cheese
+          veg: 0
+          photo: Item photo
+          id: 10
+          status: 6
+        - category_id: 2
+          price: 10.5
+          name: Veggie Pizza
+          description: Delicious veggie pizza with cheese
+          veg: 0
+          photo: Item photo
+          id: 10
+          status: 6
+    ItemsList:
+      type: array
+      items:
+        $ref: '#/components/schemas/Item'
+    Item:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10
+        category_id:
+          type: integer
+          format: int64
+          example: 2
+        name:
+          type: string
+          example: Veggie Pizza
+        description:
+          type: string
+          example: Delicious veggie pizza with cheese
+        price:
+          type: number
+          example: 10.5
+        veg:
+          type: integer
+          format: int64
+          enum:
+          - 0
+          - 1
+        photo:
+          type: string
+          example: Item photo
+        status:
+          type: integer
+          format: int64
+          enum:
+          - 0
+          - 1
+      example:
+        category_id: 2
+        price: 10.5
+        name: Veggie Pizza
+        description: Delicious veggie pizza with cheese
+        veg: 0
+        photo: Item photo
+        id: 10
+        status: 6
+    OrdersList:
+      type: array
+      items:
+        $ref: '#/components/schemas/Order'
+    Order:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 100
+        customer_id:
+          type: integer
+          format: int64
+          example: 10
+        store_id:
+          type: integer
+          format: int64
+          example: 50
+        date:
+          type: string
+          example: 2022-01-26T19:00:00+10:00
+        unit_no:
+          type: string
+          example: Unit 203
+        addr_1:
+          type: string
+          example: 7/9 Churchill Avenue
+        addr_2:
+          type: string
+          example: Strathfield
+        city:
+          type: string
+          example: Sydney
+        state:
+          type: string
+          example: NSW
+        pincode:
+          type: string
+          example: "2135"
+        customer_name:
+          type: string
+          example: vishal
+        card_number:
+          type: string
+          example: "1111222233334444"
+        card_expiry:
+          type: string
+          example: 06/12
+        payment_type:
+          type: string
+          enum:
+          - Card
+          - Points
+        delivery_pickup:
+          type: string
+          enum:
+          - D
+          - P
+        total_amount:
+          type: number
+          example: 550.3
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderedItem'
+      example:
+        store_id: 50
+        date: 2022-01-26T19:00:00+10:00
+        pincode: "2135"
+        card_number: "1111222233334444"
+        city: Sydney
+        delivery_pickup: D
+        card_expiry: 06/12
+        addr_2: Strathfield
+        payment_type: Card
+        addr_1: 7/9 Churchill Avenue
+        total_amount: 550.3
+        unit_no: Unit 203
+        id: 100
+        state: NSW
+        customer_name: vishal
+        customer_id: 10
+        items:
+        - quantity: 3
+          price: 10.5
+          name: Veggie Pizza
+          id: 10
+          order_id: 2
+        - quantity: 3
+          price: 10.5
+          name: Veggie Pizza
+          id: 10
+          order_id: 2
+    OrderedItemsList:
+      type: array
+      items:
+        $ref: '#/components/schemas/OrderedItem'
+    OrderedItem:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10
+        order_id:
+          type: integer
+          format: int64
+          example: 2
+        name:
+          type: string
+          example: Veggie Pizza
+        price:
+          type: number
+          example: 10.5
+        quantity:
+          type: integer
+          format: int64
+          example: 3
+      example:
+        quantity: 3
+        price: 10.5
+        name: Veggie Pizza
+        id: 10
+        order_id: 2
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        type:
+          type: string
+        message:
+          type: string
+    InvalidInputError:
+      example:
+        code: 400
+        type: InvalidInputError
+        message: "The following mandatory fields were not provided: %field_name_1%,\
+          \ %field_name_2%"
+      allOf:
+      - $ref: '#/components/schemas/Error'
+    StoreNotFoundError:
+      example:
+        code: 404
+        type: StoreNotFoundError
+        message: "The following Store does not exist: %store_id%"
+      allOf:
+      - $ref: '#/components/schemas/Error'
+    CategoryNotFoundError:
+      example:
+        code: 404
+        type: CategoryNotFoundError
+        message: "The following category does not exist: %category_id%"
+      allOf:
+      - $ref: '#/components/schemas/Error'
+    ItemNotFoundError:
+      example:
+        code: 404
+        type: ItemNotFoundError
+        message: "The following item does not exist: %item_id%"
+      allOf:
+      - $ref: '#/components/schemas/Error'
+    OrderNotFoundError:
+      example:
+        code: 404
+        type: OrderNotFoundError
+        message: "The following order does not exist: %order_id%"
+      allOf:
+      - $ref: '#/components/schemas/Error'
+    UnexpectedServiceError:
+      example:
+        code: 500
+        type: UnexpectedServiceError
+        message: "The following unexpected runtime error has occurred: %error%"
+      allOf:
+      - $ref: '#/components/schemas/Error'
+

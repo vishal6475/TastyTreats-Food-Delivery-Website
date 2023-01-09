@@ -1,0 +1,626 @@
+openapi: 3.0.3
+info:
+  title: Swagger TastyTreat Restaurant API (OpenAPI 3.0)
+  description: |-
+    This is a swagger model for TastyTreat Restaurant API
+  version: 1.0.11
+servers:
+  - url: http://localhost:8081/v1
+tags:
+  - name: stores
+    description: Operations for the stores/restaurants
+  - name: orders
+    description: Operations for the orders
+paths:
+  /stores:
+    post:
+      tags:
+        - stores
+      summary: Create a new store/restaurant
+      operationId: createStore
+      requestBody:
+        description: Creates a store object.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Store'
+      responses:
+        '201':
+          description: Store has been created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Store'
+        '400':
+          description: Invalid input details provided.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InvalidInputError"
+        '500':
+          description: Unexpected failure in the service layer.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnexpectedServiceError"
+    get:
+      tags:
+        - stores
+      summary: Get all the stores
+      description: Retrieve details of all the stores.
+      operationId: getStores
+      responses:
+        '200':
+          description: Stores' details retrieved successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StoresList'
+        '400':
+          description: Invalid input details provided.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InvalidInputError"
+        '500':
+          description: Unexpected failure in the service layer.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnexpectedServiceError"
+  /stores/{store_id}:
+    get:
+      tags:
+        - stores
+      summary: Get a store and its menu by store id
+      description: Retrieve a store's and its menu items using store id
+      operationId: getStoreByID
+      parameters:
+        - name: store_id
+          in: path
+          description: Store id of a store/restaurant.
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Store details retrieved successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Store'
+        '400':
+          description: Invalid input details provided.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InvalidInputError"
+        '404':
+          description: Store Not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StoreNotFoundError"
+        '500':
+          description: Unexpected failure in the service layer.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnexpectedServiceError"
+    put:
+      tags:
+        - stores
+      summary: Update a store
+      description: It updates the details of a store
+      operationId: updateStore
+      parameters:
+        - name: store_id
+          in: path
+          description: Store id of a store/restaurant.
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Update an existing store in the database.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Store'
+      responses:
+        '200':
+          description: Store details updated successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Store'
+        '400':
+          description: Invalid input details provided.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InvalidInputError"
+        '404':
+          description: Store Not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StoreNotFoundError"
+        '500':
+          description: Unexpected failure in the service layer.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnexpectedServiceError"  
+  /stores/{store_id}/category:
+    put:
+      tags:
+        - stores
+      summary: Update a category
+      description: It creates a new category for a store or updates the details of an existing category (if category_id is provided).
+      operationId: updateCategory
+      parameters:
+        - name: store_id
+          in: path
+          description: Store id of a store/restaurant.
+          required: true
+          schema:
+            type: string
+        - name: category_id
+          in: query
+          description: Id of a food category of a store.
+          required: false
+          schema:
+            type: string
+      requestBody:
+        description: Update an existing category in the database
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Category'
+      responses:
+        '200':
+          description: Category details updated successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Category'
+        '400':
+          description: Invalid input details provided.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InvalidInputError"
+        '404':
+          description: Category Not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CategoryNotFoundError"
+        '500':
+          description: Unexpected failure in the service layer.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnexpectedServiceError"
+  /stores/{store_id}/category/{category_id}/item:
+    put:
+      tags:
+        - stores
+      summary: Update a menu item
+      description: It creates a new menu item for a store or updates the details of an existing item (if item_id is provided).
+      operationId: updateItem
+      parameters:
+        - name: store_id
+          in: path
+          description: Store id of a store/restaurant.
+          required: true
+          schema:
+            type: string
+        - name: category_id
+          in: path
+          description: Id of a food category of a store.
+          required: true
+          schema:
+            type: string
+        - name: item_id
+          in: query
+          description: Id of a food menu item of a store.
+          required: false
+          schema:
+            type: string
+      requestBody:
+        description: Update an existing item in the database
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Item'
+      responses:
+        '200':
+          description: Item details updated successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item'
+        '400':
+          description: Invalid input details provided.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InvalidInputError"
+        '404':
+          description: Item Not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ItemNotFoundError"
+        '500':
+          description: Unexpected failure in the service layer.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnexpectedServiceError"                
+  /orders:
+    post:
+      tags:
+        - orders
+      summary: Create a new order
+      operationId: createOrder
+      requestBody:
+        description: Created order object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Order'
+      responses:
+        '201':
+          description: Order has been created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        '400':
+          description: Invalid input details provided.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InvalidInputError"
+        '500':
+          description: Unexpected failure in the service layer.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnexpectedServiceError"
+    get:
+      tags:
+        - orders
+      summary: Get all the order details for a customer or a store
+      description: Returns a list of orders based on customer_id or store_id or both. If no orders found for a given input, it returns an empty array.
+      operationId: getOrders
+      parameters:
+        - name: customer_id
+          in: query
+          description: Customer id of a customer.
+          required: false
+          schema:
+            type: string
+        - name: store_id
+          in: query
+          description: Store id of a store/restaurant.
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: All orders' details retrieved successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrdersList'
+        '400':
+          description: Invalid input details provided.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InvalidInputError"
+        '500':
+          description: Unexpected failure in the service layer.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnexpectedServiceError"
+  /orders/{order_id}:
+    get:
+      tags:
+        - orders
+      summary: Get an order by order id
+      description: Returns an order object based on order id.
+      operationId: getOrderByID
+      parameters:
+        - name: order_id
+          in: path
+          description: Order id of an order.
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Order details retrieved successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        '400':
+          description: Invalid input details provided.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InvalidInputError"
+        '404':
+          description: Order not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrderNotFoundError"
+        '500':
+          description: Unexpected failure in the service layer.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnexpectedServiceError"
+components:
+  schemas:
+    StoresList:
+      type: array
+      items:
+        $ref: "#/components/schemas/Store"
+    Store:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10
+        name:
+          type: string
+          example: 'Dominos Strathfield'
+        addr_1:
+          type: string
+          example: '187 The Boulevarde'
+        addr_2:
+          type: string
+          example: 'Strathfield'
+        city:
+          type: string
+          example: 'Sydney'
+        state:
+          type: string
+          example: 'NSW'
+        pincode:
+          type: string
+          example: '2135'
+        types:
+          type: array
+          items: 
+            $ref: "#/components/schemas/Type"
+        open:
+          type: string
+          example: '11:00'
+        close:
+          type: string
+          example: '22:30'
+        delivery:
+          type: string
+          enum: ['Y', 'N']
+        delivery_fee:
+          type: number
+          example: 5.5
+        min_order:
+          type: number
+          example: 20
+        photo:
+          type: string
+          example: 'store photo'
+    Type:
+      type: string
+      example: 'Fast Food'
+    CategoriesList:
+      type: array
+      items:
+        $ref: "#/components/schemas/Category"
+    Category:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 2
+        store_id:
+          type: integer
+          format: int64
+          example: 10
+        category:
+          type: string
+          example: 'Pizzas'
+        display_sequence:
+          type: integer
+          format: int64
+          example: 5
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/Item"
+    ItemsList:
+      type: array
+      items:
+        $ref: "#/components/schemas/Item"
+    Item:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10
+        category_id:
+          type: integer
+          format: int64
+          example: 2
+        name:
+          type: string
+          example: 'Veggie Pizza'
+        description:
+          type: string
+          example: 'Delicious veggie pizza with cheese'
+        price:
+          type: number
+          example: 10.5
+        veg:
+          type: integer
+          format: int64
+          enum: [0, 1]
+        photo:
+          type: string
+          example: 'Item photo'
+        status:
+          type: integer
+          format: int64
+          enum: [0, 1]
+    OrdersList:
+      type: array
+      items:
+        $ref: "#/components/schemas/Order"
+    Order:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 100
+        customer_id:
+          type: integer
+          format: int64
+          example: 10
+        store_id:
+          type: integer
+          format: int64
+          example: 50
+        date:
+          type: string
+          example: "2022-01-26T19:00:00+10:00"
+        unit_no:
+          type: string
+          example: 'Unit 203'
+        addr_1:
+          type: string
+          example: '7/9 Churchill Avenue'
+        addr_2:
+          type: string
+          example: 'Strathfield'
+        city:
+          type: string
+          example: 'Sydney'
+        state:
+          type: string
+          example: 'NSW'
+        pincode:
+          type: string
+          example: '2135'
+        customer_name:
+          type: string
+          example: 'vishal'
+        card_number:
+          type: string
+          example: '1111222233334444'
+        card_expiry:
+          type: string
+          example: '06/12'
+        payment_type:
+          type: string
+          enum: ['Card', 'Points']
+        delivery_pickup:
+          type: string
+          enum: ['D', 'P']
+        total_amount:
+          type: number
+          example: 550.3
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/OrderedItem"
+    OrderedItemsList:
+      type: array
+      items:
+        $ref: "#/components/schemas/OrderedItem"
+    OrderedItem:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          example: 10
+        order_id:
+          type: integer
+          format: int64
+          example: 2
+        name:
+          type: string
+          example: 'Veggie Pizza'
+        price:
+          type: number
+          example: 10.5
+        quantity:
+          type: integer
+          format: int64
+          example: 3
+    
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        type:
+          type: string
+        message:
+          type: string
+    InvalidInputError:
+      allOf:
+        - $ref: "#/components/schemas/Error"
+      example:
+        code: 400
+        type: InvalidInputError
+        message: "The following mandatory fields were not provided: %field_name_1%, %field_name_2%"
+    StoreNotFoundError:
+      allOf:
+        - $ref: "#/components/schemas/Error"
+      example:
+        code: 404
+        type: StoreNotFoundError
+        message: "The following Store does not exist: %store_id%"
+    CategoryNotFoundError:
+      allOf:
+        - $ref: "#/components/schemas/Error"
+      example:
+        code: 404
+        type: CategoryNotFoundError
+        message: "The following category does not exist: %category_id%"
+    ItemNotFoundError:
+      allOf:
+        - $ref: "#/components/schemas/Error"
+      example:
+        code: 404
+        type: ItemNotFoundError
+        message: "The following item does not exist: %item_id%"
+    OrderNotFoundError:
+      allOf:
+        - $ref: "#/components/schemas/Error"
+      example:
+        code: 404
+        type: OrderNotFoundError
+        message: "The following order does not exist: %order_id%"
+    UnexpectedServiceError:
+      allOf:
+        - $ref: "#/components/schemas/Error"
+      example:
+        code: 500
+        type: UnexpectedServiceError
+        message: "The following unexpected runtime error has occurred: %error%" 
+        
