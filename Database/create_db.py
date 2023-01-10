@@ -31,6 +31,7 @@ cur.execute('drop TABLE IF EXISTS customers cascade;')
 
 # Create Tables
 print('\nCreating Tables ...')
+
 cur.execute('CREATE TABLE customers (\
             id SERIAL PRIMARY KEY,\
             first_name VARCHAR(50),\
@@ -68,33 +69,75 @@ cur.execute('CREATE TABLE addresses(\
             );')
     
     
-cur.execute('CREATE TABLE hotels (\
+cur.execute('CREATE TABLE stores (\
             id SERIAL PRIMARY KEY,\
             name VARCHAR(100),\
-            addr_1 VARCHAR(100),\
-            addr_2 VARCHAR(100),\
+            addr_1 TEXT,\
+            addr_2 TEXT,\
             city VARCHAR(20),\
             state VARCHAR(20),\
             pincode VARCHAR(4),\
-            open_time TEXT,\
-            close_time TEXT,\
+            types TEXT,\
+            open VARCHAR(4),\
+            close VARCHAR(4),\
+            delivery VARCHAR(1),\
             delivery_fee float8,\
             min_order float8,\
-            points TEXT\
+            photo TEXT\
+            );')
+    
+    
+cur.execute('CREATE TABLE categories (\
+            id SERIAL PRIMARY KEY,\
+            store_id INT NOT NULL,\
+            FOREIGN KEY (store_id) REFERENCES stores (id),\
+            category TEXT NOT NULL,\
+            display_sequence INT NOT NULL\
             );')
     
     
 cur.execute('CREATE TABLE items (\
             id SERIAL PRIMARY KEY,\
-            hotel_id INT NOT NULL,\
-            FOREIGN KEY (hotel_id) REFERENCES hotels (id),\
-            category VARCHAR(50),\
-            sequence_no INT, \
-            name VARCHAR(50),\
-            description VARCHAR(50),\
-            price float8,\
-            veg VARCHAR(1),\
+            category_id INT NOT NULL,\
+            FOREIGN KEY (category_id) REFERENCES categories (id),\
+            name VARCHAR(100) NOT NULL,\
+            description VARCHAR(300),\
+            price float8 NOT NULL,\
+            veg INT NOT NULL,\
+            status INT NOT NULL,\
             photo TEXT \
+            );')
+    
+    
+cur.execute('CREATE TABLE orders (\
+            id SERIAL PRIMARY KEY,\
+            customer_id INT NOT NULL,\
+            FOREIGN KEY (customer_id) REFERENCES customers (id),\
+            store_id INT NOT NULL,\
+            FOREIGN KEY (store_id) REFERENCES stores (id),\
+            date VARCHAR(25) NOT NULL,\
+            unit_no TEXT,\
+            addr_1 TEXT,\
+            addr_2 TEXT,\
+            city VARCHAR(20),\
+            state VARCHAR(20),\
+            pincode VARCHAR(4),\
+            customer_name VARCHAR(100),\
+            card_number VARCHAR(16),\
+            card_expiry VARCHAR(4),\
+            payment_type VARCHAR(6) NOT NULL,\
+            delivery_pickup VARCHAR(1) NOT NULL,\
+            total_amount float8 NOT NULL\
+            );')
+    
+    
+cur.execute('CREATE TABLE order_items (\
+            id SERIAL PRIMARY KEY,\
+            order_id INT NOT NULL,\
+            FOREIGN KEY (order_id) REFERENCES orders (id),\
+            name VARCHAR(100) NOT NULL,\
+            price float8 NOT NULL,\
+            quantity INT NOT NULL\
             );')
 
 # Enter dummy data here

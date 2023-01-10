@@ -1,5 +1,8 @@
 import connexion
 import six
+import secrets
+import psycopg2
+from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT 
 
 from swagger_server.models.category import Category  # noqa: E501
 from swagger_server.models.category_not_found_error import CategoryNotFoundError  # noqa: E501
@@ -12,6 +15,11 @@ from swagger_server.models.stores_list import StoresList  # noqa: E501
 from swagger_server.models.unexpected_service_error import UnexpectedServiceError  # noqa: E501
 from swagger_server import util
 
+port = 5432
+host = "localhost"
+user = "postgres"
+db_password = "postgrespw"
+database = 'tastytreats'
 
 def create_store(body=None):  # noqa: E501
     """Create a new store/restaurant
@@ -23,9 +31,16 @@ def create_store(body=None):  # noqa: E501
 
     :rtype: Store
     """
-    if connexion.request.is_json:
-        body = Store.from_dict(connexion.request.get_json())  # noqa: E501
-    return 'do some magic!'
+
+    try:
+        if connexion.request.is_json:
+            body = Store.from_dict(connexion.request.get_json())  # noqa: E501
+        return 'do some magic!'
+
+    except Exception as e:
+        # catch any unexpected runtime error and return as 500 error 
+        error = UnexpectedServiceError(code="500", type="UnexpectedServiceError", message=str(e))
+        return error, 500, {'Access-Control-Allow-Origin': '*'}
 
 
 def get_store_by_id(store_id):  # noqa: E501
@@ -38,7 +53,14 @@ def get_store_by_id(store_id):  # noqa: E501
 
     :rtype: Store
     """
-    return 'do some magic!'
+
+    try:
+        return 'do some magic!'
+
+    except Exception as e:
+        # catch any unexpected runtime error and return as 500 error 
+        error = UnexpectedServiceError(code="500", type="UnexpectedServiceError", message=str(e))
+        return error, 500, {'Access-Control-Allow-Origin': '*'}
 
 
 def get_stores():  # noqa: E501
@@ -49,7 +71,14 @@ def get_stores():  # noqa: E501
 
     :rtype: StoresList
     """
-    return 'do some magic!'
+
+    try:
+        return 'do some magic!'
+
+    except Exception as e:
+        # catch any unexpected runtime error and return as 500 error 
+        error = UnexpectedServiceError(code="500", type="UnexpectedServiceError", message=str(e))
+        return error, 500, {'Access-Control-Allow-Origin': '*'}
 
 
 def update_category(store_id, body=None, category_id=None):  # noqa: E501
@@ -66,9 +95,16 @@ def update_category(store_id, body=None, category_id=None):  # noqa: E501
 
     :rtype: Category
     """
-    if connexion.request.is_json:
-        body = Category.from_dict(connexion.request.get_json())  # noqa: E501
-    return 'do some magic!'
+
+    try:
+        if connexion.request.is_json:
+            body = Category.from_dict(connexion.request.get_json())  # noqa: E501
+        return 'do some magic!'
+
+    except Exception as e:
+        # catch any unexpected runtime error and return as 500 error 
+        error = UnexpectedServiceError(code="500", type="UnexpectedServiceError", message=str(e))
+        return error, 500, {'Access-Control-Allow-Origin': '*'}
 
 
 def update_item(store_id, category_id, body=None, item_id=None):  # noqa: E501
@@ -87,9 +123,16 @@ def update_item(store_id, category_id, body=None, item_id=None):  # noqa: E501
 
     :rtype: Item
     """
-    if connexion.request.is_json:
-        body = Item.from_dict(connexion.request.get_json())  # noqa: E501
-    return 'do some magic!'
+
+    try:
+        if connexion.request.is_json:
+            body = Item.from_dict(connexion.request.get_json())  # noqa: E501
+        return 'do some magic!'
+
+    except Exception as e:
+        # catch any unexpected runtime error and return as 500 error 
+        error = UnexpectedServiceError(code="500", type="UnexpectedServiceError", message=str(e))
+        return error, 500, {'Access-Control-Allow-Origin': '*'}
 
 
 def update_store(store_id, body=None):  # noqa: E501
@@ -104,6 +147,13 @@ def update_store(store_id, body=None):  # noqa: E501
 
     :rtype: Store
     """
-    if connexion.request.is_json:
-        body = Store.from_dict(connexion.request.get_json())  # noqa: E501
-    return 'do some magic!'
+
+    try:
+        if connexion.request.is_json:
+            body = Store.from_dict(connexion.request.get_json())  # noqa: E501
+        return 'do some magic!'
+
+    except Exception as e:
+        # catch any unexpected runtime error and return as 500 error 
+        error = UnexpectedServiceError(code="500", type="UnexpectedServiceError", message=str(e))
+        return error, 500, {'Access-Control-Allow-Origin': '*'}

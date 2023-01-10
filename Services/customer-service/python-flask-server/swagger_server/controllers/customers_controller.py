@@ -36,8 +36,6 @@ def create_customer(body=None):  # noqa: E501
     try:
         if connexion.request.is_json:
             body = Customer.from_dict(connexion.request.get_json())  # noqa: E501
-
-        print('Creating', body)
         
         if (body.email == None or body.first_name == None or body.last_name == None or body.password == None):
             error = InvalidInputError(code=400, type="InvalidInputError", 
