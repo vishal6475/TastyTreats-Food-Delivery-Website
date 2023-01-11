@@ -8,7 +8,7 @@ host = "localhost"
 user = "postgres"
 password = "postgrespw"
 database = 'tastytreats'
-#hotels_img_dir = './img/hotels'
+img_stores_dir = './images/stores'
 
 
 con = psycopg2.connect(user=user, password=password, host=host, port=port)
@@ -78,8 +78,8 @@ cur.execute('CREATE TABLE stores (\
             state VARCHAR(20),\
             pincode VARCHAR(4),\
             types TEXT,\
-            open VARCHAR(4),\
-            close VARCHAR(4),\
+            open VARCHAR(5),\
+            close VARCHAR(5),\
             delivery VARCHAR(1),\
             delivery_fee float8,\
             min_order float8,\
@@ -142,14 +142,58 @@ cur.execute('CREATE TABLE order_items (\
 
 # Enter dummy data here
 print('\nInserting dummy data ...')
+
 cur.execute("INSERT INTO customers values(default, 'Vishal', 'Singh', 'vishalsingh6475@gmail.com', \
             'vish', '469717341', 'Sydney', 'pic', 'uuid', '3000'\
             );")
+
+cur.execute("INSERT INTO stores values(default, 'Dominos Strathfield', '187 The Boulevarde, Strathfield NSW, Australia', '', \
+            '', '', '', 'Pizza,Italian', '11:00', '23:00', 'Y', 5.5, 20, ''\
+            );")
+
+cur.execute("INSERT INTO stores values(default, 'Pizza Hut - Belfield', '26A Burwood Road, Belfield NSW 2191, Australia', '', \
+            '', '', '', 'Pizza,Italian', '11:00', '23:00', 'Y', 5.5, 20, ''\
+            );")
+
+cur.execute("INSERT INTO stores values(default, 'Guzman y Gomez - Auburn', 'shop a24/100 Parramatta Road, Auburn NSW 2144, Australia', '', \
+            '', '', '', 'Mexican,Fast Food', '11:00', '23:00', 'Y', 5.5, 20, ''\
+            );")
+
+cur.execute("INSERT INTO stores values(default, 'McDonald''s - Burwood Westfield', '100 Burwood Road, Burwood NSW 2134, Australia', '', \
+            '', '', '', 'Burgers,Fast Food', '11:00', '23:00', 'Y', 5.5, 20, ''\
+            );")
+    
+cur.execute("INSERT INTO stores values(default, 'Thousand Spices', '23 The Crescent, Homebush NSW 2140, Australia', '', \
+            '', '', '', 'Indian,South Indian', '11:00', '23:00', 'Y', 5.5, 20, ''\
+            );")
+    
+cur.execute("INSERT INTO stores values(default, 'Treat Talk Pizza and Kebab', 'shop 1/41 The Boulevarde, Strathfield NSW 2135, Australia', '', \
+            '', '', '', 'Turkish,Kebab', '11:00', '23:00', 'Y', 5.5, 20, ''\
+            );")
+    
+cur.execute("INSERT INTO stores values(default, 'Oporto - Strathfield Plaza', '11 The Boulevarde, Strathfield NSW 2135, Australia', '', \
+            '', '', '', 'Burgers,Chicken', '11:00', '23:00', 'Y', 5.5, 20, ''\
+            );")
+    
+cur.execute("INSERT INTO stores values(default, 'Subway - Strathfield South', '2/608-612 Liverpool Road, Strathfield South NSW 2136, Australia', '', \
+            '', '', '', 'Sandwiches', '11:00', '23:00', 'Y', 5.5, 20, ''\
+            );")
     
 
+# Update the event table with base64 images
+for filename in os.listdir(img_stores_dir):
+    f = os.path.join(img_stores_dir, filename)
+
+    with open(f, "rb") as image_file:
+        encoded_string = 'data:image/jpeg;base64,' + \
+            base64.b64encode(image_file.read()).decode()
+        sql = "UPDATE stores SET photo = '{}' where id = {}".format(
+            encoded_string, int(filename.split('.')[0]))
+        cur.execute(sql)
+        
 cur.execute('SELECT * FROM customers')
 records = cur.fetchall()
-print("\n Customer details:")
+print("\n Customers:")
 for row in records:
     for j in range(len(row)):
         print(row[j], end=" ")
@@ -166,7 +210,32 @@ for row in records:
 
 cur.execute('SELECT * FROM cards')
 records = cur.fetchall()
-print("\n Cards details:")
+print("\n Cards:")
+for row in records:
+    for j in range(len(row)):
+        print(row[j], end=" ")
+    print()    
+
+cur.execute('SELECT id, name, addr_1, addr_2, city, state, pincode, types, open, close, \
+            delivery, delivery_fee float8, min_order FROM stores')
+records = cur.fetchall()
+print("\n Stores:")
+for row in records:
+    for j in range(len(row)):
+        print(row[j], end=" ")
+    print()    
+
+cur.execute('SELECT * FROM categories')
+records = cur.fetchall()
+print("\n Categories:")
+for row in records:
+    for j in range(len(row)):
+        print(row[j], end=" ")
+    print()    
+
+cur.execute('SELECT * FROM items')
+records = cur.fetchall()
+print("\n Menu Items:")
 for row in records:
     for j in range(len(row)):
         print(row[j], end=" ")

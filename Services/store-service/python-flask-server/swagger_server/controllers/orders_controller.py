@@ -88,7 +88,7 @@ def get_order_by_id(order_id):  # noqa: E501
     """
 
     try:
-        return 'do some magic!'
+        return 'do some magic!', {'Access-Control-Allow-Origin': '*'}
 
     except Exception as e:
         # catch any unexpected runtime error and return as 500 error 
@@ -110,7 +110,7 @@ def get_orders(customer_id=None, store_id=None):  # noqa: E501
     """
 
     try:
-        return 'do some magic!'
+        return 'do some magic!', {'Access-Control-Allow-Origin': '*'}
 
     except Exception as e:
         # catch any unexpected runtime error and return as 500 error 

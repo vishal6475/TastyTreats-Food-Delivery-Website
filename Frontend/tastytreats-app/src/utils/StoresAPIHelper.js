@@ -1,10 +1,10 @@
 import * as axios from "axios";
 
-export default class CustomerAPI {
+export default class StoresAPI {
   constructor() {
     this.api_token = null;
     this.client = null;
-    this.api_url = 'http://127.0.0.1:8080/v1';
+    this.api_url = 'http://127.0.0.1:8081/v1';
   }
 
   init = () => {
@@ -22,8 +22,8 @@ export default class CustomerAPI {
     return this.client;
   };
 
-  login = (params) => {
-    return this.init().get("/customers/login", {params: params});
+  getAllStores = () => {
+    return this.init().get("/stores");
   };
 
 

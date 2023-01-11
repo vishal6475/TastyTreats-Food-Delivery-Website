@@ -91,7 +91,7 @@ def get_store_by_id(store_id):  # noqa: E501
         record = cur.fetchone()
         store = dict()
         store['id'] = int(record[0])
-        store['name'] = int(record[1])
+        store['name'] = str(record[1])
         store['addr_1'] = str(record[2])
         store['addr_2'] = str(record[3])
         store['city'] = str(record[4])
@@ -101,8 +101,8 @@ def get_store_by_id(store_id):  # noqa: E501
         store['open'] = str(record[8])
         store['close'] = str(record[9])
         store['delivery'] = str(record[10])
-        store['delivery_fee'] = str(record[11])
-        store['min_order'] = str(record[12])
+        store['delivery_fee'] = float(record[11])
+        store['min_order'] = float(record[12])
         store['photo'] = str(record[13])
 
         for item in store.keys():
@@ -139,7 +139,7 @@ def get_stores():  # noqa: E501
         for record in records:
             store = dict()
             store['id'] = int(record[0])
-            store['name'] = int(record[1])
+            store['name'] = str(record[1])
             store['addr_1'] = str(record[2])
             store['addr_2'] = str(record[3])
             store['city'] = str(record[4])
@@ -149,8 +149,8 @@ def get_stores():  # noqa: E501
             store['open'] = str(record[8])
             store['close'] = str(record[9])
             store['delivery'] = str(record[10])
-            store['delivery_fee'] = str(record[11])
-            store['min_order'] = str(record[12])
+            store['delivery_fee'] = float(record[11])
+            store['min_order'] = float(record[12])
             store['photo'] = str(record[13])
 
             for item in store.keys():
@@ -188,7 +188,7 @@ def update_category(store_id, body=None, category_id=None):  # noqa: E501
     try:
         if connexion.request.is_json:
             body = Category.from_dict(connexion.request.get_json())  # noqa: E501
-        return 'do some magic!'
+        return 'do some magic!', {'Access-Control-Allow-Origin': '*'}
 
     except Exception as e:
         # catch any unexpected runtime error and return as 500 error 
@@ -216,7 +216,7 @@ def update_item(store_id, category_id, body=None, item_id=None):  # noqa: E501
     try:
         if connexion.request.is_json:
             body = Item.from_dict(connexion.request.get_json())  # noqa: E501
-        return 'do some magic!'
+        return 'do some magic!', {'Access-Control-Allow-Origin': '*'}
 
     except Exception as e:
         # catch any unexpected runtime error and return as 500 error 
@@ -240,7 +240,7 @@ def update_store(store_id, body=None):  # noqa: E501
     try:
         if connexion.request.is_json:
             body = Store.from_dict(connexion.request.get_json())  # noqa: E501
-        return 'do some magic!'
+        return 'do some magic!', {'Access-Control-Allow-Origin': '*'}
 
     except Exception as e:
         # catch any unexpected runtime error and return as 500 error 

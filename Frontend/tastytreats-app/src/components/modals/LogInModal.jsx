@@ -4,9 +4,9 @@ import { StoreContext } from '../../utils/context';
 import { StandardModal, ModalBody, ModalTitle } from '../styles/modals';
 import { FlexBox } from '../styles/layouts';
 import { Button, TextField, Typography, Grid } from '@mui/material';
-import CustomerAPI from "../../utils/CustomerAPIHelper";
+import CustomersAPI from "../../utils/CustomersAPIHelper";
 
-const custAPI = new CustomerAPI();
+const custAPI = new CustomersAPI();
 
 const LogInModal = () => {
   const navigate = useNavigate();
@@ -86,18 +86,13 @@ const LogInModal = () => {
           'password': password
         }
 
-
         const loginResults = await custAPI.login(param)
-        //const loginResults = await CustomerAPI.pp()
         console.log(loginResults)
         console.log(loginResults.data)
         const customer = loginResults.data[0];
         setCustomer(loginResults.data)
         setLoggedIn(true)
         handleClose()
-        
-
-
         
       }
       catch(error) {
