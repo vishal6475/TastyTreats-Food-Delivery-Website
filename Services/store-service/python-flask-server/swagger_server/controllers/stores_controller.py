@@ -87,8 +87,6 @@ def get_store_by_id(store_id):  # noqa: E501
             con.close()
             return error, 404, {'Access-Control-Allow-Origin': '*'}
 
-        cur.execute('SELECT * FROM stores where id = ' + str(store_id))
-        record = cur.fetchone()
         store = dict()
         store['id'] = int(record[0])
         store['name'] = str(record[1])

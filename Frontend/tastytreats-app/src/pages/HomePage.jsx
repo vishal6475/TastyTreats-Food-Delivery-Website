@@ -18,7 +18,6 @@ const HomePage = () => {
 
   const fetchAllStores = async (event) => { 
     const allStoresRes = await storeAPI.getAllStores()
-    console.log(allStoresRes)
     console.log(allStoresRes.data)
     setStoresList(allStoresRes.data)
   }

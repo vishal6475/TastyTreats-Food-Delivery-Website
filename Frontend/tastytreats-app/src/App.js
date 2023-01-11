@@ -5,6 +5,8 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import TastyTreatsAppBar from './components/layout/AppBar';
 import FirstPage from './pages/FirstPage';
 import HomePage from './pages/HomePage';
+import AccountPage from './pages/AccountPage';
+import StoreMenuPage from './pages/StoreMenuPage';
 import LogInModal from './components/modals/LogInModal';
 //import RegisterPage from './pages/RegisterPage';
 import UnauthorizedPage from './pages/UnauthorizedPage';
@@ -42,6 +44,8 @@ function App() {
             <Routes>
               <Route path='/' element={<FirstPage/>}/>
               <Route path='/home' element={<HomePage/>}/>
+              <Route exact path='/myaccount' element={<AccountPage/>}/>
+              <Route path='/store/:s_id' element={<StoreMenuPage/>}/>
               <Route exact path='/unauthorized' element={<UnauthorizedPage/>}/>
             </Routes>
           </div>

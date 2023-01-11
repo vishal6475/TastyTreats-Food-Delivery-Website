@@ -26,5 +26,9 @@ export default class StoresAPI {
     return this.init().get("/stores");
   };
 
+  getStoreById = (store_id) => {
+    return this.init().get(`/stores/${store_id}`);
+  };
+
 
 }

@@ -39,12 +39,17 @@ const TastyTreatsAppBar = () => {
     navigate('/'); 
   }
 
+  const toHomePage = () => {    
+    address.length > 0 ? navigate('/home') : navigate('/');
+  }
+
   return (
     <AppBar id='appbar' position="sticky" sx={{ backgroundColor: 'tastytreats.mediumBlue', minHeight: '7vh', pl:0 }}>
 
       <FlexBox justify='space-between' sx={{ mt:'auto', mb:'auto'}}>
         <FlexBox>
-          <AppTitle variant="h4"  sx={{ mt:'auto', mb:'auto'}}
+          <AppTitle variant="h4"  sx={{ mt:'auto', mb:'auto', ml:'20px', p:'0', cursor: 'pointer'}}
+          onClick={toHomePage}
           >
             TastyTreats
           </AppTitle>

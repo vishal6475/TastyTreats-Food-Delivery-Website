@@ -1,5 +1,5 @@
 import { useState, useContext } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { StoreContext } from '../../utils/context';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import LogoutIcon from '@mui/icons-material/Logout';
@@ -25,6 +25,8 @@ const CustomerMenu = () => {
   const [open, setOpen] = context.logInModal;
   const [anchor, setAnchor] = useState(null);
 
+  const navigate = useNavigate();
+
   const handleOpenMenu = (event) => {
     setAnchor(event.currentTarget);
   };
@@ -35,7 +37,7 @@ const CustomerMenu = () => {
 
   const toAccountPage = () => {
     handleCloseMenu();
-
+    navigate('/myaccount')
   }
 
   const handleLogout = () => {
