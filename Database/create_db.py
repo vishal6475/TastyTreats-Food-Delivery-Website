@@ -156,7 +156,7 @@ cur.execute("INSERT INTO stores values(default, 'Pizza Hut - Belfield', '26A Bur
             );")
 
 cur.execute("INSERT INTO stores values(default, 'Guzman y Gomez - Auburn', 'shop a24/100 Parramatta Road, Auburn NSW 2144, Australia', '', \
-            '', '', '', 'Mexican,Fast Food', '11:00', '23:00', 'Y', 5.5, 20, ''\
+            '', '', '', 'Mexican,Fast Food', '11:00', '23:00', 'Y', 5.5, 0, ''\
             );")
 
 cur.execute("INSERT INTO stores values(default, 'McDonald''s - Burwood Westfield', '100 Burwood Road, Burwood NSW 2134, Australia', '', \
@@ -168,7 +168,7 @@ cur.execute("INSERT INTO stores values(default, 'Thousand Spices', '23 The Cresc
             );")
     
 cur.execute("INSERT INTO stores values(default, 'Treat Talk Pizza and Kebab', 'shop 1/41 The Boulevarde, Strathfield NSW 2135, Australia', '', \
-            '', '', '', 'Turkish,Kebab', '11:00', '23:00', 'Y', 5.5, 20, ''\
+            '', '', '', 'Turkish,Kebab', '11:00', '23:00', 'Y', 5.5, 0, ''\
             );")
     
 cur.execute("INSERT INTO stores values(default, 'Oporto - Strathfield Plaza', '11 The Boulevarde, Strathfield NSW 2135, Australia', '', \
