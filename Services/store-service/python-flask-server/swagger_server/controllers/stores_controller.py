@@ -35,7 +35,26 @@ def create_store(body=None):  # noqa: E501
     try:
         if connexion.request.is_json:
             body = Store.from_dict(connexion.request.get_json())  # noqa: E501
-        return 'do some magic!'
+        
+        if (body.name == None or body.addr_1 == None or body.open == None or body.close == None):
+            error = InvalidInputError(code=400, type="InvalidInputError", 
+                    message="The following mandatory fields were not provided: name or address or open or closing time")
+            return error, 400, {'Access-Control-Allow-Origin': '*'}
+
+
+        con = psycopg2.connect(database= database, user=user, password=db_password, host=host, port=port)
+        con.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
+        cur = con.cursor()
+
+
+        insert_string = "INSERT INTO stores VALUES (default, %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) RETURNING id;"
+        cur.execute(insert_string, (body.name, body.addr_1, body.addr_2, body.city, body.state, body.pincode, \
+            body.types, body.open, body.close, body.delivery, body.delivery_fee, body.min_order, body.photo))        
+        body.id = cur.fetchone()[0]
+
+        cur.close()
+        con.close()            
+        return body, 201, {'Access-Control-Allow-Origin': '*'}
 
     except Exception as e:
         # catch any unexpected runtime error and return as 500 error 
@@ -55,7 +74,44 @@ def get_store_by_id(store_id):  # noqa: E501
     """
 
     try:
-        return 'do some magic!'
+        con = psycopg2.connect(database= database, user=user, password=db_password, host=host, port=port)
+        con.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
+        cur = con.cursor()
+
+        cur.execute('SELECT * FROM stores where id = ' + str(store_id))
+        record = cur.fetchone()
+        if record == None:
+            error = StoreNotFoundError(code=404, type="StoreNotFoundError", 
+                    message="The following Store ID does not exist: " + str(store_id))
+            cur.close()
+            con.close()
+            return error, 404, {'Access-Control-Allow-Origin': '*'}
+
+        cur.execute('SELECT * FROM stores where id = ' + str(store_id))
+        record = cur.fetchone()
+        store = dict()
+        store['id'] = int(record[0])
+        store['name'] = int(record[1])
+        store['addr_1'] = str(record[2])
+        store['addr_2'] = str(record[3])
+        store['city'] = str(record[4])
+        store['state'] = str(record[5])
+        store['pincode'] = str(record[6])
+        store['types'] = str(record[7]).split(',')
+        store['open'] = str(record[8])
+        store['close'] = str(record[9])
+        store['delivery'] = str(record[10])
+        store['delivery_fee'] = str(record[11])
+        store['min_order'] = str(record[12])
+        store['photo'] = str(record[13])
+
+        for item in store.keys():
+            if store[item] == "None":
+                store[item] = ""  
+
+        cur.close()
+        con.close()
+        return store, 200, {'Access-Control-Allow-Origin': '*'}
 
     except Exception as e:
         # catch any unexpected runtime error and return as 500 error 
@@ -73,7 +129,40 @@ def get_stores():  # noqa: E501
     """
 
     try:
-        return 'do some magic!'
+        con = psycopg2.connect(database= database, user=user, password=db_password, host=host, port=port)
+        con.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
+        cur = con.cursor()
+
+        cur.execute('SELECT * FROM stores')
+        records = cur.fetchall()
+        stores_list = []
+        for record in records:
+            store = dict()
+            store['id'] = int(record[0])
+            store['name'] = int(record[1])
+            store['addr_1'] = str(record[2])
+            store['addr_2'] = str(record[3])
+            store['city'] = str(record[4])
+            store['state'] = str(record[5])
+            store['pincode'] = str(record[6])
+            store['types'] = str(record[7]).split(',')
+            store['open'] = str(record[8])
+            store['close'] = str(record[9])
+            store['delivery'] = str(record[10])
+            store['delivery_fee'] = str(record[11])
+            store['min_order'] = str(record[12])
+            store['photo'] = str(record[13])
+
+            for item in store.keys():
+                if store[item] == "None":
+                    store[item] = ""  
+
+            stores_list.append(store)
+
+        cur.close()
+        con.close()
+        return stores_list, 200, {'Access-Control-Allow-Origin': '*'}
+
 
     except Exception as e:
         # catch any unexpected runtime error and return as 500 error 

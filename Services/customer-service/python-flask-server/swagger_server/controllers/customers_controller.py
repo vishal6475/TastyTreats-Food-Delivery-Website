@@ -64,12 +64,11 @@ def create_customer(body=None):  # noqa: E501
         cur.execute(insert_string, (body.first_name, body.last_name, body.email, \
             body.password, body.mobile_no, body.location, body.profile_pic, \
             body.token, body.points))        
-        body.account_id = cur.fetchone()[0]
+        body.id = cur.fetchone()[0]
 
         cur.close()
         con.close()            
         return body, 201, {'Access-Control-Allow-Origin': '*'}
-
 
 
     except Exception as e:
