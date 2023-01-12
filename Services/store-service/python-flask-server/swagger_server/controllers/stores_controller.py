@@ -102,6 +102,33 @@ def get_store_by_id(store_id):  # noqa: E501
         store['delivery_fee'] = float(record[11])
         store['min_order'] = float(record[12])
         store['photo'] = str(record[13])
+        store['categories'] = []
+
+        cur.execute('SELECT * FROM categories where store_id = ' + str(store_id))
+        records = cur.fetchall()
+        for record in records:
+            category = dict()
+            category['id'] = int(record[0])
+            category['category'] = str(record[2])
+            category['display_sequence'] = str(record[3])
+            category['items'] = []
+
+            cur.execute('SELECT * FROM items where category_id = ' + str(category['id']))
+            item_records = cur.fetchall()
+            for item_rec in item_records:
+                if int(item_rec[6]) == 1:
+                    item = dict()
+                    item['id'] = int(item_rec[0])
+                    item['name'] = str(item_rec[2])
+                    item['description'] = str(item_rec[3])
+                    item['price'] = float(item_rec[4])
+                    item['veg'] = int(item_rec[5])
+                    item['status'] = int(item_rec[6])
+                    item['photo'] = str(item_rec[7])
+                    
+                    category['items'].append(item)
+
+            store['categories'].append(category)
 
         for item in store.keys():
             if store[item] == "None":

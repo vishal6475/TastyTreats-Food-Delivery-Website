@@ -9,6 +9,7 @@ user = "postgres"
 password = "postgrespw"
 database = 'tastytreats'
 img_stores_dir = './images/stores'
+img_items_1 = './images/items/1'
 
 
 con = psycopg2.connect(user=user, password=password, host=host, port=port)
@@ -179,8 +180,61 @@ cur.execute("INSERT INTO stores values(default, 'Subway - Strathfield South', '2
             '', '', '', 'Sandwiches', '11:00', '23:00', 'Y', 5.5, 20, ''\
             );")
     
+    
+cur.execute("INSERT INTO categories values(default, 1, 'New Yorker Pizzas' , 1 );")
+cur.execute("INSERT INTO categories values(default, 1, 'Premium Pizzas' , 1 );")
+cur.execute("INSERT INTO categories values(default, 1, 'Traditional Pizzas' , 1 );")
+"""
+cur.execute("INSERT INTO categories values(default, 1, 'Value Max Range' , 1 );")
+cur.execute("INSERT INTO categories values(default, 1, 'Value Range' , 1 );")
+cur.execute("INSERT INTO categories values(default, 1, 'Savoury Sides' , 1 );")
+cur.execute("INSERT INTO categories values(default, 1, 'Chicken Wings' , 1 );")
+cur.execute("INSERT INTO categories values(default, 1, 'Desserts' , 1 );")
+cur.execute("INSERT INTO categories values(default, 1, 'Icy Cold Drinks' , 1 );")
+cur.execute("INSERT INTO categories values(default, 1, 'Dipping Sauces' , 1 );")
+"""
 
-# Update the event table with base64 images
+""" Items template
+cur.execute("INSERT INTO items values(default, 3, '',\
+            '',\
+            24.99, 0, 1, '' );")
+"""
+cur.execute("INSERT INTO items values(default, 1, 'Big Cheese',\
+            'The cheesiest, sauciest, and most authentic New York-style pizza, cut into 8 super-sized slices. Indulge in soft, foldable dough, rich pizza sauce & more stretchy mozzarella than ever before.',\
+            24.99, 1, 1, '' );")
+cur.execute("INSERT INTO items values(default, 1, 'Big Hawaiian',\
+            'The cheesiest, sauciest, and most authentic New York-style pizza, cut into 8 super-sized slices. Indulge in soft, foldable dough & rich pizza sauce with smokey leg ham and juicy pineapple pieces.',\
+            24.99, 1, 1, '' );")
+cur.execute("INSERT INTO items values(default, 1, 'Big Pepperoni',\
+            'The cheesiest, sauciest, and most authentic New York-style pizza, cut into 8 super-sized slices. Indulge in soft, foldable dough & rich pizza sauce, loaded with your favourite crispy Domino’s pepperoni.',\
+            24.99, 0, 1, '' );")
+cur.execute("INSERT INTO items values(default, 2, 'Mega Meatlovers',\
+            'Mega loaded, mega tasty. Featuring seasoned chicken, smoked leg ham, crumbled beef, pepperoni slices, Italian sausage & crispy rasher bacon, brought together with a Hickory BBQ sauce',\
+            24.10, 0, 1, '' );")
+cur.execute("INSERT INTO items values(default, 2, 'Loaded Supreme',\
+            'Ground beef, crispy rasher bacon, mushroom, pepperoni, Italian sausage, baby spinach, smoked leg ham & pineapple, topped with oregano, tomato capsicum sauce & spring onions',\
+            24.50, 0, 1, '' );")
+cur.execute("INSERT INTO items values(default, 2, 'Peri Peri Chicken',\
+            'A flavoursome pairing of seasoned chicken pieces, Italian cherry tomatoes, sliced red onion & baby spinach, topped with our addictive peri peri sauce',\
+            23.30, 0, 1, '' );")
+cur.execute("INSERT INTO items values(default, 2, 'Garlic Prawn',\
+            'Juicy prawns, paired with baby spinach & diced tomato on a crème fraiche & zesty garlic sauce base, topped with oregano',\
+            24.50, 0, 1, '' );")
+cur.execute("INSERT INTO items values(default, 3, 'Spicy Peppy Paneer',\
+            'Diced paneer cheese, cherry tomatoes, sliced red onion, capsicum & spicy jalapenos on a tikka sauce base, drizzled with peri peri sauce',\
+            21.1, 1, 1, '' );")
+cur.execute("INSERT INTO items values(default, 3, 'BBQ Meatlovers',\
+            'Crispy rasher bacon, pepperoni pieces, seasoned ground beef, smokey leg ham & Italian sausage, all on a BBQ sauce base',\
+            21.40, 0, 1, '' );")
+cur.execute("INSERT INTO items values(default, 3, 'Vegorama',\
+            'Mushrooms, diced tomato, capsicum, baby spinach & slices of red onion, topped with crumbled feta cheese, kalamata olives & oregano',\
+            21.50, 1, 1, '' );")
+cur.execute("INSERT INTO items values(default, 3, 'Fire Breather ',\
+            'Domino''s pepperoni, smoked leg ham, seasoned ground beef, fiery jalapenos, tomato & sliced red onion with a spicy hit of chilli flakes',\
+            21.40, 0, 1, '' );")
+    
+
+# Update the stores table with base64 images
 for filename in os.listdir(img_stores_dir):
     f = os.path.join(img_stores_dir, filename)
 
@@ -188,6 +242,17 @@ for filename in os.listdir(img_stores_dir):
         encoded_string = 'data:image/jpeg;base64,' + \
             base64.b64encode(image_file.read()).decode()
         sql = "UPDATE stores SET photo = '{}' where id = {}".format(
+            encoded_string, int(filename.split('.')[0]))
+        cur.execute(sql)
+        
+# Update the items table with base64 images
+for filename in os.listdir(img_items_1):
+    f = os.path.join(img_items_1, filename)
+
+    with open(f, "rb") as image_file:
+        encoded_string = 'data:image/jpeg;base64,' + \
+            base64.b64encode(image_file.read()).decode()
+        sql = "UPDATE items SET photo = '{}' where id = {}".format(
             encoded_string, int(filename.split('.')[0]))
         cur.execute(sql)
         
@@ -233,7 +298,7 @@ for row in records:
         print(row[j], end=" ")
     print()    
 
-cur.execute('SELECT * FROM items')
+cur.execute('SELECT id, category_id, name, description, price, veg, status FROM items')
 records = cur.fetchall()
 print("\n Menu Items:")
 for row in records:

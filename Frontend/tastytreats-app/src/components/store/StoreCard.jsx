@@ -2,8 +2,8 @@ import { useNavigate } from 'react-router-dom';
 import { ScrollContainer } from '../styles/layouts';
 import { Grid, Card, CardMedia, CardContent, Typography, styled } from '@mui/material'
 
-export const StyledEventCard = styled(Card)`
-  height: 230px;
+export const StyledCard = styled(Card)`
+  height: 237px;
   border: none;
   cursor: pointer;
   &:hover {
@@ -38,8 +38,8 @@ const StoreCard = ({ store }) => {
   const navigate = useNavigate()
 
   return (
-    <Grid item xs={12} sm={4}>
-      <StyledEventCard onClick={() => navigate(`/store/${store.id}`)}>
+    <Grid item xs={12} sm={6} md={4}>
+      <StyledCard onClick={() => navigate(`/store/${store.id}`)}>
         <CardMedia
           component="img"
           height="140"
@@ -58,7 +58,7 @@ const StoreCard = ({ store }) => {
             {store.min_order !== 0 && ' Min Order: $'+store.min_order}
           </Typography>
         </CardContent>
-      </StyledEventCard>
+      </StyledCard>
     </Grid>
   )
 }
