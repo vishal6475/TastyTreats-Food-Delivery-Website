@@ -3,6 +3,7 @@ import { useParams, useLocation } from 'react-router-dom';
 import { StoreContext } from '../utils/context';
 import { Grid, Card, CardMedia, CardContent, Typography, styled } from '@mui/material'
 import StoresAPI from "../utils/StoresAPIHelper";
+import MenuItem from '../components/store/MenuItem'
 import Box from '@mui/material/Box';
 import { FlexBox, Container } from '../components/styles/layouts';
 import Divider from '@mui/material/Divider';
@@ -14,13 +15,13 @@ export const StyledCard = styled(Card)`
   width: 60vw;
   margin: 20px auto 0 auto;
   border: none;
-`;
+`
 
 export const StyledCardContent = styled(CardContent)`
   display: flex;
   flex-direction: column;
   align-items: center;
-`;
+`
 
 const CardTitle = styled('h1')`
   white-space: nowrap;
@@ -36,6 +37,12 @@ export const CardSummary = styled(Typography)`
   overflow: hidden;
   text-overflow: ellipsis;
   `
+
+export const MenuBox = styled(Box)`
+width: 60vw;
+margin: 20px auto 20px auto;
+border: none;
+`;
 
 
 const StoreMenuPage = () => {
@@ -54,14 +61,14 @@ const StoreMenuPage = () => {
     const storeMenuRes = await storeAPI.getStoreById(s_id)
     console.log(storeMenuRes.data)
     setStore(storeMenuRes.data)
-    setStoreTags(storeMenuRes.data.types.join(', '))
+    setStoreTags(storeMenuRes.data.types.join(' - '))
   }
 
 
   return (
-    <FlexBox >
+    <FlexBox sx={{ minHeight:'95vh' }} >
 
-      <FlexBox style={{ width:'70vw' }}>
+      <FlexBox direction='column' style={{ width:'70vw', ml:'auto', mr:'auto' }}>
         <StyledCard >
           <CardMedia
             component="img"
@@ -94,6 +101,14 @@ const StoreMenuPage = () => {
             </Typography>
           </StyledCardContent>
         </StyledCard>
+
+        <MenuBox>
+          {store.categories?.map((category, idx) => 
+              <MenuItem 
+                key={idx} menu={category} 
+              />
+            )}
+        </MenuBox>
       </FlexBox>
 
       <Divider orientation="vertical" flexItem />
