@@ -1,4 +1,5 @@
 import { FlexBox } from './layouts';
+import CloseIcon from '@mui/icons-material/Close';
 import { 
   Box,
   Dialog,
@@ -7,7 +8,6 @@ import {
   Typography,
   styled
 } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
 
 export const StandardModal = styled(Dialog)`
   & .MuiDialog-paper {
@@ -45,11 +45,46 @@ export const ModalBodyLarge = styled(Box)`
   padding-left: 1rem;
   padding-right: 1rem;
   padding-bottom: 1rem;
-  overflow: hidden;
-  
+  overflow: hidden; 
 `
 
-export const ModalTitle = ( {title, close} ) => {
+export const ItemTitleBox = styled(FlexBox)`
+  width: 90%;
+  align-items: center;
+  justify-content: center;
+`
+export const CloseIconBox = styled(FlexBox)`
+  min-width: 4%;
+`
+
+
+export const ModalItemTitle = ( {title, close} ) => {
+  return (
+    <>
+    <FlexBox >
+
+      <CloseIconBox></CloseIconBox>
+
+      <ItemTitleBox>
+        <Typography variant='h5'>
+          {title}
+        </Typography>
+      </ItemTitleBox>
+
+      <CloseIconBox>
+        <IconButton aria-label="close" onClick={close}>
+          <CloseIcon />
+        </IconButton>
+      </CloseIconBox>
+
+    </FlexBox>
+
+    <Divider variant="middle" sx={{mb:2}} />
+    </>
+  )
+}
+
+export const ModalTitle = ( {title, close} ) => { 
   return (
     <>
     <StyledTitle justify='space-between'>

@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import { StoreContext } from '../../utils/context';
 import { FlexBox } from '../styles/layouts';
-import { SideBar, SideBarTitle, SideBarItem } from '../styles/sidebar/sidebar';
+import { SideBar, SideBarTitle, SideBarItem } from '../styles/sidebar';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import LocalActivityIcon from '@mui/icons-material/LocalActivity';
 import { Button, Divider, List} from '@mui/material';

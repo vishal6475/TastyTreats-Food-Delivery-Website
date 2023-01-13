@@ -51,7 +51,8 @@ const StoreMenuPage = () => {
   const [customer] = context.customer;
   const [store, setStore] = useState([]);
   const [storeTags, setStoreTags] = useState('');
-  const [cartItems, setCartItems] = useState([]);
+  const [cartItems, setCartItems] = context.cartItems;
+  const [storeID, setStoreID] = context.storeID;
 
   useEffect(() => {
     fetchStoreMenu()
@@ -60,6 +61,7 @@ const StoreMenuPage = () => {
   const fetchStoreMenu = async (event) => { 
     const storeMenuRes = await storeAPI.getStoreById(s_id)
     console.log(storeMenuRes.data)
+    setStoreID(s_id)
     setStore(storeMenuRes.data)
     setStoreTags(storeMenuRes.data.types.join(' - '))
   }
@@ -114,7 +116,7 @@ const StoreMenuPage = () => {
       <Divider orientation="vertical" flexItem />
 
       <FlexBox direction='column' sx={{ width:'30vw',  alignItems:'center' }}>
-        {cartItems.length === 0 &&
+        {cartItems === null &&
         <FlexBox direction='column' sx={{ alignItems:'center' }}>    
           <ShoppingCartOutlinedIcon sx={{width:'200px', height:'200px', mt: 5}} />
           <Typography variant="h5" sx={{ mt: 5}} >
@@ -123,6 +125,24 @@ const StoreMenuPage = () => {
           <Typography variant="h5" sx={{ mt: 1}} >
             Add some items.
           </Typography>
+        </FlexBox>
+        }
+        {cartItems !== null &&
+        <FlexBox direction='column' sx={{ alignItems:'center' }}>    
+          {cartItems.items?.map((item, idx) => 
+          <FlexBox key={idx}>
+                <Typography variant="h5" sx={{ mt: 5}} >
+                {item.name}
+              </Typography>
+              <Typography variant="h5" sx={{ mt: 1}} >
+                {item.quantity}
+              </Typography>
+              <Typography variant="h5" sx={{ mt: 1}} >
+                {item.price}
+              </Typography>
+              </FlexBox>
+          )}
+          
         </FlexBox>
         }
       </FlexBox>

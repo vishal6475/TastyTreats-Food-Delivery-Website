@@ -1,4 +1,4 @@
-import { StandardModal, ModalBody, ModalTitle } from '../../styles/modal/modal';
+import { StandardModal, ModalBody, ModalTitle } from '../../styles/modals';
 import { FlexBox } from '../../styles/layouts';
 import { Button } from '@mui/material';
 

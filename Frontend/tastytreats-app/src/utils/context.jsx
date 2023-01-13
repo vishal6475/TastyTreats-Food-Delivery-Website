@@ -10,9 +10,11 @@ const ContextProvider = ({ children }) => {
   const [customer, setCustomer] = useState(false);
   const [address, setAddress] = useState("");
   const [card, setCard] = useState([]);
+  const [storeID, setStoreID] = useState(0);
   const [logInModal, setLogInModal] = useState(false);
   const [openAddModal, setOpenAddModal] = useState(false);
   const [itemToAdd, setItemToAdd] = useState(null);
+  const [cartItems, setCartItems] = useState(null);
 
   const states = {
     redirect: [redirect, setRedirect],
@@ -23,7 +25,9 @@ const ContextProvider = ({ children }) => {
     logInModal: [logInModal, setLogInModal],
     loginOrSignup: [loginOrSignup, setLoginOrSignup],
     addItemModal: [openAddModal, setOpenAddModal],
-    itemToAdd: [itemToAdd, setItemToAdd]
+    itemToAdd: [itemToAdd, setItemToAdd],
+    cartItems: [cartItems, setCartItems],
+    storeID: [storeID, setStoreID]
   };
 
   return (
