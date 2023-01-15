@@ -181,12 +181,14 @@ const LogInModal = () => {
           <FlexBox onClick={loadLogin}
           sx={{ pl:'1rem', pr: '1rem', cursor:'pointer', 
             backgroundColor: loginOrSignup? 'tastytreats.lightGrey': 'tastytreats.mediumBlue', 
+            borderTopLeftRadius: '7px', borderBottomLeftRadius: '7px', border: 'transparent',
             color: loginOrSignup? 'black' : 'white'}}>
             Sign in
           </FlexBox>
           <FlexBox onClick={loadSignup}
           sx={{ pl:'1rem', pr: '1rem', cursor:'pointer', 
             backgroundColor: loginOrSignup? 'tastytreats.mediumBlue' : 'tastytreats.lightGrey', 
+            borderTopRightRadius: '7px', borderBottomRightRadius: '7px', border: 'transparent',
             color:loginOrSignup? 'white' : 'black'}}>
             Sign up
           </FlexBox>
