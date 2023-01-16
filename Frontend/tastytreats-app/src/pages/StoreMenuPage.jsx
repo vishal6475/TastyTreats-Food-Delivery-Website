@@ -8,6 +8,8 @@ import Box from '@mui/material/Box';
 import { FlexBox, Container } from '../components/styles/layouts';
 import Divider from '@mui/material/Divider';
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
+import AddSharpIcon from '@mui/icons-material/AddSharp';
+import RemoveSharpIcon from '@mui/icons-material/RemoveSharp';
 
 const storeAPI = new StoresAPI();
 
@@ -131,7 +133,7 @@ const StoreMenuPage = () => {
         <FlexBox direction='column' sx={{ alignItems:'center' }}>    
           {cartItems.items?.map((item, idx) => 
           <FlexBox key={idx}>
-                <Typography variant="h5" sx={{ mt: 5}} >
+              <Typography variant="h5" sx={{ mt: 5}} >
                 {item.name}
               </Typography>
               <Typography variant="h5" sx={{ mt: 1}} >

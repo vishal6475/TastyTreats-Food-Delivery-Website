@@ -14,6 +14,8 @@ const ContextProvider = ({ children }) => {
   const [logInModal, setLogInModal] = useState(false);
   const [openAddModal, setOpenAddModal] = useState(false);
   const [itemToAdd, setItemToAdd] = useState(null);
+  const [itemToAddQuantity, setItemToAddQuantity] = useState(1);
+  const [itemOrgQuantity, setItemOrgQuantity] = useState(1);
   const [cartItems, setCartItems] = useState(null);
 
   const states = {
@@ -26,6 +28,8 @@ const ContextProvider = ({ children }) => {
     loginOrSignup: [loginOrSignup, setLoginOrSignup],
     addItemModal: [openAddModal, setOpenAddModal],
     itemToAdd: [itemToAdd, setItemToAdd],
+    itemToAddQuantity: [itemToAddQuantity, setItemToAddQuantity],
+    itemOrgQuantity: [itemOrgQuantity, setItemOrgQuantity],
     cartItems: [cartItems, setCartItems],
     storeID: [storeID, setStoreID]
   };

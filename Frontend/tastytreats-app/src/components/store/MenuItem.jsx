@@ -46,10 +46,28 @@ const MenuItem = ({ menu }) => {
 
   const [openAddModal, setOpenAddModal] = context.addItemModal;
   const [itemToAdd, setItemToAdd] = context.itemToAdd;
+  const [cartItems, setCartItems] = context.cartItems;
+  const [itemOrgQuantity, setItemOrgQuantity] = context.itemOrgQuantity;
+  const [itemToAddQuantity, setItemToAddQuantity] = context.itemToAddQuantity;
 
   const openAddModalBox = (item) => {
     setOpenAddModal(true)
     setItemToAdd(item)
+
+    let found = 0
+    if (cartItems !== null) 
+      cartItems.items.forEach((cartItem) =>{
+        if (item.id === cartItem.id) {
+          console.log('This->', cartItem)
+          found = 1
+          setItemOrgQuantity(cartItem.quantity)
+          setItemToAddQuantity(cartItem.quantity)
+        }
+      })
+    if (found === 0) {
+      setItemOrgQuantity(1)
+      setItemToAddQuantity(1)
+    }
   }
 
   return (
