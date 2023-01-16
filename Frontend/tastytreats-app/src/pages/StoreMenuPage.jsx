@@ -96,7 +96,7 @@ const StoreMenuPage = () => {
   return (
     <FlexBox sx={{ minHeight:'95vh' }} >
 
-      <FlexBox direction='column' style={{ width:'70vw', ml:'auto', mr:'auto' }}>
+      <FlexBox direction='column' style={{ width:'76vw', ml:'auto', mr:'auto' }}>
         <StyledCard >
           <CardMedia
             component="img"
@@ -142,7 +142,7 @@ const StoreMenuPage = () => {
       <Divider orientation="vertical" flexItem />
 
       {cartItems === null &&
-      <FlexBox direction='column' sx={{ width:'30vw', alignItems:'center' }}>    
+      <FlexBox direction='column' sx={{ width:'24vw', alignItems:'center' }}>    
         <ShoppingCartOutlinedIcon sx={{width:'200px', height:'200px', mt: 5}} />
         <Typography variant="h5" sx={{ mt: 5}} >
           Your cart is empty. 
@@ -154,7 +154,7 @@ const StoreMenuPage = () => {
       }
 
       {cartItems !== null &&
-      <FlexBox direction='column' sx={{ width:'30vw', alignItems:'left', p:'20px 30px 20px 20px' }}>    
+      <FlexBox direction='column' sx={{ width:'24vw', alignItems:'left', p:'20px 30px 20px 20px' }}>    
         <Button variant="contained" onClick={GoToCheckout} sx={{ mb:'1rem' }} >Checkout</Button>
         {cartItems.items?.map((item, idx) => 
         <FlexBox key={idx} direction='column' >
