@@ -1,5 +1,4 @@
 #!/bin/bash
-exec > logs.txt 2>&1
 
 echo -e "\n1. Stopping Docker containers..."
 docker kill $(docker ps -q)
