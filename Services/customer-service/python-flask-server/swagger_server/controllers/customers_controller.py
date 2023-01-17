@@ -1,6 +1,6 @@
 import connexion
 import six
-import secrets
+#import secrets
 import psycopg2
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT 
 
@@ -17,7 +17,8 @@ from swagger_server.models.unexpected_service_error import UnexpectedServiceErro
 from swagger_server import util
 
 port = 5432
-host = "localhost"
+# host = "localhost" # when running the service directly from command prompt
+host='tastytreats-db' # when running the service through Docker
 user = "postgres"
 db_password = "postgrespw"
 database = 'tastytreats'
@@ -58,7 +59,7 @@ def create_customer(body=None):  # noqa: E501
             return error, 400, {'Access-Control-Allow-Origin': '*'}
 
         body.points = str(0.0) #New users will have 0 reward points
-        body.token = secrets.token_hex(8)
+        body.token = '1w2e3r4t5y6u7i8o'
 
         insert_string = "INSERT INTO customers VALUES (default, %s,%s,%s,%s,%s,%s,%s,%s,%s) RETURNING id;"
         cur.execute(insert_string, (body.first_name, body.last_name, body.email, \
@@ -267,7 +268,7 @@ def login_customer(email, password):  # noqa: E501
                 con.close()
                 return error, 400, {'Access-Control-Allow-Origin': '*'}
 
-            new_token = secrets.token_hex(8)
+            new_token = '1w2e3r4t5y6u7i8o'
 
             customer = dict()
             customer['id'] = int(record[0])
