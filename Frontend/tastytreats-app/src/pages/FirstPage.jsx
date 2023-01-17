@@ -5,6 +5,7 @@ import {
   useJsApiLoader,
   Autocomplete,
 } from '@react-google-maps/api'
+import { geocodeByAddress } from 'react-places-autocomplete';
 import { useRef } from 'react'
 import { useNavigate } from 'react-router';
 
@@ -42,10 +43,13 @@ const FirstPage = () => {
     return <div></div>;
   } 
 
-  const gotDeliveryAddress = () => {
+  const gotDeliveryAddress = async () => {
     console.log(document.getElementById('delivery-address').value)
     setAddress(document.getElementById('delivery-address').value + ' Change')
     navigate('/home'); 
+
+    const results = await geocodeByAddress(document.getElementById('delivery-address').value);
+    console.log(results)
   }
 
 

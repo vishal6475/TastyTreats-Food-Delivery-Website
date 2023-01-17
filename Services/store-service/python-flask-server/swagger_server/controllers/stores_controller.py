@@ -16,8 +16,10 @@ from swagger_server.models.unexpected_service_error import UnexpectedServiceErro
 from swagger_server import util
 
 port = 5432
-# host = "localhost" # when running the service directly from command prompt
-host='tastytreats-db' # when running the service through Docker
+
+host = "localhost" # when running the service directly from command prompt
+#host='tastytreats-db' # when running the service through Docker
+
 user = "postgres"
 db_password = "postgrespw"
 database = 'tastytreats'

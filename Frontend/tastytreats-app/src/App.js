@@ -10,6 +10,7 @@ import StoreMenuPage from './pages/StoreMenuPage';
 import LogInModal from './components/modals/LogInModal';
 //import RegisterPage from './pages/RegisterPage';
 import UnauthorizedPage from './pages/UnauthorizedPage';
+import CheckoutPage from './pages/CheckoutPage';
 import Footer from './components/layout/Footer';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import './App.css';
@@ -47,6 +48,7 @@ function App() {
               <Route exact path='/myaccount' element={<AccountPage/>}/>
               <Route path='/store/:s_id' element={<StoreMenuPage/>}/>
               <Route exact path='/unauthorized' element={<UnauthorizedPage/>}/>
+              <Route exact path='/checkout' element={<CheckoutPage/>}/>
             </Routes>
           </div>
           <LogInModal/>

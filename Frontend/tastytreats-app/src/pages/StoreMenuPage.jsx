@@ -1,5 +1,5 @@
 import { useContext, useState, useEffect } from 'react';
-import { useParams, useLocation } from 'react-router-dom';
+import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { StoreContext } from '../utils/context';
 import { Button, Grid, Card, CardMedia, CardContent, Typography, styled } from '@mui/material'
 import StoresAPI from "../utils/StoresAPIHelper";
@@ -51,12 +51,18 @@ border: none;
 const StoreMenuPage = () => {
   const { s_id } = useParams();
   const context = useContext(StoreContext);
+  const navigate = useNavigate()
+
   const [customer] = context.customer;
   const [store, setStore] = useState([]);
   const [storeTags, setStoreTags] = useState('');
   const [currentCart, setCurrentCart] = context.currentCart;
   const [cartItems, setCartItems] = context.cartItems;
   const [storeID, setStoreID] = context.storeID;
+  const [loggedIn, setLoggedIn] = context.login;
+  const [open, setOpen] = context.logInModal;
+  const [loginOrSignup, setLoginOrSignup] = context.loginOrSignup;
+  const [fromCheckout, setFromCheckout] = context.fromCheckout;
 
   useEffect(() => {
     fetchStoreMenu()
@@ -89,7 +95,12 @@ const StoreMenuPage = () => {
   }
 
   const GoToCheckout = () => {
-
+    if (!loggedIn) {
+      setOpen(true)
+      setFromCheckout(true)
+    } else {
+      navigate('/checkout'); 
+    }
   }
 
 
@@ -154,7 +165,8 @@ const StoreMenuPage = () => {
       }
 
       {cartItems !== null &&
-      <FlexBox direction='column' sx={{ width:'24vw', alignItems:'left', p:'20px 30px 20px 20px' }}>    
+      <FlexBox direction='column' sx={{ width:'24vw', alignItems:'left', p:'20px 30px 20px 20px', 
+        position:'sticky', position: '-webkit-sticky', top:'0' }}>    
         <Button variant="contained" onClick={GoToCheckout} sx={{ mb:'1rem' }} >Checkout</Button>
         {cartItems.items?.map((item, idx) => 
         <FlexBox key={idx} direction='column' >

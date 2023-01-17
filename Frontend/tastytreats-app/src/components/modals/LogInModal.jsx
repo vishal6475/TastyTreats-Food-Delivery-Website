@@ -17,6 +17,7 @@ const LogInModal = () => {
   const [logInFail, setLogInFail] = useState(null);
   const [loginOrSignup, setLoginOrSignup] = context.loginOrSignup;
   const [customer, setCustomer] = context.customer;
+  const [fromCheckout, setFromCheckout] = context.fromCheckout;
   
   const [formErrors, setFormErrors] = useState({
     error: false,
@@ -93,6 +94,7 @@ const LogInModal = () => {
         setCustomer(loginResults.data)
         setLoggedIn(true)
         handleClose()
+        if (fromCheckout) navigate('/checkout'); 
         
       }
       catch(error) {
@@ -163,6 +165,10 @@ const LogInModal = () => {
         "mobileNo": mobileNo
       }
       try {
+
+
+        
+        if (fromCheckout) navigate('/checkout'); 
         
       }
       catch(error) {

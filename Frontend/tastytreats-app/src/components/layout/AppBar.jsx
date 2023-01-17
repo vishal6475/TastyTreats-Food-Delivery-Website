@@ -29,10 +29,12 @@ const TastyTreatsAppBar = () => {
   const [loggedIn, setLoggedIn] = context.login;
   const [open, setOpen] = context.logInModal;
   const [loginOrSignup, setLoginOrSignup] = context.loginOrSignup;
+  const [fromCheckout, setFromCheckout] = context.fromCheckout;
 
   const openLoginModal = () => {
     setLoginOrSignup(false);
     setOpen(true);
+    setFromCheckout(false)
   }
 
   const toFirstPage = () => {    
@@ -44,7 +46,7 @@ const TastyTreatsAppBar = () => {
   }
 
   return (
-    <AppBar id='appbar' position="sticky" sx={{ backgroundColor: 'tastytreats.mediumBlue', minHeight: '7vh', pl:0 }}>
+    <AppBar id='appbar' position="static" sx={{ backgroundColor: 'tastytreats.mediumBlue', minHeight: '7vh', pl:0 }}>
 
       <FlexBox justify='space-between' sx={{ mt:'auto', mb:'auto'}}>
         <FlexBox>
@@ -54,8 +56,7 @@ const TastyTreatsAppBar = () => {
             TastyTreats
           </AppTitle>
           {address &&
-          <FlexBox sx={{ mt:'auto', mb:'auto', ml:'1rem', mr:'1rem', 
-            pl:'1.5rem', pr:'1.5rem', pt:'0.4rem', pb:'0.4rem',
+          <FlexBox sx={{ m:'auto 1rem auto 1rem', p:'0.4rem 1.5rem 0.4rem 1.5rem',
             backgroundColor: '#C8C8C8', color: 'black', maxWidth:'30vw',
             borderRadius: '30px', cursor: 'pointer', '&:hover': {backgroundColor: '#888888'} }}
             id='userAddress' onClick={toFirstPage} >       
