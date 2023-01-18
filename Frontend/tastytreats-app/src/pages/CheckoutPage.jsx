@@ -1,10 +1,14 @@
 import { useContext, useState, useEffect } from 'react';
 import { StoreContext } from '../utils/context';
-import { Grid, Typography, styled } from '@mui/material'
+import { Grid, Typography, styled, Button } from '@mui/material'
 import StoresAPI from "../utils/StoresAPIHelper";
 import StoreCard from '../components/store/StoreCard'
 import { FlexBox, Container } from '../components/styles/layouts';
 import Divider from '@mui/material/Divider';
+import Accordion from '@mui/material/Accordion';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 const storeAPI = new StoresAPI();
 
@@ -19,14 +23,58 @@ const CheckoutPage = () => {
     
   }, [])
 
+  const processPayment = () => {
+
+  }
+
 
   return (
     <FlexBox sx={{ minHeight:'94vh' }} >
 
-      CheckoutPage
+      <FlexBox direction='column' sx={{ width:'76vw', ml:'auto', mr:'auto' }}>
 
-      <FlexBox direction='column' style={{ width:'76vw', ml:'auto', mr:'auto' }}>
-        
+        <FlexBox sx={{ minWidth:'66vw', m:'1rem auto 1rem auto' }}>
+          <Accordion sx={{ width:'100%'}} >
+            <AccordionSummary
+              expandIcon={<ExpandMoreIcon />}
+              aria-controls="delivery-content"
+              id="delivery-header"
+              sx={{ backgroundColor:'grey' }}
+            >
+              <Typography>Delivery Details</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Typography>
+                Unit No.
+              </Typography>
+            </AccordionDetails>
+          </Accordion>
+        </FlexBox>  
+
+        <FlexBox sx={{ minWidth:'66vw', m:'1rem auto 1rem auto' }}>
+          <Accordion sx={{ width:'100%'}} >
+            <AccordionSummary
+              
+              aria-controls="payment-content"
+              id="payment-header"
+              sx={{ backgroundColor:'grey' }}
+            >
+            <Typography>Payment Details</Typography>
+              <div>hi</div>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Typography>
+                Card No.
+              </Typography>
+            </AccordionDetails>
+          </Accordion>
+        </FlexBox>  
+
+        <Button variant="contained" onClick={processPayment} 
+        sx={{ mb:'1rem', width:'26vw', m:'1rem auto 1rem auto' }} >
+          Place Order
+        </Button>
+
       </FlexBox>
 
       <Divider orientation="vertical" flexItem />
