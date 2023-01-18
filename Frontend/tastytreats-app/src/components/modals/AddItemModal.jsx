@@ -17,7 +17,6 @@ const AddItemModal = () => {
   const [openAddModal, setOpenAddModal] = context.addItemModal;
   const [itemToAdd, setItemToAdd] = context.itemToAdd
   const [cartItems, setCartItems] = context.cartItems;
-  const [currentCart, setCurrentCart] = context.currentCart;
   const [itemOrgQuantity, setItemOrgQuantity] = context.itemOrgQuantity;
   const [itemToAddQuantity, setItemToAddQuantity] = context.itemToAddQuantity;
   const [storeID, setStoreID] = context.storeID;
@@ -46,20 +45,14 @@ const AddItemModal = () => {
         if (itemToAdd.id === cartItems.items[i].id) {
           found = 1
           cartItems.items[i].quantity = itemToAddQuantity
-          currentCart[i] = itemToAddQuantity
-          console.log(currentCart)
         }
       }
 
       if (found === 0) {
         cartItems.items.push(item)
-        currentCart.push(itemToAddQuantity)
-        console.log(currentCart)
       }
     } else {
       setCartItems(storeAdd)
-      currentCart.push(itemToAddQuantity)
-      console.log(currentCart)
     }
     
     setOpenAddModal(false);

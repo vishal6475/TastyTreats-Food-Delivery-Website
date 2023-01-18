@@ -56,7 +56,6 @@ const StoreMenuPage = () => {
   const [customer] = context.customer;
   const [store, setStore] = useState([]);
   const [storeTags, setStoreTags] = useState('');
-  const [currentCart, setCurrentCart] = context.currentCart;
   const [cartItems, setCartItems] = context.cartItems;
   const [storeID, setStoreID] = context.storeID;
   const [loggedIn, setLoggedIn] = context.login;
@@ -79,19 +78,15 @@ const StoreMenuPage = () => {
   const DecreaseQuantity = (idx) => {
     let newCart = cartItems
     newCart.items[idx].quantity -= 1
-    setCartItems(newCart)
-    currentCart[idx] -= 1
-    setCurrentCart(currentCart)
+    setCartItems(JSON.parse(JSON.stringify(newCart)))  
   } 
 
   const IncreaseQuantity = (idx) => { 
-    console.log('Before', cartItems.items[idx].quantity)
     let newCart = cartItems
+    let newQuantity = newCart.items[idx].quantity + 1
     newCart.items[idx].quantity += 1
-    setCartItems(newCart)
-    console.log('After', cartItems.items[idx].quantity)
-    currentCart[idx] += 1
-    setCurrentCart(currentCart)
+    setCartItems(JSON.parse(JSON.stringify(newCart)))   
+    //setCartItems(prevState => { return { ...prevState, items: {...prevState.items, [idx]:{...prevState.items[idx], quantity: newQuantity } } } })
   }
 
   const GoToCheckout = () => {
@@ -178,12 +173,14 @@ const StoreMenuPage = () => {
 
             
             <FlexBox direction='row' sx={{}}>
-              <IconButton disabled={currentCart[idx] === 1} sx={{color:'black', p:'0'}} onClick={() => {DecreaseQuantity(idx)}} >
+              <IconButton id={`remove-btn-${idx}`} disabled={cartItems.items[idx].quantity === 1} 
+              sx={{color:'black', p:'0'}} onClick={() => {DecreaseQuantity(idx)}} >
                 <RemoveSharpIcon sx={{cursor:'pointer'}} />
               </IconButton> 
 
-              <Typography variant="h6" color="text.secondary" component='div' sx={{m:'0 10px 0 10px', p:'0' }}>
-                {currentCart[idx]}  
+              <Typography id={`cart-item-quantity-${idx}`} variant="h6" color="text.secondary" component='div' 
+                sx={{m:'0 10px 0 10px', p:'0' }}>
+                {cartItems.items[idx].quantity}    
               </Typography>
 
               <IconButton sx={{color:'black', p:'0'}} onClick={() => {IncreaseQuantity(idx)}} >
@@ -194,8 +191,9 @@ const StoreMenuPage = () => {
           </FlexBox>
 
           
-          <Typography variant="h7" color="text.secondary" sx={{ mb:'0.8rem' }} >
-            <b>${(item.price * currentCart[idx]).toFixed(2)}</b> 
+          <Typography id={`cart-item-price-${idx}`} variant="h7" color="text.secondary" 
+            sx={{ mb:'0.8rem', fontWeight:'bold' }} >
+            ${(item.price * cartItems.items[idx].quantity).toFixed(2)}
           </Typography>
 
         </FlexBox>

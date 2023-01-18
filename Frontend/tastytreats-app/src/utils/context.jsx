@@ -17,7 +17,6 @@ const ContextProvider = ({ children }) => {
   const [itemToAddQuantity, setItemToAddQuantity] = useState(1);
   const [itemOrgQuantity, setItemOrgQuantity] = useState(1);
   const [cartItems, setCartItems] = useState(null);
-  const [currentCart, setCurrentCart] = useState([]);
   const [fromCheckout, setFromCheckout] = useState(false);
 
   const states = {
@@ -33,7 +32,6 @@ const ContextProvider = ({ children }) => {
     itemToAddQuantity: [itemToAddQuantity, setItemToAddQuantity],
     itemOrgQuantity: [itemOrgQuantity, setItemOrgQuantity],
     cartItems: [cartItems, setCartItems],
-    currentCart: [currentCart, setCurrentCart],
     storeID: [storeID, setStoreID],
     fromCheckout: [fromCheckout, setFromCheckout]
   };
