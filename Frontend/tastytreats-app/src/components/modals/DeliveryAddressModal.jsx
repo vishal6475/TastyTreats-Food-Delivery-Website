@@ -14,15 +14,16 @@ import { useRef } from 'react'
 import InputAdornment from '@mui/material/InputAdornment';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import HomeIcon from '@mui/icons-material/Home';
+import Radio from '@mui/material/Radio';
 
 
-const DeliveryAddressModal = ({openAddressModal, setOpenAddressModal, showUnitBox, setShowUnitBox}) => {
+const DeliveryAddressModal = ({openAddressModal, setOpenAddressModal, showUnitBox, setShowUnitBox, leaveAtDoor, setLeaveAtDoor}) => {
   const navigate = useNavigate();
   const context = useContext(StoreContext);
   const [loggedIn, setLoggedIn] = context.login;
   const [address, setAddress] = context.address;  
-  const [currentAddress, setCurrentAddress] = useState('');  
-  const [storeID, setStoreID] = context.storeID;
+  const [currentAddress, setCurrentAddress] = useState(''); 
+  const [curLeaveAtDoor, setCurLeaveAtDoor] = useState(false);
 
   
   const addressRef = useRef();  
@@ -47,7 +48,7 @@ const DeliveryAddressModal = ({openAddressModal, setOpenAddressModal, showUnitBo
     //setAddress((prev) => {return { ...prev, addr1: addr }})
     //const results = await geocodeByAddress(addr);
     //console.log(results)
-
+    setCurLeaveAtDoor(leaveAtDoor)
     setShowUnitBox(true)
   }
 
@@ -55,6 +56,7 @@ const DeliveryAddressModal = ({openAddressModal, setOpenAddressModal, showUnitBo
     const delivery_unit = document.getElementById('order-delivery-unit').value
     const delivery_addr = document.getElementById('order-delivery-address').value
     setAddress((prev) => {return { unitNo: delivery_unit, addr1: delivery_addr }})
+    setLeaveAtDoor(curLeaveAtDoor)
     handleClose()
     console.log(address)
   }
@@ -92,6 +94,42 @@ const DeliveryAddressModal = ({openAddressModal, setOpenAddressModal, showUnitBo
             InputProps={{
               startAdornment: <InputAdornment position="start"><HomeIcon/></InputAdornment>,
             }}
+          />
+
+          <Typography sx={{ ml:'8px', mt:'1rem'}} >
+            Delivery type
+          </Typography>
+          <FlexBox direction='row' sx={{alignItems:'center'}} >
+            <Radio
+              checked={!curLeaveAtDoor}
+              onChange={() => {setCurLeaveAtDoor(false)}}
+              value="Hand it to me"
+              label="Hand it to me"
+              name="Leave at door radio buttons"
+              color="default"
+              inputProps={{ 'aria-label': 'Hand it to me' }}
+            />
+              Hand it to me
+            <Radio
+              checked={curLeaveAtDoor}
+              onChange={() => {setCurLeaveAtDoor(true)}}
+              value="Leave at door"
+              label="Leave at door"
+              name="Leave at door radio buttons"
+              color="default"
+              inputProps={{ 'aria-label': 'Leave at door' }}
+            />
+            Leave at door
+          </FlexBox>
+          
+        
+          <TextField 
+            id='order-delivery-ins' 
+            name="order-delivery-ins"
+            placeholder='Add delivery instructions' 
+            multiline
+            rows={2}
+            sx={{backgroundColor:'white', minWidth: '100%', mt:'1rem'}}
           />
 
           <FlexBox>

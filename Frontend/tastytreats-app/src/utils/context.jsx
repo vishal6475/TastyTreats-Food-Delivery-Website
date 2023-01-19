@@ -10,7 +10,7 @@ const ContextProvider = ({ children }) => {
   const [customer, setCustomer] = useState(false);
   const [address, setAddress] = useState({unitNo: null, addr1: '84 Albert Road, Strathfield NSW, Australia'});
   const [card, setCard] = useState([]);
-  const [storeID, setStoreID] = useState(0);
+  const [storeDetails, setStoreDetails] = useState(null);
   const [logInModal, setLogInModal] = useState(false);
   const [openAddModal, setOpenAddModal] = useState(false);
   const [itemToAdd, setItemToAdd] = useState(null);
@@ -33,7 +33,7 @@ const ContextProvider = ({ children }) => {
     itemToAddQuantity: [itemToAddQuantity, setItemToAddQuantity],
     itemOrgQuantity: [itemOrgQuantity, setItemOrgQuantity],
     cartItems: [cartItems, setCartItems],
-    storeID: [storeID, setStoreID],
+    storeDetails: [storeDetails, setStoreDetails],
     cardOrder: [cardOrder, setCardOrder],
     fromCheckout: [fromCheckout, setFromCheckout]
   };

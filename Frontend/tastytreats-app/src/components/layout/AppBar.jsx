@@ -78,7 +78,7 @@ const TastyTreatsAppBar = () => {
           {loggedIn &&
           <FlexBox>
             <Typography variant='h6' sx={{ mt:'auto', mb:'auto', mr:'1rem' }}>
-             Hi { customer.first_name? customer.first_name : '' }
+             { customer.first_name? customer.first_name : '' }
             </Typography>
           </FlexBox>          
           }

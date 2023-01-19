@@ -12,8 +12,6 @@ const DeliveryAddressModal = ({openCardModal, setOpenCardModal}) => {
   const navigate = useNavigate();
   const context = useContext(StoreContext);
   const [loggedIn, setLoggedIn] = context.login;
-  
-  const [storeID, setStoreID] = context.storeID;
 
 
   const handleClose = () => {

@@ -88,8 +88,6 @@ const LogInModal = () => {
         }
 
         const loginResults = await custAPI.login(param)
-        console.log(loginResults)
-        console.log(loginResults.data)
         const customer = loginResults.data[0];
         setCustomer(loginResults.data)
         setLoggedIn(true)

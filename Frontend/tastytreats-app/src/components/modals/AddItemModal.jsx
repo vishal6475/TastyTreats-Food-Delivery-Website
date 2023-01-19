@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { StoreContext } from '../../utils/context';
 import { StandardModal, ModalBody, ModalItemTitle } from '../styles/modals';
 import { FlexBox } from '../styles/layouts';
-import { Button, TextField, Typography, Grid, CardMedia } from '@mui/material';
+import { Button, TextField, Typography, Grid, CardMedia, experimentalStyled } from '@mui/material';
 import { IconButton } from '@mui/material';
 import AddSharpIcon from '@mui/icons-material/AddSharp';
 import RemoveSharpIcon from '@mui/icons-material/RemoveSharp';
@@ -19,7 +19,7 @@ const AddItemModal = () => {
   const [cartItems, setCartItems] = context.cartItems;
   const [itemOrgQuantity, setItemOrgQuantity] = context.itemOrgQuantity;
   const [itemToAddQuantity, setItemToAddQuantity] = context.itemToAddQuantity;
-  const [storeID, setStoreID] = context.storeID;
+  const [storeDetails, setStoreDetails] = context.storeDetails;
 
 
   const handleClose = () => {
@@ -35,28 +35,33 @@ const AddItemModal = () => {
       price: itemToAdd.price
     }
     const storeAdd = {
-      storeID: storeID,
+      storeID: storeDetails.id,
+      name: storeDetails.name,
+      photo: storeDetails.photo,
       items: [item]
     }
-
+    
     if (cartItems !== null) 
     {
-      for (const i in cartItems.items) {
-        if (itemToAdd.id === cartItems.items[i].id) {
-          found = 1
-          cartItems.items[i].quantity = itemToAddQuantity
+      // checking if adding items from new store or old store
+      if (cartItems.storeID !== storeDetails.id) { // new store
+        setCartItems(storeAdd)
+      } else { // old store
+        for (const i in cartItems.items) { // checking if item is already in cart
+          if (itemToAdd.id === cartItems.items[i].id) {
+            found = 1
+            cartItems.items[i].quantity = itemToAddQuantity
+          }
+        }
+        if (found === 0) { // item not in cart, adding it now
+          cartItems.items.push(item)
         }
       }
-
-      if (found === 0) {
-        cartItems.items.push(item)
-      }
-    } else {
+    } else { //cart is experimentalStyled, adding all details
       setCartItems(storeAdd)
-    }
+    }    
     
     setOpenAddModal(false);
-    console.log(item)
   }
 
   const DecreaseQuantity = () => {

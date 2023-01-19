@@ -17,6 +17,10 @@ export const StandardModal = styled(Dialog)`
 `
 
 export const AddressModal = styled(Dialog)`
+  & .MuiDialog-container {
+    align-items: flex-start;
+    margin-top: 5vh;
+  };
   & .MuiDialog-paper {
     width: 80vw;
     max-width: 650px;

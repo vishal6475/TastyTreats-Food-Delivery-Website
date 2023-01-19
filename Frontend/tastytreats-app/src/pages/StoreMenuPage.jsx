@@ -57,11 +57,11 @@ const StoreMenuPage = () => {
   const [store, setStore] = useState([]);
   const [storeTags, setStoreTags] = useState('');
   const [cartItems, setCartItems] = context.cartItems;
-  const [storeID, setStoreID] = context.storeID;
   const [loggedIn, setLoggedIn] = context.login;
   const [open, setOpen] = context.logInModal;
   const [loginOrSignup, setLoginOrSignup] = context.loginOrSignup;
   const [fromCheckout, setFromCheckout] = context.fromCheckout;
+  const [storeDetails, setStoreDetails] = context.storeDetails;
 
   useEffect(() => {
     fetchStoreMenu()
@@ -69,10 +69,18 @@ const StoreMenuPage = () => {
 
   const fetchStoreMenu = async (event) => { 
     const storeMenuRes = await storeAPI.getStoreById(s_id)
-    console.log(storeMenuRes.data)
-    setStoreID(s_id)
+    //console.log(storeMenuRes.data)
     setStore(storeMenuRes.data)
     setStoreTags(storeMenuRes.data.types.join(' - '))
+
+    let store = {
+      id: storeMenuRes.data.id,
+      name: storeMenuRes.data.name,
+      photo: storeMenuRes.data.photo
+    }
+
+    setStoreDetails(store)
+    //console.log(store)
   } 
 
   const DecreaseQuantity = (idx) => {
@@ -161,7 +169,27 @@ const StoreMenuPage = () => {
 
       {cartItems !== null &&
       <FlexBox direction='column' sx={{ width:'24vw', alignItems:'left', p:'20px 30px 20px 20px', 
-        position:'sticky', position: '-webkit-sticky', top:'0' }}>    
+        position:'sticky', position: '-webkit-sticky', top:'0' }}>   
+        
+        <FlexBox sx={{ mb:'1rem' }} >
+          <img style={{ marginRight: '10px', borderRadius: '8px' }}
+            src={cartItems.photo}
+            width="20%"
+            alt="Store-car-thumbnail"
+            id = 'store-cart-image'
+          />
+          {//<Avatar src={storeDetails.photo} />
+          }
+          <FlexBox direction='column' >
+            <Typography>
+              Your cart from 
+            </Typography>
+            <Typography>
+              <b>{cartItems.name}</b>
+            </Typography>
+          </FlexBox>
+        </FlexBox>
+
         <Button variant="contained" onClick={GoToCheckout} sx={{ mb:'1rem' }} >Checkout</Button>
         {cartItems.items?.map((item, idx) => 
         <FlexBox key={idx} direction='column' >
