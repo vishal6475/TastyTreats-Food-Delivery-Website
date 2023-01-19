@@ -203,7 +203,7 @@ const CheckoutPage = () => {
           </Typography> 
           <Typography variant="subtitle2" color="text.secondary" 
             sx={{ p:'0', m:'0', fontSize:'0.9rem' }} >
-            <b>${(0.06 * total).toFixed(2)}</b> 
+            <b>${(cartItems.delivery_fee).toFixed(2)}</b> 
           </Typography>          
         </FlexBox>    
 
@@ -225,7 +225,7 @@ const CheckoutPage = () => {
           </Typography> 
           <Typography variant="subtitle2" color="text.secondary" 
             sx={{ p:'0', m:'0', fontSize:'0.9rem' }} >
-            <b>${(1.06 * total).toFixed(2)}</b> 
+            <b>${(1.06 * total + cartItems.delivery_fee).toFixed(2)}</b> 
           </Typography>          
         </FlexBox>   
 

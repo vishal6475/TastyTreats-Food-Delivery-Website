@@ -76,7 +76,8 @@ const StoreMenuPage = () => {
     let store = {
       id: storeMenuRes.data.id,
       name: storeMenuRes.data.name,
-      photo: storeMenuRes.data.photo
+      photo: storeMenuRes.data.photo,
+      delivery_fee: storeMenuRes.data.delivery_fee
     }
 
     setStoreDetails(store)

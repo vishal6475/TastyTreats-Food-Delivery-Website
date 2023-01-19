@@ -38,6 +38,7 @@ const AddItemModal = () => {
       storeID: storeDetails.id,
       name: storeDetails.name,
       photo: storeDetails.photo,
+      delivery_fee: storeDetails.delivery_fee,
       items: [item]
     }
     
