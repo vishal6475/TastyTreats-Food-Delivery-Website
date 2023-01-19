@@ -32,6 +32,11 @@ const theme = createTheme({
       mediumBrown: '#CC6133',
       mediumGreen: '#4BB46F'
     }
+  },
+  typography: {
+    button: {
+      textTransform: 'none'
+    }
   }
 })
 

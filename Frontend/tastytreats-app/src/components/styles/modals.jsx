@@ -16,6 +16,14 @@ export const StandardModal = styled(Dialog)`
   }
 `
 
+export const AddressModal = styled(Dialog)`
+  & .MuiDialog-paper {
+    width: 80vw;
+    max-width: 650px;
+  };
+  z-index: 100;
+`
+
 export const StyledTitle = styled(FlexBox)`
   padding-left: 1rem;
   padding-right: 1rem;
@@ -61,7 +69,7 @@ export const CloseIconBox = styled(FlexBox)`
 export const ModalItemTitle = ( {title, close} ) => {
   return (
     <>
-    <FlexBox >
+    <FlexBox sx={{ pt:'0.5rem'}} >
 
       <CloseIconBox></CloseIconBox>
 

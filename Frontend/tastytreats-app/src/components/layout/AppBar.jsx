@@ -60,7 +60,7 @@ const TastyTreatsAppBar = () => {
             backgroundColor: '#C8C8C8', color: 'black', maxWidth:'30vw',
             borderRadius: '30px', cursor: 'pointer', '&:hover': {backgroundColor: '#888888'} }}
             id='userAddress' onClick={toFirstPage} >       
-            {address.split(',')[0]}
+            {address.addr1.split(',')[0]}
           </FlexBox>
           }
         </FlexBox>

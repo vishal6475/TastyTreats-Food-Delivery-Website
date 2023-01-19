@@ -8,6 +8,8 @@ import {
 import { geocodeByAddress } from 'react-places-autocomplete';
 import { useRef } from 'react'
 import { useNavigate } from 'react-router';
+import InputAdornment from '@mui/material/InputAdornment';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
 
 const ImageBanner = styled('div')`
   width: 100%;
@@ -44,11 +46,12 @@ const FirstPage = () => {
   } 
 
   const gotDeliveryAddress = async () => {
-    console.log(document.getElementById('delivery-address').value)
-    setAddress(document.getElementById('delivery-address').value + ' Change')
+    const addr = document.getElementById('delivery-address').value
+    console.log(addr)
+    setAddress((prev) => {return { ...prev, addr1: addr }})
     navigate('/home'); 
 
-    const results = await geocodeByAddress(document.getElementById('delivery-address').value);
+    const results = await geocodeByAddress(addr);
     console.log(results)
   }
 
@@ -56,18 +59,21 @@ const FirstPage = () => {
   return (
     <div>
       <ImageBanner id='image-banner'>
-      <BoxDeliveryAdd id='textDeliveryAdd'>
-        <Autocomplete onPlaceChanged={gotDeliveryAddress}>
-          <TextField 
-            id='delivery-address' 
-            name="delivery-address"
-            ref={addressRef}
-            placeholder='Enter delivery address' 
-            required
-            style={{backgroundColor:'white', minWidth: '30vw'}}
-          />
-        </Autocomplete>
-      </BoxDeliveryAdd>
+        <BoxDeliveryAdd id='textDeliveryAdd'>
+          <Autocomplete onPlaceChanged={gotDeliveryAddress}>
+            <TextField 
+              id='delivery-address' 
+              name="delivery-address"
+              ref={addressRef}
+              placeholder='Enter delivery address' 
+              required
+              style={{backgroundColor:'white', minWidth: '30vw'}}
+              InputProps={{
+                startAdornment: <InputAdornment position="start"><LocationOnIcon/></InputAdornment>,
+              }}
+            />
+          </Autocomplete>
+        </BoxDeliveryAdd>
       </ImageBanner>
     </div>    
 
