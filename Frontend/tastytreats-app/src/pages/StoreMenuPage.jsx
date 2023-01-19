@@ -173,12 +173,13 @@ const StoreMenuPage = () => {
         position:'sticky', position: '-webkit-sticky', top:'0' }}>   
         
         <FlexBox sx={{ mb:'1rem' }} >
+          {cartItems.storeID !== storeDetails.id &&
           <img style={{ marginRight: '10px', borderRadius: '8px' }}
             src={cartItems.photo}
             width="20%"
             alt="Store-car-thumbnail"
             id = 'store-cart-image'
-          />
+          />}
           {//<Avatar src={storeDetails.photo} />
           }
           <FlexBox direction='column' >
