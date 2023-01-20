@@ -87,6 +87,9 @@ const StoreMenuPage = () => {
   const DecreaseQuantity = (idx) => {
     let newCart = cartItems
     newCart.items[idx].quantity -= 1
+    if (newCart.items[idx].quantity === 0) {
+      newCart.items.splice(idx, 1)
+    }
     setCartItems(JSON.parse(JSON.stringify(newCart)))  
   } 
 
@@ -156,81 +159,94 @@ const StoreMenuPage = () => {
 
       <Divider orientation="vertical" flexItem />
 
-      {cartItems === null &&
-      <FlexBox direction='column' sx={{ width:'24vw', alignItems:'center' }}>    
-        <ShoppingCartOutlinedIcon sx={{width:'200px', height:'200px', mt: 5}} />
-        <Typography variant="h5" sx={{ mt: 5}} >
-          Your cart is empty. 
-        </Typography>
-        <Typography variant="h5" sx={{ mt: 1}} >
-          Add some items.
-        </Typography>
-      </FlexBox>
-      }
+      <FlexBox direction='column' >
+      
+        <FlexBox direction='column' sx={{position:'sticky', top:'0' }}>
 
-      {cartItems !== null &&
-      <FlexBox direction='column' sx={{ width:'24vw', alignItems:'left', p:'20px 30px 20px 20px', 
-        position:'sticky', position: '-webkit-sticky', top:'0' }}>   
-        
-        <FlexBox sx={{ mb:'1rem' }} >
-          {cartItems.storeID !== storeDetails.id &&
-          <img style={{ marginRight: '10px', borderRadius: '8px' }}
-            src={cartItems.photo}
-            width="20%"
-            alt="Store-car-thumbnail"
-            id = 'store-cart-image'
-          />}
-          {//<Avatar src={storeDetails.photo} />
-          }
-          <FlexBox direction='column' >
-            <Typography>
-              Your cart from 
-            </Typography>
-            <Typography>
-              <b>{cartItems.name}</b>
-            </Typography>
-          </FlexBox>
-        </FlexBox>
+          <FlexBox direction='column' sx={{overflowY:'auto', height:'100vh'}}>
 
-        <Button variant="contained" onClick={GoToCheckout} sx={{ mb:'1rem' }} >Checkout</Button>
-        {cartItems.items?.map((item, idx) => 
-        <FlexBox key={idx} direction='column' >
-
-          <FlexBox justify='space-between' >
-            <Typography gutterBottom variant="subtitle2" color="text.primary" 
-              sx={{ p:'0', m:'0.2rem 0 0 0', fontSize:'1rem' }}>
-              {item.name}
-            </Typography> 
-
-            
-            <FlexBox direction='row' sx={{}}>
-              <IconButton id={`remove-btn-${idx}`} disabled={cartItems.items[idx].quantity === 1} 
-              sx={{color:'black', p:'0'}} onClick={() => {DecreaseQuantity(idx)}} >
-                <RemoveSharpIcon sx={{cursor:'pointer'}} />
-              </IconButton> 
-
-              <Typography id={`cart-item-quantity-${idx}`} variant="subtitle2" color="text.secondary" 
-                sx={{m:'0 10px 0 10px', p:'0', fontSize:'1.2rem'  }}>
-                {cartItems.items[idx].quantity}    
+            {cartItems === null &&
+            <FlexBox direction='column' sx={{ width:'24vw', alignItems:'center'}}>    
+              <ShoppingCartOutlinedIcon sx={{width:'200px', height:'200px', mt: 5}} />
+              <Typography variant="h5" sx={{ mt: 5}} >
+                Your cart is empty. 
               </Typography>
-
-              <IconButton sx={{color:'black', p:'0'}} onClick={() => {IncreaseQuantity(idx)}} >
-                <AddSharpIcon sx={{cursor:'pointer'}} />
-              </IconButton>
+              <Typography variant="h5" sx={{ mt: 1}} >
+                Add some items.
+              </Typography>
             </FlexBox>
+            }
+
+            {cartItems !== null &&
+            <FlexBox direction='column' sx={{ width:'24vw', alignItems:'left', p:'20px 30px 20px 20px' }}>   
+              
+              <FlexBox sx={{ mb:'1rem' }} >
+                {cartItems.storeID !== storeDetails.id &&
+                <img style={{ marginRight: '10px', borderRadius: '8px' }}
+                  src={cartItems.photo}
+                  width="20%"
+                  alt="Store-car-thumbnail"
+                  id = 'store-cart-image'
+                />}
+                {//<Avatar src={storeDetails.photo} />
+                }
+                <FlexBox direction='column' >
+                  <Typography>
+                    Your cart from 
+                  </Typography>
+                  <Typography>
+                    <b>{cartItems.name}</b>
+                  </Typography>
+                </FlexBox>
+              </FlexBox>
+
+              <Button variant="contained" onClick={GoToCheckout} sx={{ mb:'1rem' }} >Checkout</Button>
+              {cartItems.items?.map((item, idx) => 
+              <FlexBox key={idx} direction='column' >
+
+                <FlexBox justify='space-between' >
+                  <Typography gutterBottom variant="subtitle2" color="text.primary" 
+                    sx={{ p:'0', m:'0.2rem 0 0 0', fontSize:'1rem' }}>
+                    {item.name}
+                  </Typography> 
+
+                  
+                  <FlexBox direction='row' sx={{}}>
+                    <IconButton id={`remove-btn-${idx}`} disabled={cartItems.items[idx].quantity === 0} 
+                    sx={{color:'black', p:'0'}} onClick={() => {DecreaseQuantity(idx)}} >
+                      <RemoveSharpIcon sx={{cursor:'pointer'}} />
+                    </IconButton> 
+
+                    <Typography id={`cart-item-quantity-${idx}`} variant="subtitle2" color="text.secondary" 
+                      sx={{m:'0 10px 0 10px', p:'0', fontSize:'1.2rem'  }}>
+                      {cartItems.items[idx].quantity}    
+                    </Typography>
+
+                    <IconButton sx={{color:'black', p:'0'}} onClick={() => {IncreaseQuantity(idx)}} >
+                      <AddSharpIcon sx={{cursor:'pointer'}} />
+                    </IconButton>
+                  </FlexBox>
+
+                </FlexBox>
+
+                <Typography id={`cart-item-price-${idx}`} variant="subtitle2" color="text.secondary" 
+                  sx={{ p:'0', m:'-0.3rem 0 0 0', fontSize:'1rem' }} >
+                  ${(item.price * cartItems.items[idx].quantity).toFixed(2)}
+                </Typography>
+
+              </FlexBox>
+              )}          
+
+            </FlexBox>
+            }
+
+            <FlexBox sx={{minHeight:'50px'}} ></FlexBox>
+
 
           </FlexBox>
-
-          <Typography id={`cart-item-price-${idx}`} variant="subtitle2" color="text.secondary" 
-            sx={{ p:'0', m:'-0.3rem 0 0 0', fontSize:'1rem' }} >
-            ${(item.price * cartItems.items[idx].quantity).toFixed(2)}
-          </Typography>
-
         </FlexBox>
-        )}          
-      </FlexBox>
-      }
 
+      </FlexBox>
     </FlexBox>
   )
 

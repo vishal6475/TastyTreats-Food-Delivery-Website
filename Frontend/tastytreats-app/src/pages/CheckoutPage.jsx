@@ -156,81 +156,87 @@ const CheckoutPage = () => {
 
       <Divider orientation="vertical" flexItem />
 
-      <FlexBox direction='column' sx={{ width:'24vw', alignItems:'left', p:'20px 30px 20px 20px' }}>  
-        
-        {cartItems &&
-        <FlexBox sx={{ mb:'1rem' }} >
-          <img style={{ marginRight: '10px', borderRadius: '8px' }}
-            src={cartItems.photo}
-            width="20%"
-            alt="Store-thumbnail"
-            id = 'store-checkout-image'
-          />
-          {//<Avatar src={storeDetails.photo} />
-          }
-          <FlexBox direction='column' >
-            <Typography>
-              Your cart from 
-            </Typography>
-            <Typography>
-              <b>{cartItems.name}</b>
-            </Typography>
-          </FlexBox>
-        </FlexBox>
-        }
+      <FlexBox direction='column'>  
 
-        {cartItems?.items?.map((item, idx) => 
-        <FlexBox key={idx} direction='row' justify='space-between' >
+        <FlexBox direction='column' sx={{position:'sticky', top:'0' }}>
+          <FlexBox direction='column' 
+            sx={{ width:'24vw', alignItems:'left', overflowY:'auto', height:'90vh', p:'20px 30px 0 20px'}}>
+            
+            {cartItems &&
+            <FlexBox sx={{ mb:'1rem' }} >
+              <img style={{ marginRight: '10px', borderRadius: '8px' }}
+                src={cartItems.photo}
+                width="20%"
+                alt="Store-thumbnail"
+                id = 'store-checkout-image'
+              />
+              {//<Avatar src={storeDetails.photo} />
+              }
+              <FlexBox direction='column' >
+                <Typography>
+                  Your cart from 
+                </Typography>
+                <Typography>
+                  <b>{cartItems.name}</b>
+                </Typography>
+              </FlexBox>
+            </FlexBox>
+            }
 
-          <Typography gutterBottom variant="subtitle2" color="text.primary" 
-            sx={{ p:'0', m:'0', fontSize:'1rem' }}>
-            {item.quantity} x {item.name}
-          </Typography> 
+            {cartItems?.items?.map((item, idx) => 
+            <FlexBox key={idx} direction='row' justify='space-between' >
+
+              <Typography gutterBottom variant="subtitle2" color="text.primary" 
+                sx={{ p:'0', m:'0', fontSize:'1rem' }}>
+                {item.quantity} x {item.name}
+              </Typography> 
 
 
-          <Typography variant="subtitle2" color="text.secondary" 
-            sx={{ p:'0', m:'0', fontSize:'0.9rem' }} >
-            <b>${(item.price * item.quantity).toFixed(2)}</b> 
-          </Typography>
+              <Typography variant="subtitle2" color="text.secondary" 
+                sx={{ p:'0', m:'0', fontSize:'0.9rem' }} >
+                <b>${(item.price * item.quantity).toFixed(2)}</b> 
+              </Typography>
 
-        </FlexBox>
-        )}       
+            </FlexBox>
+            )}       
 
-        <FlexBox  direction='row' justify='space-between' sx={{mt:'2rem'}} >
-          <Typography gutterBottom variant="subtitle2" color="text.primary" 
-            sx={{ p:'0', m:'0', fontSize:'1rem' }}>
-            Delivery fee
-          </Typography> 
-          <Typography variant="subtitle2" color="text.secondary" 
-            sx={{ p:'0', m:'0', fontSize:'0.9rem' }} >
-            <b>${(cartItems.delivery_fee).toFixed(2)}</b> 
-          </Typography>          
-        </FlexBox>    
+            <FlexBox  direction='row' justify='space-between' sx={{mt:'2rem'}} >
+              <Typography gutterBottom variant="subtitle2" color="text.primary" 
+                sx={{ p:'0', m:'0', fontSize:'1rem' }}>
+                Delivery fee
+              </Typography> 
+              <Typography variant="subtitle2" color="text.secondary" 
+                sx={{ p:'0', m:'0', fontSize:'0.9rem' }} >
+                <b>${(cartItems.delivery_fee).toFixed(2)}</b> 
+              </Typography>          
+            </FlexBox>    
 
-        <FlexBox  direction='row' justify='space-between'>
-          <Typography gutterBottom variant="subtitle2" color="text.primary" 
-            sx={{ p:'0', m:'0', fontSize:'1rem' }}>
-            Service fee
-          </Typography> 
-          <Typography variant="subtitle2" color="text.secondary" 
-            sx={{ p:'0', m:'0', fontSize:'0.9rem' }} >
-            <b>${(0.06 * total).toFixed(2)}</b> 
-          </Typography>          
-        </FlexBox>    
+            <FlexBox direction='row' justify='space-between'>
+              <Typography gutterBottom variant="subtitle2" color="text.primary" 
+                sx={{ p:'0', m:'0', fontSize:'1rem' }}>
+                Service fee
+              </Typography> 
+              <Typography variant="subtitle2" color="text.secondary" 
+                sx={{ p:'0', m:'0', fontSize:'0.9rem' }} >
+                <b>${(0.06 * total).toFixed(2)}</b> 
+              </Typography>          
+            </FlexBox>    
 
-        <FlexBox  direction='row' justify='space-between' sx={{mt:'2rem'}} >
-          <Typography gutterBottom variant="subtitle2" color="text.primary" 
-            sx={{ p:'0', m:'0', fontSize:'1rem' }}>
-            Total Amount
-          </Typography> 
-          <Typography variant="subtitle2" color="text.secondary" 
-            sx={{ p:'0', m:'0', fontSize:'0.9rem' }} >
-            <b>${(1.06 * total + cartItems.delivery_fee).toFixed(2)}</b> 
-          </Typography>          
-        </FlexBox>   
+            <FlexBox direction='row' justify='space-between' sx={{mt:'2rem'}} >
+              <Typography gutterBottom variant="subtitle2" color="text.primary" 
+                sx={{ p:'0', m:'0', fontSize:'1rem' }}>
+                Total Amount
+              </Typography> 
+              <Typography variant="subtitle2" color="text.secondary" 
+                sx={{ p:'0', m:'0', fontSize:'0.9rem' }} >
+                <b>${(1.06 * total + cartItems.delivery_fee).toFixed(2)}</b> 
+              </Typography>          
+            </FlexBox>   
 
-      </FlexBox>
-      
+          </FlexBox>      
+        </FlexBox>      
+
+      </FlexBox>      
 
       <DeliveryAddressModal 
         openAddressModal={openAddressModal} 
