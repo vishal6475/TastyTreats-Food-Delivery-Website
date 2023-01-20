@@ -15,6 +15,7 @@ const LogInModal = () => {
   const [loggedIn, setLoggedIn] = context.login;
   const [open, setOpen] = context.logInModal;
   const [logInFail, setLogInFail] = useState(null);
+  const [registerFail, setRegisterFail] = useState(null);
   const [loginOrSignup, setLoginOrSignup] = context.loginOrSignup;
   const [customer, setCustomer] = context.customer;
   const [fromCheckout, setFromCheckout] = context.fromCheckout;
@@ -55,11 +56,13 @@ const LogInModal = () => {
 
   const loadLogin = () => {
     setLoginOrSignup(false);
+    setRegisterFail(false)
     removeAllErrors();
   }
 
   const loadSignup = () => {
     setLoginOrSignup(true);
+    setLogInFail(false)
     removeAllErrors();
   }
 
@@ -88,7 +91,6 @@ const LogInModal = () => {
         }
 
         const loginResults = await custAPI.login(param)
-        const customer = loginResults.data[0];
         setCustomer(loginResults.data)
         setLoggedIn(true)
         handleClose()
@@ -110,9 +112,9 @@ const LogInModal = () => {
     const firstName = data.get('firstName')
     const lastName = data.get('lastName')
     const email = data.get('email')
-    const mobileNo = data.get('mobileNo')
+    //const mobileNo = data.get('mobileNo')
     const password1 = data.get('password1')
-    const password2 = data.get('password2')
+    //const password2 = data.get('password2')
 
     signupErrors.error = false;
 
@@ -132,6 +134,7 @@ const LogInModal = () => {
       setSignupErrors(prevState => { return { ...prevState, password1: true } })
       signupErrors.error = true
     }
+    /*
     if (password1 !== password2) {
       setFormErrors(prevState => { return { ...prevState, password2: true } })
       formErrors.error = true
@@ -151,26 +154,32 @@ const LogInModal = () => {
     else {
       setSignupErrors(prevState => { return { ...prevState, mobileNo: true } })
       signupErrors.error = true
-    }
+    }*/
 
     if (!signupErrors.error) {
       const body = {
-        "first_name": firstName,
-        "last_name": lastName,
+        "firstName": firstName,
+        "lastName": lastName,
         "email": email,
-        "password1": password1,
-        "password2": password2,
-        "mobileNo": mobileNo
+        "password": password1
       }
       try {
-
-
-        
+ 
+        const registerResults = await custAPI.registerCustomer(body)
+        let newCustomer = registerResults.data
+        newCustomer.first_name = registerResults.data.firstName
+        newCustomer.last_name = registerResults.data.lastName
+        setCustomer(newCustomer)
+        setLoggedIn(true)
+        handleClose()        
         if (fromCheckout) navigate('/checkout'); 
         
       }
       catch(error) {
-        console.error(error)
+        console.error(error)               
+        if (error.response?.data?.code === 409) {
+          setRegisterFail(true)
+        }   
       }
     }
   };
@@ -198,7 +207,7 @@ const LogInModal = () => {
           </FlexBox>
         </FlexBox>
 
-        <FlexBox sx={{ minHeight:'50vh' }} justify={'center'}>
+        <FlexBox sx={{ minHeight:'40vh' }} justify={'center'}>
           
           <form component="form" noValidate onSubmit={loginCustomer}>
           {!loginOrSignup &&
@@ -207,7 +216,7 @@ const LogInModal = () => {
               name="email"
               required
               label="Email"
-              sx={{ mb: 4, width: '100%', minWidth: '20vw' }}
+              sx={{ mb: 2, width: '100%', minWidth: '20vw' }}
               autoFocus
               inputProps={{ maxLength: 50 }}
               onChange={() => {
@@ -231,14 +240,13 @@ const LogInModal = () => {
               error={formErrors.password}
               helperText={formErrors.password ? 'Cannot be empty.' : ''}
             />
-            {logInFail
-              ? <Typography variant='subtitle2' sx={{ color: 'error.main', mt: -2 }}>
-                Incorrect password or email .. Please try again
-              </Typography>
-              : ''
-            }
+            
+            <Typography variant='subtitle2' sx={{ color: 'error.main', minHeight:'5vh', mt:'-0.7rem'}}>
+              {logInFail && 'Incorrect password or email. Please try again.'}
+            </Typography>
+            
             <FlexBox>
-              <Button type='submit' variant="contained" sx={{ mt:'7rem' }}>
+              <Button type='submit' variant="contained" sx={{ mt:'0' }}>
                 Log in
               </Button>
             </FlexBox>
@@ -251,7 +259,7 @@ const LogInModal = () => {
           <FlexBox justify={'center'} >
 
             <form component="form" noValidate onSubmit={signupCustomer}>
-              <Grid container spacing={2} sx={{height:'40vh'}}>
+              <Grid container spacing={2} >
                 <Grid item xs={12} sm={6}>
                   <TextField
                     name="firstName"
@@ -295,12 +303,13 @@ const LogInModal = () => {
                     inputProps={{ maxLength: 50 }}
                     onChange={() => {
                       signupErrors.email && setSignupErrors(prevState => { return { ...prevState, email: false } })
+                      setRegisterFail(false)
                     }}
                     error={signupErrors.email}
                     helperText={signupErrors.email ? 'Invalid email.' : ''}
                   />
                 </Grid>
-                
+                {/*
                 <Grid item xs={12} sm={6}>
                   <TextField
                     name="mobileNo"
@@ -317,6 +326,7 @@ const LogInModal = () => {
                     helperText={signupErrors.mobileNo ? 'Must be a valid mobile number.' : ''}
                   />
                 </Grid>
+                  */}
                 <Grid item xs={12} sm={6}>
                   <TextField
                     name="password1"
@@ -333,6 +343,7 @@ const LogInModal = () => {
                     helperText={signupErrors.password1 ? 'Cannot be empty. Must contain at least 8 characters.' : ''}
                   />
                 </Grid>
+                {/* 
                 <Grid item xs={12} sm={6}>
                   <TextField
                     name="password2"
@@ -349,14 +360,19 @@ const LogInModal = () => {
                     helperText={signupErrors.password2 ? 'Passwords must match.' : ''}
                   />
                 </Grid>
+                */}
               </Grid> 
 
+              <Typography variant='subtitle2' sx={{ color: 'error.main', minHeight:'5vh', mt:'0.4rem'}}>
+                {registerFail && 'This email is already registered. Please use another email address.'}
+              </Typography>
+
               <FlexBox direction='column' alignItems={'center'}>
-                  <Button type='submit'
-                    variant="contained" color="success"
-                  >
-                    Sign up
-                  </Button>                
+                <Button type='submit'
+                  variant="contained" color="success"
+                >
+                  Sign up
+                </Button>                
               </FlexBox>
             </form>         
               

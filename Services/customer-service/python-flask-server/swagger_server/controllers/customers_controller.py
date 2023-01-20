@@ -63,6 +63,10 @@ def create_customer(body=None):  # noqa: E501
         body.points = str(0.0) #New users will have 0 reward points
         body.token = '1w2e3r4t5y6u7i8o'
 
+        if body.location == None: body.location = ''
+        if body.mobile_no == None: body.mobile_no = ''
+        if body.profile_pic == None: body.profile_pic = ''
+
         insert_string = "INSERT INTO customers VALUES (default, %s,%s,%s,%s,%s,%s,%s,%s,%s) RETURNING id;"
         cur.execute(insert_string, (body.first_name, body.last_name, body.email, \
             body.password, body.mobile_no, body.location, body.profile_pic, \

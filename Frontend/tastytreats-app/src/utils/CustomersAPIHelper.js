@@ -26,5 +26,9 @@ export default class CustomersAPI {
     return this.init().get("/customers/login", {params: params});
   };
 
+  registerCustomer = (body) => {
+    return this.init().post("/customers", body);
+  };
+
 
 }
