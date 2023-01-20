@@ -42,7 +42,7 @@ const TastyTreatsAppBar = () => {
   }
 
   const toHomePage = () => {    
-    address.length > 0 ? navigate('/home') : navigate('/');
+    address?.addr1.length > 0 ? navigate('/home') : navigate('/');
   }
 
   return (

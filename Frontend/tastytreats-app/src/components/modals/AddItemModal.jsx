@@ -89,7 +89,7 @@ const AddItemModal = () => {
           <b>${itemToAdd?.price}</b>
         </FlexBox>
 
-        <FlexBox sx={{ m:'0 auto 2rem auto', width:'80%'}} justifyContent='center'>
+        <FlexBox sx={{ m:'0 auto 0.2rem auto', width:'80%'}} justifyContent='center'>
           {itemToAdd?.description}
         </FlexBox>
 

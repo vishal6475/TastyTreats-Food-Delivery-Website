@@ -68,9 +68,6 @@ const FirstPage = () => {
               placeholder='Enter delivery address' 
               required
               style={{backgroundColor:'white', minWidth: '30vw'}}
-              InputProps={{
-                startAdornment: <InputAdornment position="start"><LocationOnIcon/></InputAdornment>,
-              }}
             />
           </Autocomplete>
         </BoxDeliveryAdd>
