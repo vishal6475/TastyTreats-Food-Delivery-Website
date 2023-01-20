@@ -16,6 +16,13 @@ export const StandardModal = styled(Dialog)`
   }
 `
 
+export const ItemModal = styled(Dialog)`
+  & .MuiDialog-paper {
+    width: 80vw;
+    max-width: 500px;
+  }
+`
+
 export const AddressModal = styled(Dialog)`
   & .MuiDialog-container {
     align-items: flex-start;
@@ -61,7 +68,7 @@ export const ModalBodyLarge = styled(Box)`
 `
 
 export const ItemTitleBox = styled(FlexBox)`
-  width: 90%;
+  width: 89%;
   align-items: center;
   justify-content: center;
 `

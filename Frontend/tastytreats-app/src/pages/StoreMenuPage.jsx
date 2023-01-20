@@ -197,7 +197,8 @@ const StoreMenuPage = () => {
         <FlexBox key={idx} direction='column' >
 
           <FlexBox justify='space-between' >
-            <Typography gutterBottom variant="h6" color="text.primary" sx={{ p:'0', m:'0' }}>
+            <Typography gutterBottom variant="subtitle2" color="text.primary" 
+              sx={{ p:'0', m:'0.2rem 0 0 0', fontSize:'1rem' }}>
               {item.name}
             </Typography> 
 
@@ -208,8 +209,8 @@ const StoreMenuPage = () => {
                 <RemoveSharpIcon sx={{cursor:'pointer'}} />
               </IconButton> 
 
-              <Typography id={`cart-item-quantity-${idx}`} variant="h6" color="text.secondary" component='div' 
-                sx={{m:'0 10px 0 10px', p:'0' }}>
+              <Typography id={`cart-item-quantity-${idx}`} variant="subtitle2" color="text.secondary" 
+                sx={{m:'0 10px 0 10px', p:'0', fontSize:'1.2rem'  }}>
                 {cartItems.items[idx].quantity}    
               </Typography>
 
@@ -220,9 +221,8 @@ const StoreMenuPage = () => {
 
           </FlexBox>
 
-          
-          <Typography id={`cart-item-price-${idx}`} variant="h7" color="text.secondary" 
-            sx={{ mb:'0.8rem', fontWeight:'bold' }} >
+          <Typography id={`cart-item-price-${idx}`} variant="subtitle2" color="text.secondary" 
+            sx={{ p:'0', m:'-0.3rem 0 0 0', fontSize:'1rem' }} >
             ${(item.price * cartItems.items[idx].quantity).toFixed(2)}
           </Typography>
 

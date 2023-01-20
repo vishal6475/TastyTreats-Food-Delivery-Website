@@ -1,7 +1,7 @@
 import { useState, useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { StoreContext } from '../../utils/context';
-import { StandardModal, ModalBody, ModalItemTitle } from '../styles/modals';
+import { ItemModal, ModalBody, ModalItemTitle } from '../styles/modals';
 import { FlexBox } from '../styles/layouts';
 import { Button, TextField, Typography, Grid, CardMedia, experimentalStyled } from '@mui/material';
 import { IconButton } from '@mui/material';
@@ -74,7 +74,7 @@ const AddItemModal = () => {
   }
 
   return (
-    <StandardModal open={openAddModal} onClose={handleClose} aria-labelledby="login modal" maxWidth='lg'>
+    <ItemModal open={openAddModal} onClose={handleClose} aria-labelledby="login modal" maxWidth='lg'>
       <ModalItemTitle title={itemToAdd?.name} close={handleClose} />
       <ModalBody justifyContent='center'>
 
@@ -107,11 +107,13 @@ const AddItemModal = () => {
         </FlexBox>
 
         <FlexBox sx={{ m:'0 auto 2rem auto'}} justifyContent='center'>
-          <Button variant="contained" onClick={addToCart} >Add to Cart</Button>
+          <Button variant="contained" onClick={addToCart} 
+            sx={{minWidth:'200px', maxWidth:'350px', width:'40vw', height:'50px', fontSize:'1.2rem'}}
+          >Add to Cart</Button>
         </FlexBox>
 
       </ModalBody>
-    </StandardModal>
+    </ItemModal>
   )
 }
 

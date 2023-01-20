@@ -147,7 +147,7 @@ const CheckoutPage = () => {
         </FlexBox>  
 
         <Button variant="contained" onClick={processPayment} 
-        sx={{ mb:'1rem', width:'20vw', minWidth:'160px', height:'7vh', m:'1rem auto 1rem auto',  fontSize:'1.2rem', 
+        sx={{ mb:'1rem', width:'20vw', minWidth:'160px', height:'7vh', m:'1rem auto 1rem auto', fontSize:'1.2rem', 
         backgroundColor: 'tastytreats.mediumBlue', '&:hover':{backgroundColor: 'tastytreats.mediumBlue'} }} >
           Place Order
         </Button>
