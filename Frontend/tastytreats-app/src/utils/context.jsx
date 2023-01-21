@@ -21,6 +21,8 @@ const ContextProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState(null);
   const [cardOrder, setCardOrder] = useState(null);
   const [fromCheckout, setFromCheckout] = useState(false);
+  const [isSearched, setIsSearched] = useState(false);
+  const [searchedItems, setSearchedItems] = useState('');
 
   const states = {
     redirect: [redirect, setRedirect],
@@ -39,7 +41,9 @@ const ContextProvider = ({ children }) => {
     cartItems: [cartItems, setCartItems],
     storeDetails: [storeDetails, setStoreDetails],
     cardOrder: [cardOrder, setCardOrder],
-    fromCheckout: [fromCheckout, setFromCheckout]
+    fromCheckout: [fromCheckout, setFromCheckout],
+    isSearched: [isSearched, setIsSearched],
+    searchedItems: [searchedItems, setSearchedItems]
   };
 
   return (

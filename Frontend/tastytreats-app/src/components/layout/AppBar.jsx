@@ -49,6 +49,8 @@ const TastyTreatsAppBar = () => {
   const [open, setOpen] = context.logInModal;
   const [loginOrSignup, setLoginOrSignup] = context.loginOrSignup;
   const [fromCheckout, setFromCheckout] = context.fromCheckout;
+  const [isSearched, setIsSearched]  = context.isSearched;
+  const [searchedItems, setSearchedItems] = context.searchedItems;
 
   let toSearch = null
 
@@ -59,7 +61,8 @@ const TastyTreatsAppBar = () => {
   }
 
   const toFirstPage = () => {    
-    navigate('/'); 
+    navigate('/');     
+    setIsSearched(false)
   }
 
   const checkForTypes = (store) => {
@@ -71,15 +74,14 @@ const TastyTreatsAppBar = () => {
     return false
   }
 
-  const handleSubmit = (event) => {
+  const handleSearch = (event) => {
     event.preventDefault()
-    //console.log(searchTitle?.current?.value)
     toSearch = searchTitle.current.value
     toSearch = toSearch.trim().toLowerCase()
     while (toSearch.includes('  ')) {
       toSearch = toSearch.replaceAll('  ', ' ')
     }
-    //toSearch = toSearch.replaceAll('  ', ' ')
+    setSearchedItems(toSearch)
     toSearch = toSearch.split(' ')
     console.log(toSearch)
 
@@ -88,6 +90,7 @@ const TastyTreatsAppBar = () => {
     console.log(currentStores)
     setStoresList(currentStores)
     searchTitle.current.value = ''
+    setIsSearched(true)
   }
 
   const toHomePage = () => {    
@@ -115,13 +118,13 @@ const TastyTreatsAppBar = () => {
         </FlexBox>
 
         {location.pathname === '/home' &&
-        <SearchBar component="form" onSubmit={handleSubmit}>
+        <SearchBar component="form" onSubmit={handleSearch}>
           <InputBase
             inputRef={searchTitle}
             autoComplete='off'
             id='SearchBar'
             sx={{ ml: 1.5, flex: 1 }}
-            placeholder="Search for Restaurants"
+            placeholder="Search for restaurant types"
           />
           <Tooltip title="Search restaurant" enterDelay={10}>
             <IconButton type="submit" aria-label="search" >
