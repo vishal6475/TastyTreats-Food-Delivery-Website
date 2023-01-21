@@ -18,7 +18,7 @@ const CategoryBox = styled('div')`
   flex-direction: row;
   overflow-y: auto;
   white-space: nowrap;
-  margin-bottom: 20px;
+  scroll-behavior: smooth;
   ::-webkit-scrollbar {
     display: none;
   } /* for chrome */
@@ -72,23 +72,58 @@ const HomePage = () => {
     setStoresList(allStoresList)
   }
 
+  const leftScroll = () => {
+    const left = document.getElementById('category-scroll-box');
+    left.scrollBy(300, 0);
+  }
+
+  const rightScroll = () => {
+    const right = document.getElementById('category-scroll-box');
+    right.scrollBy(-300, 0);
+  }
+
+  const selectTypeChip = (idx) => {
+    console.log(idx, categories[idx])
+    const element = document.getElementById(`category-chip-${idx}`)
+
+    console.log(element.style.backgroundColor)
+    console.log(element.style.color)
+
+    if (element.style.backgroundColor === '#F0F0F0') {
+      element.style.backgroundColor = 'blue'
+    }
+  }
+
 
   return (
       <div style={{ margin:'20px auto 20px auto', width:'75vw', minHeight:'88vh' }}>
 
-        <CategoryBox className="scrollmenu">
-          <IconButton>
-            <NavigateBeforeIcon/>
-          </IconButton>
+        <FlexBox sx={{ alignItems:'center', mb:'1rem'}}>
+            <IconButton onClick={rightScroll} >
+              <NavigateBeforeIcon sx={{ color:'black' }} />
+            </IconButton>
 
-          {categories.map((category) => {
-            return <div style={{ margin:'0 10px 0 10px', cursor:'pointer' }}>{category} </div>
-          })
-          }
-          <IconButton>
-            <NavigateNextIcon/>
-          </IconButton>
-        </CategoryBox>
+          <CategoryBox id='category-scroll-box' >
+            {categories.map((category, idx) => {
+              return <FlexBox key={idx} id={`category-chip-${idx}`} value={idx}
+              style={{ backgroundColor:'#F0F0F0' }}
+                sx={{ margin:'0 8px 0 8px', padding:'2px 6px 2px 6px', cursor:'pointer', 
+                '&:hover': {backgroundColor: '#D8D8D8'}, borderRadius:'20px' }}
+                onClick={() => {selectTypeChip(idx)}}
+                >
+                  <Typography variant='subtitle2'>
+                    {category} 
+                  </Typography>
+                
+                </FlexBox>
+            })
+            }
+          </CategoryBox>
+          
+          <IconButton onClick={leftScroll} >
+              <NavigateNextIcon sx={{ color:'black' }}/>
+            </IconButton>
+        </FlexBox>
 
         {isSearched &&
         <FlexBox sx={{ alignItems:'flex-end', mb:'1rem' }}>
