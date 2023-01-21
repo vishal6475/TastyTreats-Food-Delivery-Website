@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState, useRef  } from 'react';
 import { StoreContext } from '../../utils/context';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { FlexBox, Container } from '../styles/layouts';
@@ -6,6 +6,13 @@ import AppBar from '@mui/material/AppBar';
 import { Typography, styled } from '@mui/material';
 import CustomerMenu from '../customer/CustomerMenu';
 
+import SearchIcon from '@mui/icons-material/Search';
+import {
+  Paper,
+  InputBase,
+  IconButton,
+  Tooltip
+} from '@mui/material';
 
 const AppTitle = styled(Typography)`
   font-family: monospace;
@@ -20,16 +27,30 @@ const AppTitle = styled(Typography)`
   }
 `
 
+const SearchBar = styled(Paper)`
+  width: 400px;
+  height: 5vh;
+  border-radius: 20px;
+  display: flex;
+  margin: auto 0 auto 0;
+`
+
 const TastyTreatsAppBar = () => {
   const navigate = useNavigate()
   const location = useLocation();
+  const searchTitle = useRef('')
+
   const context = useContext(StoreContext);  
   const [address, setAddress] = context.address;
+  const [storesList, setStoresList] = context.storesList;
+  const [allStoresList, setAllStoresList] = context.allStoresList;
   const [customer, setCustomer] = context.customer;
   const [loggedIn, setLoggedIn] = context.login;
   const [open, setOpen] = context.logInModal;
   const [loginOrSignup, setLoginOrSignup] = context.loginOrSignup;
   const [fromCheckout, setFromCheckout] = context.fromCheckout;
+
+  let toSearch = null
 
   const openLoginModal = () => {
     setLoginOrSignup(false);
@@ -39,6 +60,34 @@ const TastyTreatsAppBar = () => {
 
   const toFirstPage = () => {    
     navigate('/'); 
+  }
+
+  const checkForTypes = (store) => {
+    for (let i=0; i<store.types.length; i++)
+      for (let j=0; j<toSearch.length; j++)
+        if (store.types[i].toLowerCase().includes(toSearch[j])) {
+          return true
+        }      
+    return false
+  }
+
+  const handleSubmit = (event) => {
+    event.preventDefault()
+    //console.log(searchTitle?.current?.value)
+    toSearch = searchTitle.current.value
+    toSearch = toSearch.trim().toLowerCase()
+    while (toSearch.includes('  ')) {
+      toSearch = toSearch.replaceAll('  ', ' ')
+    }
+    //toSearch = toSearch.replaceAll('  ', ' ')
+    toSearch = toSearch.split(' ')
+    console.log(toSearch)
+
+    let currentStores = allStoresList
+    currentStores = currentStores.filter(checkForTypes)
+    console.log(currentStores)
+    setStoresList(currentStores)
+    searchTitle.current.value = ''
   }
 
   const toHomePage = () => {    
@@ -57,13 +106,34 @@ const TastyTreatsAppBar = () => {
           </AppTitle>
           {address &&
           <FlexBox sx={{ m:'auto 1rem auto 1rem', p:'0.4rem 1.5rem 0.4rem 1.5rem',
-            backgroundColor: '#C8C8C8', color: 'black', maxWidth:'30vw',
-            borderRadius: '30px', cursor: 'pointer', '&:hover': {backgroundColor: '#888888'} }}
+            backgroundColor: 'white', color: 'black', maxWidth:'30vw',
+            borderRadius: '30px', cursor: 'pointer', '&:hover': {backgroundColor: '#C8C8C8'} }}
             id='userAddress' onClick={toFirstPage} >       
             {address.addr1.split(',')[0]}
           </FlexBox>
           }
         </FlexBox>
+
+        {location.pathname === '/home' &&
+        <SearchBar component="form" onSubmit={handleSubmit}>
+          <InputBase
+            inputRef={searchTitle}
+            autoComplete='off'
+            id='SearchBar'
+            sx={{ ml: 1.5, flex: 1 }}
+            placeholder="Search for Restaurants"
+          />
+          <Tooltip title="Search restaurant" enterDelay={10}>
+            <IconButton type="submit" aria-label="search" >
+              <SearchIcon
+                id='searchIcon'
+                aria-label="search-submit"
+                aria-describedby="submits search query when clicked"
+              />
+            </IconButton>
+          </Tooltip>
+        </SearchBar>
+        }
         
         <FlexBox>
           {!loggedIn &&

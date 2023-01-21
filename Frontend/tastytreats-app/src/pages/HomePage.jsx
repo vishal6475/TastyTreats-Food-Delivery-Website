@@ -10,7 +10,8 @@ const storeAPI = new StoresAPI();
 const HomePage = () => {
   const context = useContext(StoreContext);
   const [customer] = context.customer;
-  const [storesList, setStoresList] = useState([]);
+  const [storesList, setStoresList] = context.storesList;
+  const [allStoresList, setAllStoresList] = context.allStoresList;
 
   useEffect(() => {
     fetchAllStores()
@@ -20,6 +21,7 @@ const HomePage = () => {
     const allStoresRes = await storeAPI.getAllStores()
     console.log(allStoresRes.data)
     setStoresList(allStoresRes.data)
+    setAllStoresList(allStoresRes.data)
   }
 
 
