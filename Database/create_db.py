@@ -184,6 +184,9 @@ cur.execute("INSERT INTO stores values(default, 'Subway - Strathfield South', '2
 cur.execute("INSERT INTO categories values(default, 1, 'New Yorker Pizzas' , 1 );")
 cur.execute("INSERT INTO categories values(default, 1, 'Premium Pizzas' , 1 );")
 cur.execute("INSERT INTO categories values(default, 1, 'Traditional Pizzas' , 1 );")
+cur.execute("INSERT INTO categories values(default, 1, 'Value Max Range' , 1 );")
+cur.execute("INSERT INTO categories values(default, 1, 'Vegan' , 1 );")
+cur.execute("INSERT INTO categories values(default, 1, 'Savoury Sides' , 1 );")
 """
 cur.execute("INSERT INTO categories values(default, 1, 'Value Max Range' , 1 );")
 cur.execute("INSERT INTO categories values(default, 1, 'Value Range' , 1 );")
@@ -229,7 +232,42 @@ cur.execute("INSERT INTO items values(default, 3, 'BBQ Meatlovers',\
 cur.execute("INSERT INTO items values(default, 3, 'Vegorama',\
             'Mushrooms, diced tomato, capsicum, baby spinach & slices of red onion, topped with crumbled feta cheese, kalamata olives & oregano',\
             21.50, 1, 1, '' );")
-cur.execute("INSERT INTO items values(default, 3, 'Fire Breather ',\
+cur.execute("INSERT INTO items values(default, 3, 'Fire Breather',\
+            'Domino''s pepperoni, smoked leg ham, seasoned ground beef, fiery jalapenos, tomato & sliced red onion with a spicy hit of chilli flakes',\
+            21.40, 0, 1, '' );")
+    
+    
+cur.execute("INSERT INTO items values(default, 4, 'Big Cheese_2',\
+            'The cheesiest, sauciest, and most authentic New York-style pizza, cut into 8 super-sized slices. Indulge in soft, foldable dough, rich pizza sauce & more stretchy mozzarella than ever before.',\
+            24.99, 1, 1, '' );")
+cur.execute("INSERT INTO items values(default, 4, 'Big Hawaiian_2',\
+            'The cheesiest, sauciest, and most authentic New York-style pizza, cut into 8 super-sized slices. Indulge in soft, foldable dough & rich pizza sauce with smokey leg ham and juicy pineapple pieces.',\
+            24.99, 1, 1, '' );")
+cur.execute("INSERT INTO items values(default, 4, 'Big Pepperoni_2',\
+            'The cheesiest, sauciest, and most authentic New York-style pizza, cut into 8 super-sized slices. Indulge in soft, foldable dough & rich pizza sauce, loaded with your favourite crispy Domino’s pepperoni.',\
+            24.99, 0, 1, '' );")
+cur.execute("INSERT INTO items values(default, 5, 'Mega Meatlovers_2',\
+            'Mega loaded, mega tasty. Featuring seasoned chicken, smoked leg ham, crumbled beef, pepperoni slices, Italian sausage & crispy rasher bacon, brought together with a Hickory BBQ sauce',\
+            24.10, 0, 1, '' );")
+cur.execute("INSERT INTO items values(default, 5, 'Loaded Supreme_2',\
+            'Ground beef, crispy rasher bacon, mushroom, pepperoni, Italian sausage, baby spinach, smoked leg ham & pineapple, topped with oregano, tomato capsicum sauce & spring onions',\
+            24.50, 0, 1, '' );")
+cur.execute("INSERT INTO items values(default, 5, 'Peri Peri Chicken_2',\
+            'A flavoursome pairing of seasoned chicken pieces, Italian cherry tomatoes, sliced red onion & baby spinach, topped with our addictive peri peri sauce',\
+            23.30, 0, 1, '' );")
+cur.execute("INSERT INTO items values(default, 5, 'Garlic Prawn_2',\
+            'Juicy prawns, paired with baby spinach & diced tomato on a crème fraiche & zesty garlic sauce base, topped with oregano',\
+            24.50, 0, 1, '' );")
+cur.execute("INSERT INTO items values(default, 6, 'Spicy Peppy Paneer_2',\
+            'Diced paneer cheese, cherry tomatoes, sliced red onion, capsicum & spicy jalapenos on a tikka sauce base, drizzled with peri peri sauce',\
+            21.1, 1, 1, '' );")
+cur.execute("INSERT INTO items values(default, 6, 'BBQ Meatlovers_2',\
+            'Crispy rasher bacon, pepperoni pieces, seasoned ground beef, smokey leg ham & Italian sausage, all on a BBQ sauce base',\
+            21.40, 0, 1, '' );")
+cur.execute("INSERT INTO items values(default, 6, 'Vegorama_2',\
+            'Mushrooms, diced tomato, capsicum, baby spinach & slices of red onion, topped with crumbled feta cheese, kalamata olives & oregano',\
+            21.50, 1, 1, '' );")
+cur.execute("INSERT INTO items values(default, 6, 'Fire Breather_2',\
             'Domino''s pepperoni, smoked leg ham, seasoned ground beef, fiery jalapenos, tomato & sliced red onion with a spicy hit of chilli flakes',\
             21.40, 0, 1, '' );")
     

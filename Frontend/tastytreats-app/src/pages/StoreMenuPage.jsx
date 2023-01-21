@@ -12,10 +12,13 @@ import { IconButton } from '@mui/material';
 import AddSharpIcon from '@mui/icons-material/AddSharp';
 import RemoveSharpIcon from '@mui/icons-material/RemoveSharp';
 
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+
 const storeAPI = new StoresAPI();
 
 export const StyledCard = styled(Card)`
-  width: 60vw;
+  width: 70vw;
   margin: 20px auto 0 auto;
   border: none;
 `
@@ -63,6 +66,11 @@ const StoreMenuPage = () => {
   const [fromCheckout, setFromCheckout] = context.fromCheckout;
   const [storeDetails, setStoreDetails] = context.storeDetails;
 
+  const [tabValue, setTabValue] = useState(0);
+  const handleTabChange = (event, newValue) => {
+    setTabValue(newValue);
+  };
+
   useEffect(() => {
     fetchStoreMenu()
   }, [])
@@ -83,6 +91,24 @@ const StoreMenuPage = () => {
     setStoreDetails(store)
     //console.log(store)
   } 
+
+  const scrollToCategory = (e) => {
+    let element = document.getElementById(`menu-${e.target.id}`);
+    //console.log('Element', e.target.id)
+    element.scrollIntoView({behavior:"smooth"});
+  }
+
+  {store.categories?.map((category, idx) => {
+    window.addEventListener('scroll', () => { 
+      var element = document.getElementById(`menu-${idx}`);
+      var position = element.getBoundingClientRect();
+      //console.log(position.top)
+      //if (idx===2) console.log(position.top)
+      if (position.top && position.top <= 350) setTabValue(idx)
+    });
+  }    
+  )}
+
 
   const DecreaseQuantity = (idx) => {
     let newCart = cartItems
@@ -148,13 +174,33 @@ const StoreMenuPage = () => {
           </StyledCardContent>
         </StyledCard>
 
-        <MenuBox>
-          {store.categories?.map((category, idx) => 
+        <FlexBox direction='row' sx={{ width:'70vw', m:'0 auto 0 auto' }} >
+
+          <FlexBox direction='column' sx={{ width:'10vw', mr:'5px', position:'sticky', top:'0', height:'100vh' }}>
+            <Box sx={{ bgcolor: 'background.paper', mt:6}} >
+              <Tabs
+                orientation="vertical"
+                variant="scrollable"
+                value={tabValue}
+                onChange={handleTabChange}
+                aria-label="Menu category vertical tabs"
+              >
+              {store.categories?.map((menu, idx) => 
+                 <Tab key={idx} id={idx} value={idx} label={menu.category} onClick={scrollToCategory}  />
+              )}
+              </Tabs>
+            </Box>
+          </FlexBox>
+
+          <MenuBox>
+            {store.categories?.map((category, idx) => 
               <MenuItem 
-                key={idx} menu={category} 
+                key={idx} menu={category} idx={idx}
               />
             )}
-        </MenuBox>
+          </MenuBox>
+
+        </FlexBox>        
       </FlexBox>
 
       <Divider orientation="vertical" flexItem />

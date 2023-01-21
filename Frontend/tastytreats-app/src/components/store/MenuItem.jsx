@@ -32,15 +32,7 @@ const CardSummary = styled(Typography)`
   text-overflow: ellipsis;
 `
 
-const TagContainer = styled(ScrollContainer)`
-  /* white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis; */
-  padding-bottom: 5px;
-  overflow-x: auto;
-`
-
-const MenuItem = ({ menu }) => {
+const MenuItem = ({ menu, idx }) => {
   const navigate = useNavigate();  
   const context = useContext(StoreContext);
 
@@ -72,7 +64,7 @@ const MenuItem = ({ menu }) => {
 
   return (
     <div>      
-      <Typography variant="h5" sx={{ mt: 4, mb:1}} >
+      <Typography id={`menu-${idx}`} className={`menu-${idx}`} variant="h5" sx={{ mt: 4, mb:1}} >
         <b>{menu.category}</b>
       </Typography>
       <Grid container spacing={3}>

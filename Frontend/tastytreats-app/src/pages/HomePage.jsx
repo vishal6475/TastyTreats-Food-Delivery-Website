@@ -4,10 +4,29 @@ import { Grid, Typography, styled } from '@mui/material'
 import { FlexBox, Container } from '../components/styles/layouts';
 import StoresAPI from "../utils/StoresAPIHelper";
 import StoreCard from '../components/store/StoreCard'
+import { IconButton } from '@mui/material';
+import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
+
+
+const CategoryBox = styled('div')`
+  display: flex;
+  flex-direction: row;
+  overflow-y: auto;
+  white-space: nowrap;
+  margin-bottom: 20px;
+  ::-webkit-scrollbar {
+    display: none;
+  } /* for chrome */
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+`
+
+
 
 const storeAPI = new StoresAPI();
 
@@ -22,6 +41,7 @@ const HomePage = () => {
   let [showNoRestaurant, setShowNoRestaurant] = useState(false);
   
   const categories = ['Pizza', 'Burgers', 'Italian', 'Fast Food', 'Indian', 'Chicken', 'Mexican', 
+    'Sandwiches', 'Kebab', 'Turkish', 'South Indian', 'Pizza', 'Burgers', 'Italian', 'Fast Food', 'Indian', 'Chicken', 'Mexican', 
     'Sandwiches', 'Kebab', 'Turkish', 'South Indian' ]
   const [tabValue, setTabValue] = useState(0);
 
@@ -55,21 +75,20 @@ const HomePage = () => {
 
   return (
       <div style={{ margin:'20px auto 20px auto', width:'75vw', minHeight:'88vh' }}>
-        <Box sx={{  bgcolor: 'background.paper', mb:'1rem' }}>
-          <Tabs
-            value={tabValue}
-            onChange={changeTab}
-            variant="scrollable"
-            scrollButtons="auto"
-            aria-label="scrollable tabs for restaurant types"
-          >
-            {categories.map((category) => {
-              return <Tab label={category}>hi</Tab>
-            })
 
-            }
-          </Tabs>
-        </Box>
+        <CategoryBox className="scrollmenu">
+          <IconButton>
+            <NavigateBeforeIcon/>
+          </IconButton>
+
+          {categories.map((category) => {
+            return <div style={{ margin:'0 10px 0 10px', cursor:'pointer' }}>{category} </div>
+          })
+          }
+          <IconButton>
+            <NavigateNextIcon/>
+          </IconButton>
+        </CategoryBox>
 
         {isSearched &&
         <FlexBox sx={{ alignItems:'flex-end', mb:'1rem' }}>
