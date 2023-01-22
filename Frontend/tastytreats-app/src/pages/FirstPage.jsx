@@ -47,7 +47,7 @@ const FirstPage = () => {
 
   const gotDeliveryAddress = async () => {
     const addr = document.getElementById('delivery-address').value
-    console.log(addr)
+    //console.log(addr)
     setAddress((prev) => {return { ...prev, addr1: addr }})
     navigate('/home'); 
 

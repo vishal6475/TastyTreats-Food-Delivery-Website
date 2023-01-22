@@ -10,6 +10,7 @@ const ContextProvider = ({ children }) => {
   const [customer, setCustomer] = useState(false);
   const [address, setAddress] = useState({unitNo: null, addr1: '84 Albert Road, Strathfield NSW, Australia'});
   const [storesList, setStoresList] = useState([]);
+  const [orgChippedStores, setOrgChippedStores] = useState([]);
   const [allStoresList, setAllStoresList] = useState([]);
   const [card, setCard] = useState([]);
   const [storeDetails, setStoreDetails] = useState(null);
@@ -33,6 +34,7 @@ const ContextProvider = ({ children }) => {
     card: [card, setCard],
     address: [address, setAddress],
     storesList: [storesList, setStoresList],
+    orgChippedStores: [orgChippedStores, setOrgChippedStores],
     allStoresList: [allStoresList, setAllStoresList],
     logInModal: [logInModal, setLogInModal],
     loginOrSignup: [loginOrSignup, setLoginOrSignup],

@@ -42,8 +42,10 @@ const TastyTreatsAppBar = () => {
 
   const context = useContext(StoreContext);  
   const [address, setAddress] = context.address;
-  const [storesList, setStoresList] = context.storesList;
-  const [allStoresList, setAllStoresList] = context.allStoresList;
+  const [storesList, setStoresList] = context.storesList; // to show details of only SELECTED stores
+  const [allStoresList, setAllStoresList] = context.allStoresList; // to store details of ALL stores
+  const [orgChippedStores, setOrgChippedStores] = context.orgChippedStores // to store initial list of stores or after search
+                                                               // use for adding or removing chipped selections
   const [customer, setCustomer] = context.customer;
   const [loggedIn, setLoggedIn] = context.login;
   const [open, setOpen] = context.logInModal;
@@ -89,7 +91,7 @@ const TastyTreatsAppBar = () => {
     }
     setSearchedItems(toSearch)
     toSearch = toSearch.split(' ')
-    console.log(toSearch)
+    //console.log(toSearch)
 
     setIsChipSearched(0)
     setChippedItems([])    
@@ -101,8 +103,9 @@ const TastyTreatsAppBar = () => {
 
     let currentStores = allStoresList
     currentStores = currentStores.filter(checkForTypes)
-    console.log(currentStores)
+    //console.log(currentStores)
     setStoresList(currentStores)
+    setOrgChippedStores(currentStores)
     searchTitle.current.value = ''
     setIsSearched(1)
   }

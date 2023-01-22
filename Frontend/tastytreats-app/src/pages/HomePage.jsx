@@ -26,17 +26,14 @@ const ChipBox = styled(FlexBox)`
 
 `
 
-
-
 const storeAPI = new StoresAPI();
-
 
 const HomePage = () => {
   const context = useContext(StoreContext);
   const [customer] = context.customer;
   const [storesList, setStoresList] = context.storesList; // to show details of only SELECTED stores
   const [allStoresList, setAllStoresList] = context.allStoresList; // to store details of ALL stores
-  const [orgChippedStores, setOrgChippedStores] = useState([]) // to store initial list of stores or after search
+  const [orgChippedStores, setOrgChippedStores] = context.orgChippedStores // to store initial list of stores or after search
                                                                // use for adding or removing chipped selections
   const [isSearched, setIsSearched]  = context.isSearched;
   const [searchedItems, setSearchedItems] = context.searchedItems;
@@ -61,20 +58,26 @@ const HomePage = () => {
   }, [])
 
   const fetchAllStores = async (event) => { 
-    const allStoresRes = await storeAPI.getAllStores()
-    console.log(allStoresRes.data)
+    const allStoresRes = await storeAPI.getAllStores() 
+    //console.log(allStoresRes.data)
     setStoresList(allStoresRes.data)
+    setOrgChippedStores(allStoresRes.data)
     setAllStoresList(allStoresRes.data)
     setShowNoRestaurant(true)
     setChippedItems([])
+    unselectAllChips()    
   }
 
   const removeSearch = () => {    
     setIsSearched(0)
-    setStoresList(allStoresList)
     setIsChipSearched(0)
     setChippedItems([])
-    setOrgChippedStores([])
+    setStoresList(allStoresList)
+    setOrgChippedStores(allStoresList)
+    unselectAllChips()    
+  }
+
+  const unselectAllChips = () => {
     for (let i=0; i < categories.length; i++) {
       let element = document.getElementById(`category-chip-${i}`)
       element.style.color = 'black'
@@ -111,9 +114,6 @@ const HomePage = () => {
     const element = document.getElementById(`category-chip-${idx}`)
 
     if (element.style.color === 'black') { // when a new category chip is selected
-      if (isChipSearched === 0) {
-        setOrgChippedStores(storesList)
-      }
       setIsChipSearched(isChipSearched + 1)
       chippedItems.push(categories[idx])
       element.style.color = 'white'
@@ -122,6 +122,7 @@ const HomePage = () => {
     } else {      // when a category chip is DE-selected
       if (isChipSearched === 1) {
         setStoresList(orgChippedStores)
+        //setOrgChippedStores(orgChippedStores)
       } 
       setIsChipSearched(isChipSearched - 1)
       let removeIndex = chippedItems.indexOf(categories[idx])
@@ -130,7 +131,7 @@ const HomePage = () => {
       element.style.backgroundColor = '#F0F0F0'
       if (chippedItems.length > 0) handleChipSelections()
     }
-    console.log(chippedItems)
+    //console.log(chippedItems)
   }
 
 
