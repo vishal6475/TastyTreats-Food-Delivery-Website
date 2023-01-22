@@ -50,9 +50,15 @@ const TastyTreatsAppBar = () => {
   const [loginOrSignup, setLoginOrSignup] = context.loginOrSignup;
   const [fromCheckout, setFromCheckout] = context.fromCheckout;
   const [isSearched, setIsSearched]  = context.isSearched;
-  const [searchedItems, setSearchedItems] = context.searchedItems;
+  const [searchedItems, setSearchedItems] = context.searchedItems;  
+  const [isChipSearched, setIsChipSearched]  = context.isChipSearched;
+  const [chippedItems, setChippedItems] = context.chippedItems;
 
   let toSearch = null
+
+  const categories = ['Pizza', 'Burgers', 'Italian', 'Fast Food', 'Indian', 'Chicken', 'Mexican', 
+    'Sandwiches', 'Kebab', 'Turkish', 'South Indian', 'Pizza', 'Burgers', 'Italian', 'Fast Food', 'Indian', 'Chicken', 'Mexican', 
+    'Sandwiches', 'Kebab', 'Turkish', 'South Indian' ]
 
   const openLoginModal = () => {
     setLoginOrSignup(false);
@@ -62,7 +68,7 @@ const TastyTreatsAppBar = () => {
 
   const toFirstPage = () => {    
     navigate('/');     
-    setIsSearched(false)
+    setIsSearched(0)
   }
 
   const checkForTypes = (store) => {
@@ -85,12 +91,20 @@ const TastyTreatsAppBar = () => {
     toSearch = toSearch.split(' ')
     console.log(toSearch)
 
+    setIsChipSearched(0)
+    setChippedItems([])    
+    for (let i=0; i < categories.length; i++) {
+      let element = document.getElementById(`category-chip-${i}`)
+      element.style.color = 'black'
+      element.style.backgroundColor = '#F0F0F0'
+    }
+
     let currentStores = allStoresList
     currentStores = currentStores.filter(checkForTypes)
     console.log(currentStores)
     setStoresList(currentStores)
     searchTitle.current.value = ''
-    setIsSearched(true)
+    setIsSearched(1)
   }
 
   const toHomePage = () => {    
