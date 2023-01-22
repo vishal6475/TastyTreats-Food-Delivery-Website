@@ -17,7 +17,8 @@ import HomeIcon from '@mui/icons-material/Home';
 import Radio from '@mui/material/Radio';
 
 
-const DeliveryAddressModal = ({openAddressModal, setOpenAddressModal, showUnitBox, setShowUnitBox, leaveAtDoor, setLeaveAtDoor}) => {
+const DeliveryAddressModal = ({openAddressModal, setOpenAddressModal, showUnitBox, setShowUnitBox, 
+  leaveAtDoor, setLeaveAtDoor, addressToUpdate, setAddressToUpdate}) => {
   const navigate = useNavigate();
   const context = useContext(StoreContext);
   const [loggedIn, setLoggedIn] = context.login;
@@ -38,10 +39,21 @@ const DeliveryAddressModal = ({openAddressModal, setOpenAddressModal, showUnitBo
     return <div></div>;
   } 
 
-
   const handleClose = () => {
     setOpenAddressModal(false);
   }
+
+  const changeAddr1Field = (e) => {
+    setAddressToUpdate((prev) => {return {...prev, addr1: e.target.value }})
+  }  
+
+  const changeUnitField = (e) => {
+    setAddressToUpdate((prev) => {return {...prev, unitNo: e.target.value }})
+  }  
+
+  const changeInsField = (e) => {
+    setAddressToUpdate((prev) => {return {...prev, ins: e.target.value }})
+  }  
 
   const gotDeliveryAddress = async () => {
     //const addr = document.getElementById('order-delivery-address').value
@@ -55,10 +67,13 @@ const DeliveryAddressModal = ({openAddressModal, setOpenAddressModal, showUnitBo
   const updateAddress = () => {      
     const delivery_unit = document.getElementById('order-delivery-unit').value
     const delivery_addr = document.getElementById('order-delivery-address').value
-    setAddress((prev) => {return { unitNo: delivery_unit, addr1: delivery_addr }})
+    const delivery_ins = document.getElementById('order-delivery-ins').value
+    //console.log(addressToUpdate)
+    setAddress((prev) => {return { ...prev, unitNo: addressToUpdate.unitNo, addr1: delivery_addr, 
+      leaveAtDoor: curLeaveAtDoor, ins: addressToUpdate.ins}})
     setLeaveAtDoor(curLeaveAtDoor)
     handleClose()
-    console.log(address)
+    //console.log(address)
   }
 
 
@@ -72,8 +87,8 @@ const DeliveryAddressModal = ({openAddressModal, setOpenAddressModal, showUnitBo
           <TextField 
             id='order-delivery-address' 
             name="order-delivery-address"
-            ref={addressRef}
             placeholder='Enter delivery address' 
+            ref={addressRef}
             required
             sx={{backgroundColor:'white', minWidth: '100%', border: 'none', borderRadius:'0'}}
             InputProps={{
@@ -90,6 +105,8 @@ const DeliveryAddressModal = ({openAddressModal, setOpenAddressModal, showUnitBo
             id='order-delivery-unit' 
             name="order-delivery-unit"
             placeholder='Apartment or unit or floor number' 
+            value={addressToUpdate.unitNo}
+            onChange={changeUnitField}
             sx={{backgroundColor:'white', minWidth: '100%', mt:'1rem'}}
             InputProps={{
               startAdornment: <InputAdornment position="start"><HomeIcon/></InputAdornment>,
@@ -127,6 +144,8 @@ const DeliveryAddressModal = ({openAddressModal, setOpenAddressModal, showUnitBo
             id='order-delivery-ins' 
             name="order-delivery-ins"
             placeholder='Add delivery instructions' 
+            value={addressToUpdate.ins}
+            onChange={changeInsField}
             multiline
             rows={2}
             sx={{backgroundColor:'white', minWidth: '100%', mt:'1rem'}}

@@ -55,6 +55,13 @@ def create_order(body=None):  # noqa: E501
             cur.close()
             con.close()
             return error, 404, {'Access-Control-Allow-Origin': '*'}
+
+        if body.addr_2 == None: body.addr_2 = ''
+        if body.city == None: body.city = ''
+        if body.state == None: body.state = ''
+        if body.pincode == None: body.pincode = ''
+        if body.payment_type == None: body.payment_type = 'Card'
+        if body.delivery_pickup == None: body.addr_2 = 'D'
             
 
         insert_string = "INSERT INTO orders VALUES (default, %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) RETURNING id;"

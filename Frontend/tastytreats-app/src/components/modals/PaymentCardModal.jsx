@@ -17,6 +17,8 @@ const DeliveryAddressModal = ({openCardModal, setOpenCardModal}) => {
   const [cardNumber, setCardNumber] = useState('')
   const [cardExpiry, setCardExpiry] = useState('')
   const [cardCVV, setCardCVV] = useState('')
+  const [cardOrder, setCardOrder] = context.cardOrder;
+
   const [formErrors, setFormErrors] = useState({
     cardName: false,
     cardNumber: false,
@@ -65,14 +67,21 @@ const DeliveryAddressModal = ({openCardModal, setOpenCardModal}) => {
         setFormErrors(prevState => { return { ...prevState, cardNumber: true } })
       } else if (cardExpiry.length !== 4){
         setFormErrors(prevState => { return { ...prevState, cardExpiry: true } })
-      } else if (parseInt(cardExpiry.substring(2, 4)) < 22){
+      } else if (parseInt(cardExpiry.substring(2, 4)) < 23){
         setFormErrors(prevState => { return { ...prevState, cardExpiry: true } })
       } else if (parseInt(cardExpiry.substring(0, 2)) < 1 || parseInt(cardExpiry.substring(0, 2)) > 12){
         setFormErrors(prevState => { return { ...prevState, cardExpiry: true } })
       } else if (cardCVV.length !== 3){
         setFormErrors(prevState => { return { ...prevState, cardCVV: true } })
       } else {
-
+        let cardDetails = {
+          name: cardName,
+          number: cardNumber,
+          expiry: cardExpiry,
+          cvv: cardCVV
+        }
+        setCardOrder(cardDetails)
+        handleClose()
       }
     }
     catch (err) {
@@ -133,6 +142,7 @@ const DeliveryAddressModal = ({openCardModal, setOpenCardModal}) => {
               name="cardCVV"
               required
               fullWidth
+              type='password'
               inputProps={{ maxLength: 3 }}
               value={cardCVV}
               id="cardCVV"

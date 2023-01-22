@@ -106,7 +106,7 @@ const TastyTreatsAppBar = () => {
     //console.log(currentStores)
     setStoresList(currentStores)
     setOrgChippedStores(currentStores)
-    searchTitle.current.value = ''
+    //searchTitle.current.value = ''
     setIsSearched(1)
   }
 
@@ -124,7 +124,7 @@ const TastyTreatsAppBar = () => {
           >
             TastyTreats
           </AppTitle>
-          {address &&
+          {address?.addr1 &&
           <FlexBox sx={{ m:'auto 1rem auto 1rem', p:'0.4rem 1.5rem 0.4rem 1.5rem',
             backgroundColor: 'white', color: 'black', maxWidth:'30vw',
             borderRadius: '30px', cursor: 'pointer', '&:hover': {backgroundColor: '#C8C8C8'} }}

@@ -23,7 +23,6 @@ const CategoryBox = styled('div')`
 
 const ChipBox = styled(FlexBox)`
   backgroundColor: #F0F0F0;
-
 `
 
 const storeAPI = new StoresAPI();
@@ -75,6 +74,8 @@ const HomePage = () => {
     setStoresList(allStoresList)
     setOrgChippedStores(allStoresList)
     unselectAllChips()    
+    let search = document.getElementById('SearchBar')
+    search.value = ''
   }
 
   const unselectAllChips = () => {

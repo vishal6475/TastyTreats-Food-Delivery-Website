@@ -21,22 +21,29 @@ import {
   Avatar
 } from '@mui/material';
 
-const storeAPI = new StoresAPI();
+import OrdersAPI from "../utils/OrdersAPIHelper";
+
+const orderAPI = new OrdersAPI();
 
 
 const CheckoutPage = () => {
   const context = useContext(StoreContext);
-  const [customer] = context.customer;
+  const [customer, _] = context.customer;
   const [storesList, setStoresList] = useState([]);
   const [total, setTotal] = useState(0);
   const [cartItems, setCartItems] = context.cartItems;  
-  const [address, setAddress] = context.address;
+  const [address, setAddress] = context.address; 
+  const [addressToUpdate, setAddressToUpdate] = useState({});
   const [openAddressModal, setOpenAddressModal] = useState(false);
   const [showUnitBox, setShowUnitBox] = useState(false);
   const [openCardModal, setOpenCardModal] = useState(false);
   const [leaveAtDoor, setLeaveAtDoor] = useState(false);
   const [cardOrder, setCardOrder] = context.cardOrder;
   const [storeDetails, setStoreDetails] = context.storeDetails;
+  const [noAddressError, setNoAddressError] = useState(false);
+  const [noCardError, setNoCardError] = useState(false);
+
+  let populateAddr1Interval = null
   
   const navigate = useNavigate()
 
@@ -56,17 +63,60 @@ const CheckoutPage = () => {
     setTotal(sum)
   }
 
+  const populateAddr1Field = () => {
+    if (document.getElementById('order-delivery-address')) {
+      document.getElementById('order-delivery-address').value = address.addr1
+      clearInterval(populateAddr1Interval);
+    }
+  }
+
   const handleAddressModal = () => {
-    setShowUnitBox(false)
+    setNoAddressError(false)
+    setAddressToUpdate(address)
+    setShowUnitBox(true)
     setOpenAddressModal(true)
+    populateAddr1Interval = setInterval(populateAddr1Field, 100);
+  }
+
+  const handleLeaveHandModal = () => {
+    setNoAddressError(false)
+    setAddressToUpdate(address)
+    setShowUnitBox(true)
+    setOpenAddressModal(true)
+    populateAddr1Interval = setInterval(populateAddr1Field, 100);
   }
 
   const handleCardModal = () => {
+    setNoCardError(false)
     setOpenCardModal(true)
   }
 
-  const processPayment = () => {
+  const placeOrder = async () => {
+    if (address.addr1.length === 0){
+      setNoAddressError(true)
+      setNoCardError(false)
+    } else if (!cardOrder) {
+      setNoCardError(true)
+    } else {
 
+      try{
+        console.log(cartItems)
+        console.log(customer)
+
+        const body = {
+          customer_id: 2
+        }
+
+        const response = await orderAPI.createOrder(body)
+
+      }
+      catch (error) {
+        console.log(error)
+      }
+
+      
+
+    }
   }
 
 
@@ -94,25 +144,37 @@ const CheckoutPage = () => {
             </AccordionSummary>
             <AccordionDetails>
 
-              <FlexBox direction='row' sx={{ mt:'1rem', mb:'0.5rem', cursor:'pointer' }} 
+              <FlexBox direction='row' sx={{ mt:'1rem', mb:'0.5rem', cursor:'pointer', justifyContent:'space-between' }} 
                 onClick={handleAddressModal} >
-                <LocationOnIcon/>
-
-                <Typography sx={{ ml:'0.6rem' }}>
-                  {address.unitNo? address.unitNo + ' ' : ''} {address.addr1.split(',')[0]}
-                </Typography>
+                <FlexBox>
+                  <LocationOnIcon/>
+                  <Typography sx={{ ml:'0.6rem' }}>
+                    {address.unitNo? address.unitNo + ' ' : ''} {address.addr1.split(',')[0]}
+                  </Typography>
+                </FlexBox>
+                <FlexBox sx={{ border:'solid', borderRadius:'7px', borderWidth:'1px', padding:'1px 5px 1px 5px' }} >
+                  <Typography variant='subtitle2'>
+                    Edit
+                  </Typography>
+                </FlexBox>
               </FlexBox>
               <Divider sx={{ mb:'1rem' }} />
               
 
-              <FlexBox direction='row' sx={{ mt:'2rem', mb:'0.5rem', cursor:'pointer' }} 
-                onClick={handleAddressModal} >
-                <MeetingRoomIcon/>
-
-                <Typography sx={{ ml:'0.6rem' }}>
-                  {!leaveAtDoor && 'Hand it to me'}
-                  {leaveAtDoor && 'Leave at door'}
-                </Typography>
+              <FlexBox direction='row' sx={{ mt:'2rem', mb:'0.5rem', cursor:'pointer', justifyContent:'space-between' }} 
+                onClick={handleLeaveHandModal} >
+                <FlexBox>
+                  <MeetingRoomIcon/>
+                  <Typography sx={{ ml:'0.6rem' }}>
+                    {!leaveAtDoor && 'Hand it to me'}
+                    {leaveAtDoor && 'Leave at door'}
+                  </Typography>
+                </FlexBox>
+                <FlexBox sx={{ border:'solid', borderRadius:'7px', borderWidth:'1px', padding:'1px 5px 1px 5px' }} >
+                  <Typography variant='subtitle2'>
+                    Edit
+                  </Typography>
+                </FlexBox>
               </FlexBox>
               <Divider sx={{ mb:'1.8rem' }} />
               
@@ -132,13 +194,20 @@ const CheckoutPage = () => {
             </AccordionSummary>
             <AccordionDetails>
 
-              <FlexBox direction='row' sx={{ mt:'1.5rem', mb:'0.5rem', cursor:'pointer' }} 
+              <FlexBox direction='row' sx={{ mt:'1.5rem', mb:'0.5rem', cursor:'pointer', justifyContent:'space-between' }} 
                 onClick={handleCardModal} >
-                <CreditCardIcon/>
-                <Typography sx={{ ml:'0.6rem' }}>
-                { cardOrder && 'Card999' }
-                { !cardOrder && 'Select Credit/Debit Card' }
-                </Typography>
+                <FlexBox>
+                  <CreditCardIcon/>
+                  <Typography sx={{ ml:'0.6rem' }}>
+                  { cardOrder && 'Card ...' + cardOrder.number.substr(-4, 4) }
+                  { !cardOrder && 'Select Credit/Debit Card' }
+                  </Typography>
+                </FlexBox>
+                <FlexBox sx={{ border:'solid', borderRadius:'7px', borderWidth:'1px', padding:'1px 5px 1px 5px' }} >
+                  <Typography variant='subtitle2'>
+                    Edit
+                  </Typography>
+                </FlexBox>
               </FlexBox>
               <Divider sx={{ mb:'1.6rem' }} />
 
@@ -146,8 +215,14 @@ const CheckoutPage = () => {
           </Accordion>
         </FlexBox>  
 
-        <Button variant="contained" onClick={processPayment} 
-        sx={{ mb:'1rem', width:'20vw', minWidth:'160px', height:'7vh', m:'1rem auto 1rem auto', fontSize:'1.2rem', 
+        <Typography variant='subtitle2' 
+          sx={{ color: 'error.main', minHeight:'5vh', m:'0.4rem auto 0 auto', fontSize:'1rem'}}>
+          {noAddressError && 'Please enter your delivery address.'}
+          {noCardError && 'Please enter your card details.'}
+        </Typography>
+
+        <Button variant="contained" onClick={placeOrder} 
+        sx={{ mb:'1rem', width:'20vw', minWidth:'160px', height:'7vh', m:'0.6rem auto 1rem auto', fontSize:'1.2rem', 
         backgroundColor: 'tastytreats.mediumBlue', '&:hover':{backgroundColor: 'tastytreats.mediumBlue'} }} >
           Place Order
         </Button>
@@ -200,38 +275,42 @@ const CheckoutPage = () => {
             </FlexBox>
             )}       
 
-            <FlexBox  direction='row' justify='space-between' sx={{mt:'2rem'}} >
-              <Typography gutterBottom variant="subtitle2" color="text.primary" 
-                sx={{ p:'0', m:'0', fontSize:'1rem' }}>
-                Delivery fee
-              </Typography> 
-              <Typography variant="subtitle2" color="text.secondary" 
-                sx={{ p:'0', m:'0', fontSize:'0.9rem' }} >
-                <b>${(cartItems.delivery_fee).toFixed(2)}</b> 
-              </Typography>          
-            </FlexBox>    
+            {cartItems &&
+            <FlexBox direction='column'>
+              <FlexBox  direction='row' justify='space-between' sx={{mt:'2rem'}} >
+                <Typography gutterBottom variant="subtitle2" color="text.primary" 
+                  sx={{ p:'0', m:'0', fontSize:'1rem' }}>
+                  Delivery fee
+                </Typography> 
+                <Typography variant="subtitle2" color="text.secondary" 
+                  sx={{ p:'0', m:'0', fontSize:'0.9rem' }} >
+                  <b>${cartItems? (cartItems.delivery_fee).toFixed(2): '0.00'}</b> 
+                </Typography>          
+              </FlexBox>    
 
-            <FlexBox direction='row' justify='space-between'>
-              <Typography gutterBottom variant="subtitle2" color="text.primary" 
-                sx={{ p:'0', m:'0', fontSize:'1rem' }}>
-                Service fee
-              </Typography> 
-              <Typography variant="subtitle2" color="text.secondary" 
-                sx={{ p:'0', m:'0', fontSize:'0.9rem' }} >
-                <b>${(0.06 * total).toFixed(2)}</b> 
-              </Typography>          
-            </FlexBox>    
+              <FlexBox direction='row' justify='space-between'>
+                <Typography gutterBottom variant="subtitle2" color="text.primary" 
+                  sx={{ p:'0', m:'0', fontSize:'1rem' }}>
+                  Service fee
+                </Typography> 
+                <Typography variant="subtitle2" color="text.secondary" 
+                  sx={{ p:'0', m:'0', fontSize:'0.9rem' }} >
+                  <b>${(0.06 * total).toFixed(2)}</b> 
+                </Typography>          
+              </FlexBox>    
 
-            <FlexBox direction='row' justify='space-between' sx={{mt:'2rem'}} >
-              <Typography gutterBottom variant="subtitle2" color="text.primary" 
-                sx={{ p:'0', m:'0', fontSize:'1rem' }}>
-                Total Amount
-              </Typography> 
-              <Typography variant="subtitle2" color="text.secondary" 
-                sx={{ p:'0', m:'0', fontSize:'0.9rem' }} >
-                <b>${(1.06 * total + cartItems.delivery_fee).toFixed(2)}</b> 
-              </Typography>          
-            </FlexBox>   
+              <FlexBox direction='row' justify='space-between' sx={{mt:'2rem'}} >
+                <Typography gutterBottom variant="subtitle2" color="text.primary" 
+                  sx={{ p:'0', m:'0', fontSize:'1rem' }}>
+                  Total Amount
+                </Typography> 
+                <Typography variant="subtitle2" color="text.secondary" 
+                  sx={{ p:'0', m:'0', fontSize:'0.9rem' }} >
+                  <b>${cartItems? (1.06 * total + cartItems.delivery_fee).toFixed(2): '0.00'}</b> 
+                </Typography>          
+              </FlexBox>  
+            </FlexBox>  
+            } 
 
           </FlexBox>      
         </FlexBox>      
@@ -244,7 +323,9 @@ const CheckoutPage = () => {
         showUnitBox={showUnitBox}
         setShowUnitBox={setShowUnitBox}
         leaveAtDoor={leaveAtDoor}
-        setLeaveAtDoor={setLeaveAtDoor}        
+        setLeaveAtDoor={setLeaveAtDoor}  
+        addressToUpdate={addressToUpdate}      
+        setAddressToUpdate={setAddressToUpdate}
         />
 
       <PaymentCardModal 

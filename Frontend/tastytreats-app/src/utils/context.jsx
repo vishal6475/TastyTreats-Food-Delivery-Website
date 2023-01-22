@@ -8,7 +8,8 @@ const ContextProvider = ({ children }) => {
   const [loggedIn, setLoggedIn] = useState(false);
   const [loginOrSignup, setLoginOrSignup] = useState(false);
   const [customer, setCustomer] = useState(false);
-  const [address, setAddress] = useState({unitNo: null, addr1: '84 Albert Road, Strathfield NSW, Australia'});
+  const [address, setAddress] = useState({unitNo: '', addr1: '84 Albert Road, Strathfield NSW, Australia', 
+                                          leaveAtDoor: false, ins: '' });
   const [storesList, setStoresList] = useState([]);
   const [orgChippedStores, setOrgChippedStores] = useState([]);
   const [allStoresList, setAllStoresList] = useState([]);
