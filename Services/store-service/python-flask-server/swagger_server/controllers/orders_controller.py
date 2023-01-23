@@ -37,12 +37,6 @@ def create_order(body=None):  # noqa: E501
         if connexion.request.is_json:
             body = Order.from_dict(connexion.request.get_json())  # noqa: E501
         
-       # if (body.email == None or body.first_name == None or body.last_name == None or body.password == None):
-       #     error = InvalidInputError(code=400, type="InvalidInputError", 
-       #             message="The following mandatory fields were not provided: email or first name or last name or password")
-       #     return error, 400, {'Access-Control-Allow-Origin': '*'}
-
-
         con = psycopg2.connect(database= database, user=user, password=db_password, host=host, port=port)
         con.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
         cur = con.cursor()
@@ -83,8 +77,6 @@ def create_order(body=None):  # noqa: E501
         return error, 500, {'Access-Control-Allow-Origin': '*'}
 
 
-
-
 def get_order_by_id(order_id):  # noqa: E501
     """Get an order by order id
 
@@ -97,7 +89,59 @@ def get_order_by_id(order_id):  # noqa: E501
     """
 
     try:
-        return 'do some magic!', {'Access-Control-Allow-Origin': '*'}
+        con = psycopg2.connect(database= database, user=user, password=db_password, host=host, port=port)
+        con.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
+        cur = con.cursor()
+
+        cur.execute('SELECT * FROM orders where id = ' + str(order_id))
+        record = cur.fetchone()
+        if record != None:
+            order = dict()
+            order['id'] = int(record[0])
+            order['customer_id'] = int(record[1])
+            order['store_id'] = int(record[2])
+            order['date'] = str(record[3])
+            order['unit_no'] = str(record[4])
+            order['addr_1'] = str(record[5])
+            order['addr_2'] = str(record[6])
+            order['city'] = str(record[7])
+            order['state'] = str(record[8])
+            order['pincode'] = str(record[9])
+            order['customer_name'] = str(record[10])
+            order['card_number'] = str(record[11])
+            order['card_expiry'] = str(record[12])
+            order['payment_type'] = str(record[13])
+            order['delivery_pickup'] = str(record[14])
+            order['total_amount'] = float(record[15])    
+
+            for item in order.keys():
+                if order[item] == "None":
+                    order[item] = ""  
+
+            order['items'] = []
+            cur.execute('SELECT * FROM order_items where order_id = ' + str(order_id))
+            records = cur.fetchall()
+            for record in records:
+                item = dict()
+                item['id'] = int(record[0])
+                item['order_id'] = int(record[1])
+                item['name'] = str(record[2])
+                item['price'] = float(record[3])
+                item['quantity'] = int(record[4])
+
+                order['items'].append(item)
+
+            cur.close()
+            con.close()
+            return order, 200, {'Access-Control-Allow-Origin': '*'}
+
+        else:
+            error = OrderNotFoundError(code=404, type="OrderNotFoundError", 
+                    message="The following Order ID does not exist: " + str(order_id))
+            cur.close()
+            con.close()
+            return error, 404, {'Access-Control-Allow-Origin': '*'}
+
 
     except Exception as e:
         # catch any unexpected runtime error and return as 500 error 
@@ -119,7 +163,74 @@ def get_orders(customer_id=None, store_id=None):  # noqa: E501
     """
 
     try:
-        return 'do some magic!', {'Access-Control-Allow-Origin': '*'}
+        con = psycopg2.connect(database= database, user=user, password=db_password, host=host, port=port)
+        con.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
+        cur = con.cursor()  
+
+        if (customer_id == None and store_id == None):
+            error = InvalidInputError(code=400, type="InvalidInputError", 
+                   message="At least one of the following mandatory fields are needed: customer_id or store_id")
+            return error, 400, {'Access-Control-Allow-Origin': '*'}
+
+        if store_id != None:
+            cur.execute('SELECT * FROM stores where id = ' + str(store_id))
+            record = cur.fetchone()
+            if record == None:
+                error = StoreNotFoundError(code=404, type="StoreNotFoundError", 
+                        message="The following Store ID does not exist: " + str(store_id))
+                cur.close()
+                con.close()
+                return error, 404, {'Access-Control-Allow-Origin': '*'}
+
+        orders_list = []
+        get_string = "SELECT * FROM orders where " 
+        if customer_id != None: get_string += " customer_id = " + str(customer_id)
+        if (customer_id != None and store_id != None): get_string += ' and '
+        if store_id != None: get_string += " store_id = " + str(store_id)
+
+        cur.execute(get_string)
+        records = cur.fetchall()
+        for record in records:
+            order = dict()
+            order['id'] = int(record[0])
+            order['customer_id'] = int(record[1])
+            order['store_id'] = int(record[2])
+            order['date'] = str(record[3])
+            order['unit_no'] = str(record[4])
+            order['addr_1'] = str(record[5])
+            order['addr_2'] = str(record[6])
+            order['city'] = str(record[7])
+            order['state'] = str(record[8])
+            order['pincode'] = str(record[9])
+            order['customer_name'] = str(record[10])
+            order['card_number'] = str(record[11])
+            order['card_expiry'] = str(record[12])
+            order['payment_type'] = str(record[13])
+            order['delivery_pickup'] = str(record[14])
+            order['total_amount'] = float(record[15])    
+
+            for item in order.keys():
+                if order[item] == "None":
+                    order[item] = ""  
+
+            order['items'] = []
+            cur.execute('SELECT * FROM order_items where order_id = ' + str(order['id']))
+            records = cur.fetchall()
+            for record in records:
+                item = dict()
+                item['id'] = int(record[0])
+                item['order_id'] = int(record[1])
+                item['name'] = str(record[2])
+                item['price'] = float(record[3])
+                item['quantity'] = int(record[4])
+
+                order['items'].append(item)
+
+            orders_list.append(order)
+
+        cur.close()
+        con.close()
+        return orders_list, 200, {'Access-Control-Allow-Origin': '*'}
 
     except Exception as e:
         # catch any unexpected runtime error and return as 500 error 
