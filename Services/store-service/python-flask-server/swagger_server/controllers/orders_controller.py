@@ -61,11 +61,10 @@ def create_order(body=None):  # noqa: E501
         if body.state == None: body.state = ''
         if body.pincode == None: body.pincode = ''
         if body.payment_type == None: body.payment_type = 'Card'
-        if body.delivery_pickup == None: body.addr_2 = 'D'
-            
+        if body.delivery_pickup == None: body.addr_2 = 'D'      
 
         insert_string = "INSERT INTO orders VALUES (default, %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) RETURNING id;"
-        cur.execute(insert_string, (body.customer_id, body.store_id, body.date, body.unit_no, body.addr_1, \
+        cur.execute(insert_string, (body.customer_id, body.store_id, body._date, body.unit_no, body.addr_1, \
             body.addr_2, body.city, body.state, body.pincode, body.customer_name, body.card_number, 
             body.card_expiry, body.payment_type, body.delivery_pickup, body.total_amount ))        
         body.id = cur.fetchone()[0]            

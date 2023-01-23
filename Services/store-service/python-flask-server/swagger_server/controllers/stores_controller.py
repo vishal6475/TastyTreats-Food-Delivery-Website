@@ -216,6 +216,9 @@ def update_category(store_id, body=None, category_id=None):  # noqa: E501
     try:
         if connexion.request.is_json:
             body = Category.from_dict(connexion.request.get_json())  # noqa: E501
+
+        """ THIS WILL BE DONE IN SPRINT 2 WHEN BUSINES SIDE UI IS BEING CREATED """
+
         return 'do some magic!', {'Access-Control-Allow-Origin': '*'}
 
     except Exception as e:
@@ -244,6 +247,9 @@ def update_item(store_id, category_id, body=None, item_id=None):  # noqa: E501
     try:
         if connexion.request.is_json:
             body = Item.from_dict(connexion.request.get_json())  # noqa: E501
+        
+        """ THIS WILL BE DONE IN SPRINT 2 WHEN BUSINES SIDE UI IS BEING CREATED """
+
         return 'do some magic!', {'Access-Control-Allow-Origin': '*'}
 
     except Exception as e:
@@ -268,6 +274,9 @@ def update_store(store_id, body=None):  # noqa: E501
     try:
         if connexion.request.is_json:
             body = Store.from_dict(connexion.request.get_json())  # noqa: E501
+        
+        """ THIS WILL BE DONE IN SPRINT 2 WHEN BUSINES SIDE UI IS BEING CREATED """
+
         return 'do some magic!', {'Access-Control-Allow-Origin': '*'}
 
     except Exception as e:

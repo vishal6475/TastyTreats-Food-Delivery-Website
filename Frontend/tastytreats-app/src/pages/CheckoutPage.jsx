@@ -91,6 +91,13 @@ const CheckoutPage = () => {
     setOpenCardModal(true)
   }
 
+  const dateFormat = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' };
+
+  function formatDate(datetime) {
+    let d = new Date(datetime);
+    return d.toLocaleDateString("en-US", dateFormat)
+  }
+
   const placeOrder = async () => {
     if (address.addr1.length === 0){
       setNoAddressError(true)
@@ -100,11 +107,27 @@ const CheckoutPage = () => {
     } else {
 
       try{
-        console.log(cartItems)
-        console.log(customer)
+        //console.log(cartItems)
+        //console.log(customer)
+        //console.log(cardOrder)
+
+        let currentDate = new Date()
+        //currentDate = currentDate.toISOString().slice(0, -5)+"+11:00"
+        console.log(formatDate(currentDate))        
 
         const body = {
-          customer_id: 2
+          customer_id: customer.id,
+          store_id: cartItems.storeID,
+          unit_no: address.unitNo,
+          addr_1: address.addr1,
+          customer_name: cardOrder.name,
+          card_number: cardOrder.number,
+          card_expiry: cardOrder.expiry,
+          payment_type: 'Card',
+          delivery_pickup: 'D',
+          total_amount: parseInt((1.06 * total + cartItems.delivery_fee).toFixed(2)),
+          items: cartItems.items,
+          date: currentDate
         }
 
         const response = await orderAPI.createOrder(body)
