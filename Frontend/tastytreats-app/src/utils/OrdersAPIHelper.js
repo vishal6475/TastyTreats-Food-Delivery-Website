@@ -26,5 +26,13 @@ export default class OrdersAPI {
     return this.init().post("/orders", body);
   };
 
+  getOrderByID = (order_id) => {
+    return this.init().get(`/orders/${order_id}`);
+  };
+
+  getOrders = (params) => {
+    return this.init().get("/orders", {params: params});
+  };
+
 
 }

@@ -14,7 +14,7 @@ const AccountSideBar = ({ accountPage, setAccountPage }) => {
   }
 
   return (
-    <SideBar>
+    <SideBar sx={{ backgroundColor:'white'}}>
       <SideBarTitle variant='h6'>
         Account menu
       </SideBarTitle>
@@ -29,9 +29,25 @@ const AccountSideBar = ({ accountPage, setAccountPage }) => {
         </SideBarItem>
         
         <SideBarItem 
-          title='My orders' 
+          title='Orders' 
           selected={accountPage === 'orders' ? true : false}
           onClick={() => handleChangePage('orders')}
+        >
+          <LocalActivityIcon />
+        </SideBarItem>
+        
+        <SideBarItem 
+          title='Address' 
+          selected={accountPage === 'address' ? true : false}
+          onClick={() => handleChangePage('address')}
+        >
+          <LocalActivityIcon />
+        </SideBarItem>
+        
+        <SideBarItem 
+          title='Payment' 
+          selected={accountPage === 'payment' ? true : false}
+          onClick={() => handleChangePage('payment')}
         >
           <LocalActivityIcon />
         </SideBarItem>

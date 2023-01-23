@@ -2,8 +2,6 @@ import { useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { StoreContext } from '../utils/context';
 import { Grid, Typography, styled, Button } from '@mui/material'
-import StoresAPI from "../utils/StoresAPIHelper";
-import StoreCard from '../components/store/StoreCard'
 import { FlexBox, Container } from '../components/styles/layouts';
 import Divider from '@mui/material/Divider';
 import Accordion from '@mui/material/Accordion';
@@ -22,9 +20,7 @@ import {
 } from '@mui/material';
 
 import OrdersAPI from "../utils/OrdersAPIHelper";
-
 const orderAPI = new OrdersAPI();
-
 
 const CheckoutPage = () => {
   const context = useContext(StoreContext);
@@ -40,6 +36,7 @@ const CheckoutPage = () => {
   const [leaveAtDoor, setLeaveAtDoor] = useState(false);
   const [cardOrder, setCardOrder] = context.cardOrder;
   const [storeDetails, setStoreDetails] = context.storeDetails;
+  const [completedOrder, setCompletedOrder] = context.completedOrder;
   const [noAddressError, setNoAddressError] = useState(false);
   const [noCardError, setNoCardError] = useState(false);
 
@@ -131,6 +128,9 @@ const CheckoutPage = () => {
         }
 
         const response = await orderAPI.createOrder(body)
+        console.log(response.data)
+        setCompletedOrder(response.data)
+        navigate(`/order/${response.data.id}`)
 
       }
       catch (error) {

@@ -27,6 +27,7 @@ const ContextProvider = ({ children }) => {
   const [searchedItems, setSearchedItems] = useState('');  
   const [isChipSearched, setIsChipSearched]  = useState(0);
   const [chippedItems, setChippedItems] = useState([]);
+  const [completedOrder, setCompletedOrder] = useState(null);
 
   const states = {
     redirect: [redirect, setRedirect],
@@ -50,7 +51,8 @@ const ContextProvider = ({ children }) => {
     isSearched: [isSearched, setIsSearched],
     searchedItems: [searchedItems, setSearchedItems],
     isChipSearched: [isChipSearched, setIsChipSearched],
-    chippedItems: [chippedItems, setChippedItems]
+    chippedItems: [chippedItems, setChippedItems],
+    completedOrder: [completedOrder, setCompletedOrder]
   };
 
   return (

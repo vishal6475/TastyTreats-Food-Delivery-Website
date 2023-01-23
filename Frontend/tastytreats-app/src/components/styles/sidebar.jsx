@@ -10,7 +10,6 @@ export const SideBar = styled('div')`
 display: flex;
 flex-direction: column;
 flex-grow: 1;
-border: 3px solid #ad9fa3;
 margin-right: 1rem;
 margin-bottom: 1rem;
 max-width: 225px;

@@ -55,15 +55,10 @@ const AccountDetailsPage = ({ change, setChange }) => {
     error: false,
     firstName: null,
     lastName: null,
-    age: null,
     mobile: null,
     email: null,
     password1: null,
-    password2: null,
-    cardName: null,
-    cardNumber: null,
-    cardType: null,
-    cardExpiry: null
+    password2: null
   })
 
   const handleImage = async (event) => {
@@ -79,19 +74,12 @@ const AccountDetailsPage = ({ change, setChange }) => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    const blurb = data.get('blurb')
     const firstName = data.get('firstName')
     const lastName = data.get('lastName')
-    const age = data.get('age')
     const mobile = data.get('mobile')
-    const location = data.get('location')
     const email = data.get('email')
     const password1 = data.get('password1')
     const password2 = data.get('password2')
-    const cardName = data.get('cardName')
-    const cardNumber = data.get('cardNumber')
-    const cardType = data.get('cardType')
-    const cardExpiry = data.get('cardExpiry')
 
     formErrors.error = false;
 
@@ -101,10 +89,6 @@ const AccountDetailsPage = ({ change, setChange }) => {
     }
     if (!lastName || !/^[a-zA-Z]+(\s[a-zA-Z]+)*$/.test(lastName)) {
       setFormErrors(prevState => { return { ...prevState, lastName: true } })
-      formErrors.error = true
-    }
-    if (age && (/\D+/.test(age) && (0 > parseInt(age) || parseInt(age) > 120))) {
-      setFormErrors(prevState => { return { ...prevState, age: true } })
       formErrors.error = true
     }
     if (mobile && mobile[0] === '+') {
@@ -134,26 +118,6 @@ const AccountDetailsPage = ({ change, setChange }) => {
         formErrors.error = true
       }
     }
-    if (changeCard) {
-      if (!cardName || !/^[a-zA-Z0-9]+(\s[a-zA-Z0-9]+)*$/.test(cardName)) {
-        setFormErrors(prevState => { return { ...prevState, cardName: true } })
-        formErrors.error = true
-      }
-      if (/\D+/.test(cardNumber) || cardNumber.length < 16) {
-        setFormErrors(prevState => { return { ...prevState, cardNumber: true } })
-        formErrors.error = true
-      }
-      if (!cardType || !/^[a-zA-Z0-9]+(\s[a-zA-Z0-9]+)*$/.test(cardType)) {
-        setFormErrors(prevState => { return { ...prevState, cardType: true } })
-        formErrors.error = true
-      }
-      const month = parseInt(cardExpiry.slice(0, 2))
-      const year = parseInt(cardExpiry.slice(2, 4))
-      if (/\D+/.test(cardExpiry) || cardExpiry.length !== 4 || month < 1 || month > 12 || year < 22 || (year === 22 && month < 8)) {
-        setFormErrors(prevState => { return { ...prevState, cardExpiry: true } })
-        formErrors.error = true
-      }
-    }
     if (!formErrors.error) {
       try {
 
@@ -168,21 +132,14 @@ const AccountDetailsPage = ({ change, setChange }) => {
   };
 
   useEffect(() => {
-    Object.keys(card).length !== 0 && setAddCard(true)
+    
     setChange(false)
   }, [])
 
   return (
-    <ScrollContainer thin pr='1vw'>
-      <Grid
-        onChange={() => !change && setChange(true)}
-        id='accountForm' component="form" noValidate onSubmit={handleSubmit}
-        container spacing={2} sx={{ mt: 0 }}
-      >
-
-        {/* Account image upload */}
-
-        <Grid item sm={12} md={5}>
+    <ScrollContainer thin="true" pr='1vw'>
+      
+          {/* Account image upload */}
           <ImageHolder component='label'>
             <input
               hidden type="file" name="profilePicture"
@@ -210,22 +167,17 @@ const AccountDetailsPage = ({ change, setChange }) => {
               }
             })()}
           </ImageHolder>
-        </Grid>
+      <Grid
+        onChange={() => !change && setChange(true)}
+        id='accountForm' component="form" noValidate onSubmit={handleSubmit}
+        container spacing={2} sx={{ mt: 0 }}
+      >
+
+        
+
 
         {/* Account basic details */}
 
-        <Grid item sm={12} md={7}>
-          <InfoHeader title='Account blurb:' />
-          <TextField
-            name="blurb"
-            fullWidth
-            multiline
-            rows={9}
-            id="blurb"
-            label="Your blurb"
-            defaultValue={account.user_desc}
-          />
-        </Grid>
         <Grid item sm={12} md={6}>
           <InfoHeader title='Account basics:' />
           <TextField
@@ -243,6 +195,7 @@ const AccountDetailsPage = ({ change, setChange }) => {
             helperText={formErrors.firstName ? 'Must be a valid firstname.' : ''}
           />
         </Grid>
+
         <Grid item sm={12} md={6} sx={{ mt: { sm: 0, md: 5.6 } }} >
           <TextField
             name="lastName"
@@ -259,22 +212,7 @@ const AccountDetailsPage = ({ change, setChange }) => {
             helperText={formErrors.lastName ? 'Must be a valid lastName.' : ''}
           />
         </Grid>
-        <Grid item sm={12} md={6}>
-          <TextField
-            name="age"
-            fullWidth
-            id="age"
-            label="Age"
-            type='number'
-            inputProps={{ min: 1, max: 120 }}
-            defaultValue={account.age ? account.age : ''}
-            onChange={() => {
-              formErrors.age && setFormErrors(prevState => { return { ...prevState, age: false } })
-            }}
-            error={formErrors.age}
-            helperText={formErrors.age ? 'Must be a valid age.' : ''}
-          />
-        </Grid>
+        
         <Grid item sm={12} md={6}>
           <TextField
             name="mobile"
@@ -289,17 +227,6 @@ const AccountDetailsPage = ({ change, setChange }) => {
             }}
             error={formErrors.mobile}
             helperText={formErrors.mobile ? 'Must be a valid mobile.' : ''}
-          />
-        </Grid>
-        <Grid item sm={12} md={12} >
-          <TextField
-            name="location"
-            fullWidth
-            id="location"
-            label="Location"
-            inputProps={{ maxLength: 50 }}
-            defaultValue={account.location}
-            sx={{ width: { sm: '100%', md: '49%' } }}
           />
         </Grid>
 
@@ -362,6 +289,7 @@ const AccountDetailsPage = ({ change, setChange }) => {
             helperText={formErrors.password1 ? 'Must contain at least 8 characters.' : ''}
           />
         </Grid>
+
         <Grid item sm={12} md={6}>
           <Button
             variant="contained"
@@ -396,148 +324,6 @@ const AccountDetailsPage = ({ change, setChange }) => {
           : ''
         }
 
-        {/* Card details */}
-
-        <Grid item sm={12} md={6}>
-          <InfoHeader title='Credit card details:' />
-          {Object.keys(card).length !== 0
-            ? <Button
-              variant="contained"
-              sx={{ width: '191px', mb: 1, backgroundColor: changeCard ? 'evenTastic.dull' : 'info.main' }}
-              onClick={() => {
-                setChangeCard(!changeCard)
-              }
-              }
-            >
-              {changeCard ? 'Undo change' : 'Change card?'}
-            </Button>
-            : <Button
-              variant="contained"
-              sx={{ width: '191px', mb: 1, backgroundColor: changeCard ? 'evenTastic.dull' : 'info.main' }}
-              onClick={() => {
-                setTimeout(scrollTo, 50)
-                setAddCard(!addCard)
-                setChangeCard(!changeCard)
-              }
-              }
-            >
-              {addCard ? 'Cancel' : 'Add card?'}
-            </Button>
-          }
-          {changeCard
-            ? <TextField
-              name="cardName"
-              required
-              fullWidth
-              id="cardName"
-              label="Card holder name"
-              inputProps={{ maxLength: 50 }}
-              InputLabelProps={{ shrink: true }}
-              defaultValue={card.card_name}
-              onChange={() => {
-                formErrors.cardName && setFormErrors(prevState => { return { ...prevState, cardName: false } })
-              }}
-              error={formErrors.cardName}
-              helperText={formErrors.cardName ? 'Must be a valid card holder name.' : ''}
-              sx={{ display: addCard ? 'inherit' : 'none', mt: 2 }}
-            />
-            : <Box sx={{mt: 2, display: card.card_name ? 'inherit' : 'none' }}>
-              <Typography variant="subtitle1" color="text.secondary">
-                Card name
-              </Typography>
-              <Typography variant='subtitle1'>
-                {card.card_name}
-              </Typography>
-            </Box>
-          }
-
-        </Grid>
-        <ToggleGrid show={addCard ? 1 : 0} item sm={12} md={6}>
-          {changeCard
-            ? <TextField
-              name="cardNumber"
-              required
-              fullWidth
-              id="cardNumber"
-              label="Card number"
-              inputProps={{ maxLength: 16 }}
-              InputLabelProps={{ shrink: true }}
-              defaultValue={card.card_number}
-              onChange={() => {
-                formErrors.cardNumber && setFormErrors(prevState => { return { ...prevState, cardNumber: false } })
-              }}
-              error={formErrors.cardNumber}
-              helperText={formErrors.cardNumber ? 'Must be a valid 16 digit card number.' : ''}
-              sx={{ mt: { sm: 0, md: 13.2 } }}
-            />
-            : <Box sx={{ mt: { sm: 0, md: 13.2 } }}>
-              <Typography variant="subtitle1" color="text.secondary">
-                Card Number
-              </Typography>
-              <Typography variant='subtitle1'>
-                {card.card_number}
-              </Typography>
-            </Box>
-          }
-
-        </ToggleGrid>
-        <ToggleGrid show={addCard ? 1 : 0} item sm={12} md={6}>
-          {changeCard
-            ? <TextField
-              name="cardType"
-              required
-              fullWidth
-              id="cardType"
-              label="Card type"
-              inputProps={{ maxLength: 10 }}
-              InputLabelProps={{ shrink: true }}
-              defaultValue={card.card_type}
-              onChange={() => {
-                formErrors.cardType && setFormErrors(prevState => { return { ...prevState, cardType: false } })
-              }}
-              error={formErrors.cardType}
-              helperText={formErrors.cardType ? 'Must be a valid card type.' : ''}
-            />
-            : <div>
-              <Typography variant="subtitle1" color="text.secondary">
-                Card Type
-              </Typography>
-              <Typography variant='subtitle1'>
-                {card.card_type}
-              </Typography>
-            </div>
-          }
-
-        </ToggleGrid>
-        <ToggleGrid show={addCard ? 1 : 0} item sm={12} md={6}>
-          {changeCard
-            ? <TextField
-              name="cardExpiry"
-              ref={ref}
-              required
-              fullWidth
-              id="cardExpiry"
-              label="Card expiry"
-              inputProps={{ maxLength: 4 }}
-              InputLabelProps={{ shrink: true }}
-              defaultValue={card.card_expiry}
-              onChange={() => {
-                formErrors.cardExpiry && setFormErrors(prevState => { return { ...prevState, cardExpiry: false } })
-              }}
-              error={formErrors.cardExpiry}
-              helperText={formErrors.cardExpiry ? 'Must be a valid card expiry date (MMYY)' : ''}
-            />
-            : <div>
-              <Typography variant="subtitle1" color="text.secondary">
-                Card Expiry
-              </Typography>
-              <Typography variant='subtitle1'>
-                {card.card_expiry}
-              </Typography>
-            </div>
-          }
-
-        </ToggleGrid>
       </Grid>
       <AccountUpdatedModal open={OpenModal} setOpen={setOpenModal} />
       <EmailExistsModal open={openEmailModal} setOpen={setEmailModal} email={emailErr} />
