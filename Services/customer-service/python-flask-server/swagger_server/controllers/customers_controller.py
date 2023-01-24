@@ -389,11 +389,15 @@ def update_address(customer_id, body=None, address_id=None):  # noqa: E501
         if connexion.request.is_json:
             body = Address.from_dict(connexion.request.get_json())  # noqa: E501
         
-        if (body.unit_no == None or body.addr_1 == None or body.city == None or body.state == None or body.pincode == None):
+        if (body.addr_1 == None):
             error = InvalidInputError(code=400, type="InvalidInputError", 
-                    message="The following mandatory fields were not provided: unit_no or addr_1 or city or state or pincode")
+                    message="The following mandatory field was not provided: street address")
             return error, 400, {'Access-Control-Allow-Origin': '*'}        
-        if body.addr_2 == None: body.addr_2 = ''
+        if body.unit_no == None: body.unit_no = ''    
+        if body.addr_2 == None: body.addr_2 = '' 
+        if body.city == None: body.city = '' 
+        if body.state == None: body.state = '' 
+        if body.pincode == None: body.pincode = ''
         if body.primary1 == None or body.primary1 == '': body.primary1 = 'N'
 
         con = psycopg2.connect(database= database, user=user, password=db_password, host=host, port=port)
