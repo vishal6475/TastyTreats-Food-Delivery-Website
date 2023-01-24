@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react"
 import { styled } from '@mui/material/styles';
 import { StoreContext } from '../../utils/context';
-import { FlexBox, ScrollContainer } from "../styles/layouts"
+import { FlexBox } from "../styles/layouts"
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import { useNavigate } from "react-router-dom";
@@ -43,9 +43,9 @@ const AccountMainOrdersScreen = ({  }) => {
 
   
   return (
-    <ScrollContainer hide="true" sx={{ p: 1, mt: 7 }}>
+    <FlexBox >
       Orders
-    </ScrollContainer>
+    </FlexBox>
   )
 }
 

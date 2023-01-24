@@ -2,8 +2,7 @@ import { useContext, useEffect, useState, useRef } from 'react';
 import { fileToDataUrl } from '../../utils/helpers';
 import { StoreContext } from '../../utils/context';
 import AccountUpdatedModal from './modals/AccountUpdatedModal'
-import EmailExistsModal from './modals/EmailExistsModal';
-import { ScrollContainer } from '../styles/layouts';
+import { PageContainer, FlexBox } from '../styles/layouts'
 import InfoHeader from './styles/InfoHeader';
 import {
   Box,
@@ -20,17 +19,14 @@ const ImageHolder = styled(Button)`
   cursor: pointer;
   height:100%;
   width:100%;
-  max-height: 350px;
+  min-height: 35vh;
+  max-height: 35vh;
   max-width: 350px;
-  ${({ theme }) => theme.breakpoints.down("md")} {
-    min-height: 350px;
-    min-width: 350px;
-  }
   background-color: ${({ theme }) => theme.palette.tastytreats.dull};
 `
 
 const Image = styled('img')`
-  max-height: 100%;
+  max-height: 35vh;
   max-width: 100%;
 `
 
@@ -40,46 +36,78 @@ const ToggleGrid = styled(Grid)`
 
 const AccountDetailsPage = ({ change, setChange }) => {
   const context = useContext(StoreContext);
-  const [account, setAccount] = context.customer;
+  const [customer, setcustomer] = context.customer;
   const [card, setCard] = context.card;
   const ref = useRef(null);
   const [OpenModal, setOpenModal] = useState(false);
   const [openEmailModal, setEmailModal] = useState(false);
   const [imgUpload, setImageUpload] = useState(false);
-  const [addCard, setAddCard] = useState(false);
+  const [changeProfilePic, setChangeProfilePic] = useState(false);
+  const [changeBasics, setChangeBasics] = useState(false);
   const [changeEmail, setChangeEmail] = useState(false);
-  const [emailErr, setEmailErr] = useState(null);
+  const [emailExistsError, setEmailExistsError] = useState(null);
   const [changePassword, setChangePassword] = useState(false);
-  const [changeCard, setChangeCard] = useState(false);
   const [formErrors, setFormErrors] = useState({
     error: false,
     firstName: null,
     lastName: null,
     mobile: null,
     email: null,
-    password1: null,
-    password2: null
+    password: null
   })
 
   const handleImage = async (event) => {
-    const imageFile = event.target.files[0]
-    const imageBlob = await fileToDataUrl(imageFile)
-    setImageUpload(imageBlob)
+    try {
+      setChangeProfilePic(true)
+      const imageFile = event.target.files[0]
+      const imageBlob = await fileToDataUrl(imageFile)
+      setImageUpload(imageBlob)
+    }
+    catch (error) {
+      console.log(error)
+    }
   }
 
   const scrollTo = () => {
     ref?.current?.scrollIntoView()
   }
 
-  const handleSubmit = async (event) => {
+  const updateProfilePic = async () => {
+    setChangeProfilePic(false)
+  }
+
+  const updateEmail = async (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    const firstName = data.get('firstName')
-    const lastName = data.get('lastName')
-    const mobile = data.get('mobile')
-    const email = data.get('email')
-    const password1 = data.get('password1')
-    const password2 = data.get('password2')
+    setChangeEmail(false)
+
+    const email = document.getElementById('email')
+
+    formErrors.error = false;
+    
+    if (changeEmail && !/^[\w]+(\.?[\w]+)*@[\w]+\.[a-zA-Z]+$/.test(email)) {
+      setFormErrors(prevState => { return { ...prevState, email: true } })
+      formErrors.error = true
+    }
+    if (!formErrors.error) {
+      try {
+
+        
+      }
+      catch (error) {
+        if (error.response?.status === 400) {
+        }
+        console.error(error)
+      }
+    }
+  }
+
+  const updateDetails = async (event) => {
+    event.preventDefault();
+    
+    const firstName = document.getElementById('firstName')
+    const lastName = document.getElementById('lastName')
+    const mobile = document.getElementById('mobile')
+    const password = document.getElementById('password')
 
     formErrors.error = false;
 
@@ -104,17 +132,9 @@ const AccountDetailsPage = ({ change, setChange }) => {
         formErrors.error = true
       }
     }
-    if (changeEmail && !/^[\w]+(\.?[\w]+)*@[\w]+\.[a-zA-Z]+$/.test(email)) {
-      setFormErrors(prevState => { return { ...prevState, email: true } })
-      formErrors.error = true
-    }
     if (changePassword) {
-      if (password1.length < 8) {
-        setFormErrors(prevState => { return { ...prevState, password1: true } })
-        formErrors.error = true
-      }
-      if (password1 !== password2) {
-        setFormErrors(prevState => { return { ...prevState, password2: true } })
+      if (password.length < 8) {
+        setFormErrors(prevState => { return { ...prevState, password: true } })
         formErrors.error = true
       }
     }
@@ -132,13 +152,13 @@ const AccountDetailsPage = ({ change, setChange }) => {
   };
 
   useEffect(() => {
-    
-    setChange(false)
+       setChange(false)
+    console.log(customer)
   }, [])
 
   return (
-    <ScrollContainer thin="true" pr='1vw'>
-      
+    <FlexBox direction='column' >
+        <FlexBox sx={{justifyContent:'center'}} >      
           {/* Account image upload */}
           <ImageHolder component='label'>
             <input
@@ -146,10 +166,10 @@ const AccountDetailsPage = ({ change, setChange }) => {
               id="profilePicture" label="profilePicture" onChange={handleImage}
             />
             {(() => {
-              if (account.profile_pic && !imgUpload) {
+              if (customer.profile_pic && !imgUpload) {
                 return (
                   <Image
-                    src={account.profile_pic}
+                    src={customer.profile_pic}
                     alt="Account profile picture"
                   />
                 )
@@ -167,167 +187,273 @@ const AccountDetailsPage = ({ change, setChange }) => {
               }
             })()}
           </ImageHolder>
-      <Grid
-        onChange={() => !change && setChange(true)}
-        id='accountForm' component="form" noValidate onSubmit={handleSubmit}
-        container spacing={2} sx={{ mt: 0 }}
-      >
-
+        </FlexBox>
         
+        <FlexBox sx={{ height:'5vh', justifyContent:'center' }}>
+        {changeProfilePic && 
+        <FlexBox>
+          <Button variant="contained" onClick={() => {setChangeProfilePic(false)}} 
+            sx={{ width:'14vw', minWidth:'140px', height:'5vh', m:'1rem 10px 1rem auto', fontSize:'1.1rem', 
+            color: 'white', backgroundColor: 'tastytreats.dull', 
+            '&:hover':{color:'white', backgroundColor: 'tastytreats.mediumGrey'} }} >
+            Cancel
+          </Button>
+          <Button variant="contained" onClick={updateProfilePic} 
+            sx={{ width:'14vw', minWidth:'140px', height:'5vh', m:'1rem auto 1rem 10px', fontSize:'1.1rem', 
+            backgroundColor: 'tastytreats.lightBlue', '&:hover':{backgroundColor: 'tastytreats.mediumBlue'} }} >
+            Save image
+          </Button>
+        </FlexBox>
+        }
+        </FlexBox>
+        
+      <InfoHeader title='Account basics:' sx={{ mt:'2rem' }} />
+      <Grid component="form" container spacing={2} sx={{ mt: 0 }}>
 
+        <Grid item xs={5} sm={5} md={4} sx={{ height:'58px'}} >
+          <Typography sx={{ fontWeight:'bold' }} >
+            First Name:
+          </Typography>
+        </Grid>
 
-        {/* Account basic details */}
+        <Grid item xs={6} sm={6} md={4}>
 
-        <Grid item sm={12} md={6}>
-          <InfoHeader title='Account basics:' />
+          {!changeBasics &&          
+          <Typography color="text.secondary" sx={{ fontWeight:'bold' }} >
+            {customer.first_name}
+          </Typography>
+          }
+          
+          {changeBasics &&
           <TextField
+            size="small"
             name="firstName"
             required
             fullWidth
             id="firstName"
-            label="First Name"
+            label="Change first name"
             inputProps={{ maxLength: 50 }}
-            defaultValue={account.first_name}
+            defaultValue={customer.first_name}
             onChange={() => {
               formErrors.firstName && setFormErrors(prevState => { return { ...prevState, firstName: false } })
             }}
             error={formErrors.firstName}
             helperText={formErrors.firstName ? 'Must be a valid firstname.' : ''}
           />
+          }
+
+
         </Grid>
 
-        <Grid item sm={12} md={6} sx={{ mt: { sm: 0, md: 5.6 } }} >
+        <Grid item xs={1} sm={1} md={4}>
+        </Grid>
+        
+        <Grid item xs={5} sm={5} md={4} sx={{ height:'58px'}} >
+          <Typography sx={{ fontWeight:'bold' }}>
+            Last Name:
+          </Typography>
+        </Grid>
+
+        <Grid item xs={6} sm={6} md={4}>         
+
+          {!changeBasics &&          
+          <Typography color="text.secondary" sx={{ fontWeight:'bold' }}>
+            {customer.last_name}
+          </Typography>
+          }
+          {changeBasics &&      
           <TextField
+            size="small"
             name="lastName"
             required
             fullWidth
             id="lastName"
-            label="Last Name"
+            label="Change last name"
             inputProps={{ maxLength: 50 }}
-            defaultValue={account.last_name}
+            defaultValue={customer.last_name}
             onChange={() => {
               formErrors.lastName && setFormErrors(prevState => { return { ...prevState, lastName: false } })
             }}
             error={formErrors.lastName}
             helperText={formErrors.lastName ? 'Must be a valid lastName.' : ''}
           />
+          }
+        </Grid>
+
+        <Grid item xs={1} sm={1} md={4}>
+        </Grid>        
+        
+        <Grid item xs={5} sm={5} md={4} sx={{ height:'58px'}} >
+          <Typography sx={{ fontWeight:'bold' }}>
+            Mobile:
+          </Typography>
         </Grid>
         
-        <Grid item sm={12} md={6}>
+        <Grid item xs={6} sm={6} md={4}>
+
+          {!changeBasics &&          
+          <Typography color="text.secondary" sx={{ fontWeight:'bold' }}>
+            {customer.mobile_no}
+          </Typography>
+          }
+          {changeBasics &&      
           <TextField
+            size="small"
             name="mobile"
             fullWidth
             type="tel"
             id="mobile"
-            label="Mobile"
+            label="Change mobile"
             inputProps={{ maxLength: 17 }}
-            defaultValue={account.mobile}
+            defaultValue={customer.mobile_no}
             onChange={() => {
               formErrors.mobile && setFormErrors(prevState => { return { ...prevState, mobile: false } })
             }}
             error={formErrors.mobile}
             helperText={formErrors.mobile ? 'Must be a valid mobile.' : ''}
           />
+          }
         </Grid>
 
-        {/* Account email */}
+        <Grid item xs={1} sm={1} md={4}>
+        </Grid>        
+        
+        <Grid item xs={5} sm={5} md={4} sx={{ height:'58px'}} >
+          <Typography sx={{ fontWeight:'bold' }}>
+            Password:
+          </Typography>
+        </Grid>
 
-        <Grid item sm={12} md={6}>
-          <InfoHeader title='Account email:' />
-          {changeEmail
-            ? <TextField
-              name="email"
-              required
-              fullWidth
-              id="email"
-              label="Email"
-              inputProps={{ maxLength: 50 }}
-              InputLabelProps={{ shrink: true }}
-              defaultValue={account.email}
-              onChange={() => {
-                formErrors.email && setFormErrors(prevState => { return { ...prevState, email: false } })
-              }}
-              error={formErrors.email}
-              helperText={formErrors.email ? 'Must be a valid email.' : ''}
-            />
-            : <Typography variant='h6'>
-              {account.email}
-            </Typography>
+        <Grid item xs={6} sm={6} md={4}>          
+
+          {!changeBasics &&          
+          <Typography color="text.secondary" sx={{ fontWeight:'bold' }}>
+            ******
+          </Typography>
           }
 
-        </Grid>
-        <Grid item sm={12} md={6}>
-          <Button
-            variant="contained"
-            sx={{
-              mt: { sm: 0, md: 7 }, width: '191px',
-              backgroundColor: changeEmail ? 'evenTastic.dull' : 'info.main'
-            }}
-            onClick={() => setChangeEmail(!changeEmail)}
-          >
-            {changeEmail ? 'Undo change' : 'Change email?'}
-          </Button>
-        </Grid>
-
-        {/* Account password */}
-
-        <Grid item sm={12} md={6}>
-          <InfoHeader title='Account password:' />
+          {changeBasics &&      
           <TextField
-            name="password1"
+            size="small"
+            name="password"
             fullWidth
             type="password"
-            id="password1"
+            id="password"
             label="Change password"
-            autoComplete="new-password"
             inputProps={{ maxLength: 50 }}
-            disabled={!changePassword}
             onChange={() => {
-              formErrors.password1 && setFormErrors(prevState => { return { ...prevState, password1: false } })
+              formErrors.password && setFormErrors(prevState => { return { ...prevState, password: false } })
             }}
-            error={formErrors.password1}
-            helperText={formErrors.password1 ? 'Must contain at least 8 characters.' : ''}
+            error={formErrors.password}
+            helperText={formErrors.password ? 'Must contain at least 8 characters.' : ''}
           />
+          } 
         </Grid>
 
-        <Grid item sm={12} md={6}>
-          <Button
-            variant="contained"
-            sx={{
-              mt: { sm: 0, md: 7 }, width: '191px',
-              backgroundColor: changePassword ? 'evenTastic.dull' : 'info.main'
-            }}
-            onClick={() => setChangePassword(!changePassword)}
-          >
-            {changePassword ? 'Undo change' : 'Change password?'}
-          </Button>
+        <Grid item xs={1} sm={1} md={4}>
         </Grid>
-        {changePassword
-          ? <Grid item sm={12} sx={{ width: { md: '100%', lg: '59%' } }}>
-            <TextField
-              name="password2"
-              required
-              fullWidth
-              type="password"
-              id="password2"
-              label="Confirm password"
-              autoComplete="new-password"
-              inputProps={{ maxLength: 50 }}
-              onChange={() => {
-                formErrors.password2 && setFormErrors(prevState => { return { ...prevState, password2: false } })
-              }}
-              error={formErrors.password2}
-              helperText={formErrors.password2 ? 'Passwords must match.' : ''}
-              sx={{ width: { sm: '100%', md: '49%' } }}
-            />
-          </Grid>
-          : ''
-        }
-
       </Grid>
+
+      {!changeBasics && 
+      <Button variant="contained" onClick={() => {setChangeBasics(true)}} 
+        sx={{ width:'14vw', minWidth:'140px', height:'5vh', m:'1rem auto 1rem auto', fontSize:'1.1rem', 
+        color: 'white', backgroundColor: 'tastytreats.dull', 
+        '&:hover':{color:'white', backgroundColor: 'tastytreats.grey'} }} >
+        Edit details
+      </Button>
+      }
+
+      {changeBasics && 
+      <FlexBox>
+        <Button variant="contained" onClick={() => {setChangeBasics(false)}} 
+          sx={{ width:'14vw', minWidth:'140px', height:'5vh', m:'1rem 10px 1rem auto', fontSize:'1.1rem', 
+          color: 'white', backgroundColor: 'tastytreats.dull', 
+          '&:hover':{color:'white', backgroundColor: 'tastytreats.mediumGrey'} }} >
+          Cancel
+        </Button>
+        <Button variant="contained" onClick={() => {setChangeBasics(false)}} 
+          sx={{ width:'14vw', minWidth:'140px', height:'5vh', m:'1rem auto 1rem 10px', fontSize:'1.1rem', 
+          backgroundColor: 'tastytreats.lightBlue', '&:hover':{backgroundColor: 'tastytreats.mediumBlue'} }} >
+          Save changes
+        </Button>
+      </FlexBox>
+      }
+
+      <InfoHeader title='Account email:' />
+      <Grid container spacing={2} sx={{ mt: 0 }}>
+
+        <Grid item xs={5} sm={5} md={4} sx={{ height:'58px'}} >
+          <Typography sx={{ fontWeight:'bold' }}>
+            Email:
+          </Typography>
+        </Grid>
+
+        <Grid item xs={6} sm={6} md={4}>          
+
+          {!changeEmail &&          
+          <Typography color="text.secondary" sx={{ fontWeight:'bold' }}>
+            {customer.email}
+          </Typography>
+          }
+
+          {changeEmail &&      
+          <TextField
+            size="small"
+            name="email"
+            fullWidth
+            type="email"
+            id="email"
+            label='Change email'            
+            defaultValue={customer.email}
+            inputProps={{ maxLength: 50}}
+            onChange={() => {
+              formErrors.email && setFormErrors(prevState => { return { ...prevState, email: false } })
+            }}
+            error={formErrors.email}
+            helperText={formErrors.email ? 'Must be a valid email.' : ''}
+          />
+          }
+        </Grid>
+
+        <Grid item xs={1} sm={1} md={4}>
+        </Grid>
+      </Grid>
+
+      <FlexBox variant="subtitle2" sx={{ minHeight:'23px', justifyContent:'center', color: 'error.main', mt:'0.3rem' }}>
+        {emailExistsError && 'This email ID is already registered.'}
+      </FlexBox>
+
+      {!changeEmail && 
+      <Button variant="contained" onClick={() => {setChangeEmail(true)}} 
+        sx={{ width:'14vw', minWidth:'140px', height:'5vh', m:'0.6rem auto 1rem auto', fontSize:'1.1rem', 
+        color: 'white', backgroundColor: 'tastytreats.dull', 
+        '&:hover':{color:'white', backgroundColor: 'tastytreats.grey'} }} >
+        Edit email
+      </Button>
+      }
+
+      {changeEmail && 
+      <FlexBox>
+        <Button variant="contained" onClick={() => {setChangeEmail(false)}} 
+          sx={{ width:'14vw', minWidth:'140px', height:'5vh', m:'0.6rem 10px 1rem auto', fontSize:'1.1rem', 
+          color: 'white', backgroundColor: 'tastytreats.dull', 
+          '&:hover':{color:'white', backgroundColor: 'tastytreats.mediumGrey'} }} >
+          Cancel
+        </Button>
+        <Button variant="contained" onClick={updateEmail} 
+          sx={{ width:'14vw', minWidth:'140px', height:'5vh', m:'0.6rem auto 1rem 10px', fontSize:'1.1rem', 
+          backgroundColor: 'tastytreats.lightBlue', '&:hover':{backgroundColor: 'tastytreats.mediumBlue'} }} >
+          Save changes
+        </Button>
+      </FlexBox>
+      }
+
+      <FlexBox sx={{ width:'100%', height:'20px' }} >        
+      </FlexBox>
+
+
       <AccountUpdatedModal open={OpenModal} setOpen={setOpenModal} />
-      <EmailExistsModal open={openEmailModal} setOpen={setEmailModal} email={emailErr} />
-    </ScrollContainer>
+    </FlexBox>
   )
 }
 

@@ -30,6 +30,7 @@ const theme = createTheme({
       lightBlack: '#201c1c',
       lightBlue: '#08acf4',
       lightGrey: '#dedcdd',
+      mediumGrey: '#A0A0A0',
       mediumBlue: '#339ECC',
       mediumBrown: '#CC6133',
       mediumGreen: '#4BB46F'

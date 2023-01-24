@@ -12,7 +12,6 @@ export const AccountContainer = styled('div')`
   flex-grow: 7;
   margin-bottom: 1rem;
   padding: 1rem;
-  overflow: hidden;
 `;
 
 const PageTitles = {
@@ -30,32 +29,14 @@ const AccountMain = ({ accountPage, changePage }) => {
   return (
     <AccountContainer sx={{ backgroundColor:'white'}}>
       <FlexBox justify='space-between'>
-        <Typography variant='h6'>
+        <Typography variant='h6' sx={{color:'tastytreats.grey'}} >
           {PageTitles[accountPage]}
         </Typography>
-
-        {(() => {
-          if (accountPage === 'account') {
-            return (
-              <Button form='accountForm' type='submit' disabled={!accountChange} color='success'
-                variant="contained" sx={{ bottom: '5px', backgroundColor: 'success.main' }}>
-                Save changes
-              </Button>
-            )
-          }
-          else if (accountPage === 'orders') {
-            return (
-              <FlexBox sx={{ ml: 'auto', mr: 'auto' }}>                
-                
-              </FlexBox>
-            )
-          }
-        })()}
       </FlexBox>
 
 
 
-      <Divider variant="middle" sx={{ mb: 2 }} />
+      <Divider sx={{ mb: 2 }} />
 
       {(() => {
         if (accountPage === 'account') {

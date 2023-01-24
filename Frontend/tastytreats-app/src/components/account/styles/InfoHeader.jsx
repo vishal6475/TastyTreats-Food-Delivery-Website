@@ -3,10 +3,10 @@ import { Divider, Typography } from '@mui/material';
 const InfoHeader = ({ title }) => {
     return (
       <div>
-        <Typography variant='subtitle1' sx={{ color: 'evenTastic.grey', fontWeight: 1000 }}>
+        <Typography variant='subtitle1' sx={{ color: 'tastytreats.grey', fontWeight: 1000, mt:'2rem' }}>
           {title}
         </Typography>
-        <Divider variant="middle" sx={{ mb: 2 }} />
+        <Divider sx={{ mb: 2 }} />
       </div>
     )
   }

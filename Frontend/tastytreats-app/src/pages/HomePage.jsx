@@ -17,8 +17,6 @@ const CategoryBox = styled('div')`
   ::-webkit-scrollbar {
     display: none;
   } /* for chrome */
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
 `
 
 const ChipBox = styled(FlexBox)`

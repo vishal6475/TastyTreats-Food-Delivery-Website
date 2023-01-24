@@ -4,6 +4,8 @@ import { FlexBox } from '../styles/layouts';
 import { SideBar, SideBarTitle, SideBarItem } from '../styles/sidebar';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import LocalActivityIcon from '@mui/icons-material/LocalActivity';
+import PlaceIcon from '@mui/icons-material/Place';
+import PaymentsIcon from '@mui/icons-material/Payments';
 import { Button, Divider, List} from '@mui/material';
 
 const AccountSideBar = ({ accountPage, setAccountPage }) => {
@@ -41,7 +43,7 @@ const AccountSideBar = ({ accountPage, setAccountPage }) => {
           selected={accountPage === 'address' ? true : false}
           onClick={() => handleChangePage('address')}
         >
-          <LocalActivityIcon />
+          <PlaceIcon />
         </SideBarItem>
         
         <SideBarItem 
@@ -49,7 +51,7 @@ const AccountSideBar = ({ accountPage, setAccountPage }) => {
           selected={accountPage === 'payment' ? true : false}
           onClick={() => handleChangePage('payment')}
         >
-          <LocalActivityIcon />
+          <PaymentsIcon />
         </SideBarItem>
 
         

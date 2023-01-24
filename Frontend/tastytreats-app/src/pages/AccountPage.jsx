@@ -19,13 +19,13 @@ const AccountScreen = () => {
   }, [])
 
   return (
-    <PageContainer direction='row' 
-    sx={{ minWidth:'100%', minHeight:'93vh', backgroundColor: 'tastytreats.backgroundGrey', justifyContent:'center' }} >
+    <FlexBox direction='row' 
+    sx={{ minWidth:'97%', minHeight:'95vh', height:'100%', backgroundColor: 'tastytreats.backgroundGrey', justifyContent:'center' }} >
       <FlexBox sx={{width:'80vw'}} >
         <AccountSideBar accountPage={accountPage} setAccountPage={setAccountPage}/>
         <AccountMainScreen accountPage={accountPage} changePage={setAccountPage}/>
       </FlexBox>
-    </PageContainer>
+    </FlexBox>
   )
 }
 
