@@ -28,7 +28,11 @@ export default class CustomersAPI {
 
   registerCustomer = (body) => {
     return this.init().post("/customers", body);
-  };
+  }; 
+
+  updateCustomer = (customer_id, body) => {
+    return this.init().put(`/customers/${customer_id}`, body);
+  }; 
 
 
 }

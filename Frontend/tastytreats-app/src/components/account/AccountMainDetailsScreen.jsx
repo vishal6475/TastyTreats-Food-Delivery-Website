@@ -14,6 +14,11 @@ import {
 } from '@mui/material';
 import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
 
+
+import CustomersAPI from "../../utils/CustomersAPIHelper";
+const custAPI = new CustomersAPI();
+
+
 const ImageHolder = styled(Button)`
   border: 1px solid black;
   cursor: pointer;
@@ -36,17 +41,15 @@ const ToggleGrid = styled(Grid)`
 
 const AccountDetailsPage = ({ change, setChange }) => {
   const context = useContext(StoreContext);
-  const [customer, setcustomer] = context.customer;
-  const [card, setCard] = context.card;
   const ref = useRef(null);
+  
+  const [customer, setcustomer] = context.customer;
   const [OpenModal, setOpenModal] = useState(false);
-  const [openEmailModal, setEmailModal] = useState(false);
   const [imgUpload, setImageUpload] = useState(false);
   const [changeProfilePic, setChangeProfilePic] = useState(false);
   const [changeBasics, setChangeBasics] = useState(false);
   const [changeEmail, setChangeEmail] = useState(false);
   const [emailExistsError, setEmailExistsError] = useState(null);
-  const [changePassword, setChangePassword] = useState(false);
   const [formErrors, setFormErrors] = useState({
     error: false,
     firstName: null,
@@ -72,42 +75,72 @@ const AccountDetailsPage = ({ change, setChange }) => {
     ref?.current?.scrollIntoView()
   }
 
-  const updateProfilePic = async () => {
+  const cancelUpdatePic = () => {
     setChangeProfilePic(false)
+    setImageUpload(false)
   }
 
-  const updateEmail = async (event) => {
-    event.preventDefault();
-    setChangeEmail(false)
+  const updateProfilePic = async () => {
+    try {
+      setChangeProfilePic(false)
+      const body = {
+        profile_pic: imgUpload
+      }
+      const response = await custAPI.updateCustomer(customer.id, body)
+      console.log(response.data)
+      setcustomer((prev) => {return {...prev, profile_pic: imgUpload }})
 
-    const email = document.getElementById('email')
+    } catch (error) {
+      console.log(error)
+    }    
+  }
+
+  const cancelUpdateEmail = () => {
+    setChangeEmail(false)
+    setFormErrors(prevState => { return { ...prevState, email: false, error: false } })
+  }
+
+  const updateEmail = async () => {
+
+    const email = document.getElementById('email').value
+    console.log(email)
 
     formErrors.error = false;
     
     if (changeEmail && !/^[\w]+(\.?[\w]+)*@[\w]+\.[a-zA-Z]+$/.test(email)) {
       setFormErrors(prevState => { return { ...prevState, email: true } })
       formErrors.error = true
-    }
-    if (!formErrors.error) {
+    } else {
       try {
-
-        
+        const body = {
+          email: email
+        }
+        const response = await custAPI.updateCustomer(customer.id, body)
+        console.log(response.data)
+        setcustomer((prev) => {return {...prev, email: email }})  
+        setChangeEmail(false)   
       }
       catch (error) {
         if (error.response?.status === 400) {
+          setEmailExistsError(true)
         }
-        console.error(error)
+        console.log(error)
       }
-    }
+    }          
+  }  
+
+  const cancelUpdateDetails = () => {
+    setChangeBasics(false)
+    setFormErrors(prevState => { return { ...prevState, firstName: false, lastName: false, mobile: false,
+      password: false, error: false } })
   }
 
-  const updateDetails = async (event) => {
-    event.preventDefault();
+  const updateDetails = async () => {
     
-    const firstName = document.getElementById('firstName')
-    const lastName = document.getElementById('lastName')
-    const mobile = document.getElementById('mobile')
-    const password = document.getElementById('password')
+    const firstName = document.getElementById('firstName').value
+    const lastName = document.getElementById('lastName').value
+    const mobile = document.getElementById('mobile').value
+    const password = document.getElementById('password').value
 
     formErrors.error = false;
 
@@ -132,21 +165,29 @@ const AccountDetailsPage = ({ change, setChange }) => {
         formErrors.error = true
       }
     }
-    if (changePassword) {
-      if (password.length < 8) {
-        setFormErrors(prevState => { return { ...prevState, password: true } })
-        formErrors.error = true
-      }
-    }
+    if (password.length > 0 && password.length < 8) {
+      setFormErrors(prevState => { return { ...prevState, password: true } })
+      formErrors.error = true
+     }
+    
     if (!formErrors.error) {
       try {
-
-        
+        let body = {
+          firstName: firstName,
+          lastName: lastName,
+          mobile_no: mobile
+        }
+        if (password.length > 0) {
+          body.password = password
+        }
+        console.log(body)
+        const response = await custAPI.updateCustomer(customer.id, body)
+        console.log(response)
+        setcustomer((prev) => {return {...prev, first_name: firstName, last_name: lastName, mobile_no: mobile,password: password }}) 
+        setChangeBasics(false)
       }
       catch (error) {
-        if (error.response?.status === 400) {
-        }
-        console.error(error)
+        console.log(error)
       }
     }
   };
@@ -192,7 +233,7 @@ const AccountDetailsPage = ({ change, setChange }) => {
         <FlexBox sx={{ height:'5vh', justifyContent:'center' }}>
         {changeProfilePic && 
         <FlexBox>
-          <Button variant="contained" onClick={() => {setChangeProfilePic(false)}} 
+          <Button variant="contained" onClick={cancelUpdatePic}
             sx={{ width:'14vw', minWidth:'140px', height:'5vh', m:'1rem 10px 1rem auto', fontSize:'1.1rem', 
             color: 'white', backgroundColor: 'tastytreats.dull', 
             '&:hover':{color:'white', backgroundColor: 'tastytreats.mediumGrey'} }} >
@@ -365,13 +406,13 @@ const AccountDetailsPage = ({ change, setChange }) => {
 
       {changeBasics && 
       <FlexBox>
-        <Button variant="contained" onClick={() => {setChangeBasics(false)}} 
+        <Button variant="contained" onClick={cancelUpdateDetails}
           sx={{ width:'14vw', minWidth:'140px', height:'5vh', m:'1rem 10px 1rem auto', fontSize:'1.1rem', 
           color: 'white', backgroundColor: 'tastytreats.dull', 
           '&:hover':{color:'white', backgroundColor: 'tastytreats.mediumGrey'} }} >
           Cancel
         </Button>
-        <Button variant="contained" onClick={() => {setChangeBasics(false)}} 
+        <Button variant="contained" onClick={updateDetails}
           sx={{ width:'14vw', minWidth:'140px', height:'5vh', m:'1rem auto 1rem 10px', fontSize:'1.1rem', 
           backgroundColor: 'tastytreats.lightBlue', '&:hover':{backgroundColor: 'tastytreats.mediumBlue'} }} >
           Save changes
@@ -434,7 +475,7 @@ const AccountDetailsPage = ({ change, setChange }) => {
 
       {changeEmail && 
       <FlexBox>
-        <Button variant="contained" onClick={() => {setChangeEmail(false)}} 
+        <Button variant="contained" onClick={cancelUpdateEmail}
           sx={{ width:'14vw', minWidth:'140px', height:'5vh', m:'0.6rem 10px 1rem auto', fontSize:'1.1rem', 
           color: 'white', backgroundColor: 'tastytreats.dull', 
           '&:hover':{color:'white', backgroundColor: 'tastytreats.mediumGrey'} }} >
@@ -450,7 +491,6 @@ const AccountDetailsPage = ({ change, setChange }) => {
 
       <FlexBox sx={{ width:'100%', height:'20px' }} >        
       </FlexBox>
-
 
       <AccountUpdatedModal open={OpenModal} setOpen={setOpenModal} />
     </FlexBox>
