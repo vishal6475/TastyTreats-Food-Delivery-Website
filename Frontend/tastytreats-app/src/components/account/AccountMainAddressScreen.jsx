@@ -124,14 +124,13 @@ const AccountMainAddressScreen = ({  }) => {
   
   return (
     <FlexBox direction='column' sx={{ justifyContent:'center' }} >
-      <InfoHeader title='Add new address:' sx={{ mt:'0.1rem' }} />
 
       <FlexBox sx={{ width:'30vw', m:'0 auto 1rem auto' }} >
         <Autocomplete onPlaceChanged={gotNewAddress} >
           <TextField 
             id='new-address' 
             name="new-address"
-            placeholder='Enter address' 
+            placeholder='Add new address' 
             style={{backgroundColor:'white', minWidth: '30vw'}}
             />
         </Autocomplete>

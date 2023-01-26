@@ -16,7 +16,7 @@ const AccountSideBar = ({ accountPage, setAccountPage }) => {
   }
 
   return (
-    <SideBar sx={{ backgroundColor:'white'}}>
+    <SideBar sx={{ backgroundColor:'white', position:'sticky', top:'0', height:'100vh'}}>
       <SideBarTitle variant='h6'>
         Account menu
       </SideBarTitle>
