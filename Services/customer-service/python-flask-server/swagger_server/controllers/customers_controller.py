@@ -495,7 +495,7 @@ def update_card(customer_id, body=None, card_id=None):  # noqa: E501
 
             insert_string = "INSERT INTO cards VALUES (default, %s,%s,%s,%s,%s) RETURNING id;"
             cur.execute(insert_string, (customer_id, body.customer_name, body.card_number, body.card_expiry, body.primary1))
-            card_id = cur.fetchone()[0]
+            body.id = cur.fetchone()[0]
         else: # to update the card details if it already exists
             cur.execute('SELECT * FROM cards where id = ' + str(card_id) + ' and customer_id = ' + str(customer_id))
             record = cur.fetchone()

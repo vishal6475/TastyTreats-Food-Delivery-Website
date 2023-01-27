@@ -5,7 +5,11 @@ import { FlexBox } from "../styles/layouts"
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import { useNavigate } from "react-router-dom";
+import InfoHeader from './styles/InfoHeader';
+import AddCardModal from '../modals/AddCardModal';
 
+import CustomersAPI from "../../utils/CustomersAPIHelper";
+const custAPI = new CustomersAPI();
 
 const MainBox = styled('div')`
   display: flex;
@@ -33,18 +37,41 @@ function formatDate(datetime) {
 }
 
 const AccountMainPaymentScreen = ({  }) => {
-  const context = useContext(StoreContext);
+  const context = useContext(StoreContext);  
+  const [customer, setcustomer] = context.customer;  
+  const [openCardModal, setOpenCardModal] = useState(false);
+  const [allCards, setAllCards] = useState([]);
   
+  const fetchAddedCards = async () => {
+    try {
+    const cardsResponse = await custAPI.getCards(customer.id)
+    setAllCards(cardsResponse.data)
+    console.log(cardsResponse.data)
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   
   useEffect(() => {
+    fetchAddedCards()
     
   }, [])
 
   
   return (
-    <FlexBox>
-      Cards
+    <FlexBox direction='column'>
+      <Button onClick={() => {setOpenCardModal(true)}}
+        sx={{ width:'100px', border:'solid', borderWidth:'1px', borderColor:'tastytreats.mediumBlue' }} >
+        Add Card
+      </Button>
+      <InfoHeader title='Added cards:' sx={{ mt:'2rem' }} />
+
+      <AddCardModal 
+        allCards={allCards}
+        setAllCards={setAllCards}
+        openCardModal={openCardModal} 
+        setOpenCardModal={setOpenCardModal} />
     </FlexBox>
   )
 }
