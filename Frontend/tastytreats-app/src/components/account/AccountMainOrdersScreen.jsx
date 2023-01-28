@@ -50,15 +50,7 @@ const AccountMainOrdersScreen = ({  }) => {
       customer_id: customer.id
     }
     const orderResponse = await orderAPI.getOrders(params)
-
     setAllOrders(orderResponse.data)
-
-    orderResponse.data.map(async (order, idx) => {
-      let storeRes = await storeAPI.getStoreById(order.store_id)
-      //console.log(storeRes.data)
-      orderResponse.data[idx]['store_name'] = storeRes.data.name
-      setAllOrders(orderResponse.data)
-    })
   }
   
   useEffect(() => {
@@ -80,7 +72,7 @@ const AccountMainOrdersScreen = ({  }) => {
           <Grid container spacing={1}>
             <Grid item xs={12} >
               <Typography color="text.secondary" sx={{ fontWeight:'bold', fontSize:'1.1rem' }} >
-              {order.store_name? order.store_name: ''}
+              {order.store_name}
               </Typography>
             </Grid>
             

@@ -12,6 +12,10 @@ import { IconButton } from '@mui/material';
 import AddSharpIcon from '@mui/icons-material/AddSharp';
 import RemoveSharpIcon from '@mui/icons-material/RemoveSharp';
 
+import Stepper from '@mui/material/Stepper';
+import Step from '@mui/material/Step';
+import StepLabel from '@mui/material/StepLabel';
+
 import OrdersAPI from "../utils/OrdersAPIHelper";
 
 const orderAPI = new OrdersAPI();
@@ -24,19 +28,14 @@ const StoreMenuPage = () => {
 
   const [customer] = context.customer;
   const [store, setStore] = useState([]);
-  const [storeTags, setStoreTags] = useState('');
+  const [orderFound, setOrderFound] = useState(true);
   const [cartItems, setCartItems] = context.cartItems;
   const [loggedIn, setLoggedIn] = context.login;
-  const [open, setOpen] = context.logInModal;
   const [loginOrSignup, setLoginOrSignup] = context.loginOrSignup;
-  const [fromCheckout, setFromCheckout] = context.fromCheckout;
   const [storeDetails, setStoreDetails] = context.storeDetails;
   const [completedOrder, setCompletedOrder] = context.completedOrder;
 
-  const [tabValue, setTabValue] = useState(0);
-  const handleTabChange = (event, newValue) => {
-    setTabValue(newValue);
-  };
+  const steps = ['Order submitted', 'Preparing', 'Packing', 'Delivering', 'Completed'];
 
   useEffect(() => {
     if (completedOrder == null)
@@ -59,16 +58,105 @@ const StoreMenuPage = () => {
 
   return (
     <FlexBox sx={{ minHeight:'95vh', backgroundColor: 'tastytreats.backgroundGrey' }} >
-      Completed order
-      {!completedOrder &&
+      <FlexBox direction='column' sx={{ minWidth:'60vw', m:'0 auto 0 auto', backgroundColor:'white'}} >
+        <Stepper activeStep={0} sx={{ m:'2rem 1rem 2rem 1rem' }} >
+          {steps.map((label, idx) => {
+            const stepProps = {};
+            const labelProps = {};
+            return (
+              <Step key={idx} {...stepProps}>
+                <StepLabel {...labelProps}>{label}</StepLabel>
+              </Step>
+            );
+          })}
+        </Stepper>
+      
+
+      {(!completedOrder && orderFound === false) &&
       'Order not found!'
       }
       {completedOrder &&
-      <FlexBox>
-        Id: {completedOrder.id}
-        Date: {formatDate(completedOrder.date)}
-      </FlexBox>
+      <FlexBox direction='column'
+      sx={{m:'0 auto 1rem auto', p:'0.5rem 1rem 0.5rem 1rem', width:'60vw', backgroundColor:'white' }} >
+        <Grid container spacing={1} sx={{ mb:'2rem', width:'50vw' }} >
+          <Grid item xs={12} >
+            <Typography color="text.secondary" sx={{ fontWeight:'bold', fontSize:'1.1rem' }} >
+            {completedOrder.store_name? completedOrder.store_name: ''}
+            </Typography>
+          </Grid>
+          
+
+          <Grid item xs={3} >
+            <Typography sx={{ fontWeight:'bold', fontSize:'0.95rem' }} >
+              Date:
+            </Typography>
+          </Grid>
+
+          <Grid item xs={9} >
+            <Typography color="text.secondary" sx={{ fontWeight:'bold', fontSize:'0.95rem' }} >
+              {formatDate(completedOrder.date)}
+            </Typography>
+          </Grid>
+
+          <Grid item xs={3} >
+            <Typography sx={{ fontWeight:'bold', fontSize:'0.95rem' }} >
+              Delivery address:
+            </Typography>
+          </Grid>
+
+          <Grid item xs={9} >
+            <Typography color="text.secondary" sx={{ fontWeight:'bold', fontSize:'0.95rem' }} >
+              {completedOrder.unit_no.length > 0? completedOrder.unit_no.length + ', ' : '' + completedOrder.addr_1}
+            </Typography>
+          </Grid>            
+
+          <Grid item xs={3} >
+            <Typography sx={{ fontWeight:'bold', fontSize:'0.95rem' }} >
+              Total Amount:
+            </Typography>
+          </Grid>
+
+          <Grid item xs={2} >
+            <Typography color="text.secondary" sx={{ fontWeight:'bold', fontSize:'0.95rem' }} >
+              ${completedOrder.total_amount}
+            </Typography>
+          </Grid>            
+
+          <Grid item xs={2} >
+            <Typography sx={{ fontWeight:'bold', fontSize:'0.95rem' }} >
+              Type:
+            </Typography>
+          </Grid>
+
+          <Grid item xs={5} >
+            <Typography color="text.secondary" sx={{ fontWeight:'bold', fontSize:'0.95rem' }} >
+              {completedOrder.delivery_pickup === 'D'? 'Delivery': 'Pickup'}
+            </Typography>
+          </Grid>
+
+        </Grid>
+
+        {completedOrder.items.map((item, idx) => {
+          return <FlexBox key={idx} direction='row' justify='space-between'
+                    sx={{ width:'25vw', minWidth:'250px', m:'0 auto 0 auto' }} >
+
+                  <Typography gutterBottom variant="subtitle2" color="text.primary" 
+                    sx={{ p:'0', m:'0', fontSize:'1rem' }}>
+                    {item.quantity} x {item.name}
+                  </Typography> 
+    
+    
+                  <Typography variant="subtitle2" color="text.secondary" 
+                    sx={{ p:'0', m:'0', fontSize:'0.9rem' }} >
+                    <b>${(item.price * item.quantity).toFixed(2)}</b> 
+                  </Typography>
+    
+                </FlexBox>
+        })}
+      
+    </FlexBox>
       }
+      </FlexBox>
     </FlexBox>
   )
 

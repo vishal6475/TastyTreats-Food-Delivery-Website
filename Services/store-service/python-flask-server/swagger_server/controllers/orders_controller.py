@@ -131,6 +131,10 @@ def get_order_by_id(order_id):  # noqa: E501
 
                 order['items'].append(item)
 
+            cur.execute('SELECT * FROM stores where id = ' + str(order['store_id']))
+            record = cur.fetchone()
+            order['store_name'] = str(record[1])            
+
             cur.close()
             con.close()
             return order, 200, {'Access-Control-Allow-Origin': '*'}
@@ -224,7 +228,11 @@ def get_orders(customer_id=None, store_id=None):  # noqa: E501
                 item['price'] = float(record[3])
                 item['quantity'] = int(record[4])
 
-                order['items'].append(item)
+                order['items'].append(item)            
+
+            cur.execute('SELECT * FROM stores where id = ' + str(order['store_id']))
+            record = cur.fetchone()
+            order['store_name'] = str(record[1])  
 
             orders_list.append(order)
 
