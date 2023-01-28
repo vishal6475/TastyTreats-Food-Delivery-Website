@@ -2,24 +2,14 @@ import { useContext, useState, useEffect } from 'react';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { StoreContext } from '../utils/context';
 import { Button, Grid, Card, CardMedia, CardContent, Typography, styled } from '@mui/material'
-import StoresAPI from "../utils/StoresAPIHelper";
-import MenuItem from '../components/store/MenuItem'
-import Box from '@mui/material/Box';
 import { FlexBox, Container } from '../components/styles/layouts';
-import Divider from '@mui/material/Divider';
-import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
-import { IconButton } from '@mui/material';
-import AddSharpIcon from '@mui/icons-material/AddSharp';
-import RemoveSharpIcon from '@mui/icons-material/RemoveSharp';
 
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 
 import OrdersAPI from "../utils/OrdersAPIHelper";
-
 const orderAPI = new OrdersAPI();
-
 
 const StoreMenuPage = () => {
   const { o_id } = useParams();
@@ -78,24 +68,21 @@ const StoreMenuPage = () => {
       {completedOrder &&
       <FlexBox direction='column'
       sx={{m:'0 auto 1rem auto', p:'0.5rem 1rem 0.5rem 1rem', width:'60vw', backgroundColor:'white' }} >
-        <Grid container spacing={1} sx={{ mb:'2rem', width:'50vw' }} >
+        <Grid container spacing={1} sx={{ m:'0 auto 1rem auto', width:'50vw', maxWidth:'600px' }} >
           <Grid item xs={12} >
             <Typography color="text.secondary" sx={{ fontWeight:'bold', fontSize:'1.1rem' }} >
             {completedOrder.store_name? completedOrder.store_name: ''}
             </Typography>
           </Grid>
-          
 
-          <Grid item xs={3} >
-            <Typography sx={{ fontWeight:'bold', fontSize:'0.95rem' }} >
-              Date:
-            </Typography>
-          </Grid>
-
-          <Grid item xs={9} >
-            <Typography color="text.secondary" sx={{ fontWeight:'bold', fontSize:'0.95rem' }} >
-              {formatDate(completedOrder.date)}
-            </Typography>
+          <Grid item xs={12} >
+            <Card sx={{ cursor:'default', mb:'1rem' }} >
+              <CardMedia
+                component="img"
+                height="140"
+                image={completedOrder.photo}
+              />
+            </Card>
           </Grid>
 
           <Grid item xs={3} >
@@ -132,27 +119,34 @@ const StoreMenuPage = () => {
             <Typography color="text.secondary" sx={{ fontWeight:'bold', fontSize:'0.95rem' }} >
               {completedOrder.delivery_pickup === 'D'? 'Delivery': 'Pickup'}
             </Typography>
+          </Grid>          
+
+          <Grid item xs={12} >
+            <Typography sx={{ fontWeight:'bold', fontSize:'0.95rem' }} >
+              Items:
+            </Typography>
+          </Grid>       
+
+          <Grid item xs={12} >
+          {completedOrder.items.map((item, idx) => {
+            return <FlexBox key={idx} direction='row' justify='space-between'
+                    sx={{ width:'25vw', minWidth:'250px'}} >
+
+                    <Typography gutterBottom variant="subtitle2" color="text.primary" 
+                      sx={{ p:'0', m:'0', fontSize:'0.95rem' }}>
+                      {item.quantity} x {item.name}
+                    </Typography> 
+      
+      
+                    <Typography variant="subtitle2" color="text.secondary" 
+                      sx={{ p:'0', m:'0', fontSize:'0.9rem' }} >
+                      <b>${(item.price * item.quantity).toFixed(2)}</b> 
+                    </Typography>
+      
+                  </FlexBox>
+          })}
           </Grid>
-
         </Grid>
-
-        {completedOrder.items.map((item, idx) => {
-          return <FlexBox key={idx} direction='row' justify='space-between'
-                    sx={{ width:'25vw', minWidth:'250px', m:'0 auto 0 auto' }} >
-
-                  <Typography gutterBottom variant="subtitle2" color="text.primary" 
-                    sx={{ p:'0', m:'0', fontSize:'1rem' }}>
-                    {item.quantity} x {item.name}
-                  </Typography> 
-    
-    
-                  <Typography variant="subtitle2" color="text.secondary" 
-                    sx={{ p:'0', m:'0', fontSize:'0.9rem' }} >
-                    <b>${(item.price * item.quantity).toFixed(2)}</b> 
-                  </Typography>
-    
-                </FlexBox>
-        })}
       
     </FlexBox>
       }

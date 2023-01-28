@@ -133,7 +133,8 @@ def get_order_by_id(order_id):  # noqa: E501
 
             cur.execute('SELECT * FROM stores where id = ' + str(order['store_id']))
             record = cur.fetchone()
-            order['store_name'] = str(record[1])            
+            order['store_name'] = str(record[1])      
+            order['photo'] = str(record[13])        
 
             cur.close()
             con.close()
@@ -233,6 +234,7 @@ def get_orders(customer_id=None, store_id=None):  # noqa: E501
             cur.execute('SELECT * FROM stores where id = ' + str(order['store_id']))
             record = cur.fetchone()
             order['store_name'] = str(record[1])  
+            order['photo'] = str(record[13])  
 
             orders_list.append(order)
 
