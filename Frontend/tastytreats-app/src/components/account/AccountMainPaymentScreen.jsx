@@ -67,6 +67,16 @@ const AccountMainPaymentScreen = ({  }) => {
       </Button>
       <InfoHeader title='Added cards:' sx={{ mt:'2rem' }} />
 
+      {allCards.map((card, idx) => {
+        return  <FlexBox key={idx} direction='column'
+                  sx={{border:'solid', borderColor:'tastytreats.dull', borderWidth:'1px', borderRadius:'15px',
+                    m:'0 1rem 1rem 1rem', p:'0.5rem 1rem 0.5rem 1rem', width:'200px' }} >
+                  <Typography sx={{ fontWeight:'bold', fontSize:'0.95rem' }} >
+                      Card ending with ...{card.card_number.substr(-4, 4)}
+                  </Typography>                    
+                </FlexBox>
+      })}
+
       <AddCardModal 
         allCards={allCards}
         setAllCards={setAllCards}

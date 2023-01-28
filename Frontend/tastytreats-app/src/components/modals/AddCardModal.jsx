@@ -84,10 +84,15 @@ const AddCardModal = ({allCards, setAllCards, openCardModal, setOpenCardModal}) 
           primary1: ''
         }
         const cardsResponse = await custAPI.addCard(customer.id, body)
-        console.log(cardsResponse)
+        //console.log(cardsResponse)
 
         allCards.push(cardsResponse.data)       
-        console.log('here', allCards)
+        //console.log('here', allCards)
+
+        setCardName('')
+        setCardNumber('')
+        setCardExpiry('')
+        setCardCVV('')
         
         handleClose()
       }

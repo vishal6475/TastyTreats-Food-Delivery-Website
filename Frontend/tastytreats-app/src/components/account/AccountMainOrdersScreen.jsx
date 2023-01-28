@@ -7,6 +7,9 @@ import Button from '@mui/material/Button';
 import { useNavigate } from "react-router-dom";
 
 
+import OrdersAPI from "../../utils/OrdersAPIHelper";
+const orderAPI = new OrdersAPI();
+
 const MainBox = styled('div')`
   display: flex;
   flex-direction: row;
@@ -34,17 +37,33 @@ function formatDate(datetime) {
 
 const AccountMainOrdersScreen = ({  }) => {
   const context = useContext(StoreContext);
+  const [customer, setcustomer] = context.customer;
+  const [allOrders, setAllOrders] = useState([]);
   
 
+  const fetchOrders = async () => {
+    let params = {
+      customer_id: customer.id
+    }
+    const orderResponse = await orderAPI.getOrders(params)
+    console.log(orderResponse.data)
+  }
   
   useEffect(() => {
-    
+    fetchOrders()
   }, [])
 
   
   return (
-    <FlexBox >
-      Orders
+    <FlexBox direction='column' >
+      {allOrders.map((order, idx) => {
+        <FlexBox key={idx}>
+          
+        </FlexBox>
+
+      })
+
+      }
     </FlexBox>
   )
 }
