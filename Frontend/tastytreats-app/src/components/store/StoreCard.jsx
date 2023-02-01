@@ -3,7 +3,7 @@ import { ScrollContainer } from '../styles/layouts';
 import { Grid, Card, CardMedia, CardContent, Typography, styled } from '@mui/material'
 
 export const StyledCard = styled(Card)`
-  height: 237px;
+  height: 255px;
   border: none;
   cursor: pointer;
   &:hover {
@@ -52,7 +52,14 @@ const StoreCard = ({ store }) => {
           <Typography gutterBottom variant="subtitle2" component="div" sx={{ mt: -0.5 }}>
             {store.types.join(', ')}
           </Typography>
+
+          {store.distance && 
           <Typography variant="subtitle2" color="text.secondary" sx={{ mb: -1, mt: -0.5  }}>
+            {store.distance} km - {store.time} minutes
+          </Typography>
+          }
+
+          <Typography variant="subtitle2" color="text.secondary" sx={{ mb: -1, mt: 0.7  }}>
             Delivery Fee: ${store.delivery_fee} - 
             {store.min_order === 0 && ' No minimum order'}
             {store.min_order !== 0 && ' Min Order: $'+store.min_order}

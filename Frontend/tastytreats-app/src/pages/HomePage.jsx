@@ -6,7 +6,11 @@ import StoresAPI from "../utils/StoresAPIHelper";
 import StoreCard from '../components/store/StoreCard'
 import { IconButton } from '@mui/material';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
-import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';import {
+  useJsApiLoader,
+  Autocomplete,
+} from '@react-google-maps/api'
+import { geocodeByAddress } from 'react-places-autocomplete';
 
 const CategoryBox = styled('div')`
   display: flex;
@@ -28,6 +32,7 @@ const storeAPI = new StoresAPI();
 const HomePage = () => {
   const context = useContext(StoreContext);
   const [customer] = context.customer;
+  const [address, setAddress] = context.address;
   const [storesList, setStoresList] = context.storesList; // to show details of only SELECTED stores
   const [allStoresList, setAllStoresList] = context.allStoresList; // to store details of ALL stores
   const [orgChippedStores, setOrgChippedStores] = context.orgChippedStores // to store initial list of stores or after search
@@ -46,23 +51,64 @@ const HomePage = () => {
 
   useEffect(() => {    
     // removing previous stored restaurants
-    setStoresList([])
-    setAllStoresList([])
-    setIsSearched(0)
+    removeSearch()
 
     // fetching current stores
+    if (allStoresList.length === 0)
     fetchAllStores()
+    
   }, [])
+  
 
   const fetchAllStores = async (event) => { 
-    const allStoresRes = await storeAPI.getAllStores() 
-    //console.log(allStoresRes.data)
-    setStoresList(allStoresRes.data)
-    setOrgChippedStores(allStoresRes.data)
-    setAllStoresList(allStoresRes.data)
-    setShowNoRestaurant(true)
-    setChippedItems([])
-    unselectAllChips()    
+
+    try {
+
+      const allStoresRes = await storeAPI.getAllStores() 
+      let storesData = allStoresRes.data
+
+      setStoresList(storesData)
+      setOrgChippedStores(storesData)
+      setAllStoresList(storesData)
+
+      try {
+        const service = new window.google.maps.DistanceMatrixService()
+        for (let i=0; i<storesData.length; i++) {
+          await service.getDistanceMatrix(
+            {
+              origins: [address.addr1],
+              destinations: [storesData[i].addr_1],
+              travelMode: "DRIVING"
+            },
+            (response, status) => {
+              if (status === "OK") {
+                console.log(response.rows[0].elements[0].distance.value, response.rows[0].elements[0].duration.value);
+                storesData[i].distance = (response.rows[0].elements[0].distance.value / 1000).toFixed(1)
+                storesData[i].time = parseInt((response.rows[0].elements[0].duration.value + 1200) / 60)
+              }
+            }
+          )
+        }
+        
+        //for (let i=0; i < storesData.length; i++) console.log(storesData[i].time);
+        
+        storesData = storesData.filter(store => {return parseInt(store.distance) < 7})
+      }
+      catch(error) {
+        console.log(error)
+      }
+      
+      console.log(storesData)
+      setStoresList(storesData)
+      setOrgChippedStores(storesData)
+      setAllStoresList(storesData)
+      setShowNoRestaurant(true)
+      setChippedItems([])
+      unselectAllChips()    
+    }
+    catch(error) {
+      console.error(error)   
+    }
   }
 
   const removeSearch = () => {    
@@ -132,7 +178,6 @@ const HomePage = () => {
     }
     //console.log(chippedItems)
   }
-
 
   return (
       <div style={{ margin:'20px auto 20px auto', width:'75vw', minHeight:'88vh' }}>

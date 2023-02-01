@@ -103,31 +103,31 @@ const StoreMenuPage = () => {
             </Typography>
           </Grid>
 
-          <Grid item xs={2} >
+          <Grid item xs={9} >
             <Typography color="text.secondary" sx={{ fontWeight:'bold', fontSize:'0.95rem' }} >
               ${completedOrder.total_amount}
             </Typography>
           </Grid>            
 
-          <Grid item xs={2} >
+          <Grid item xs={3} >
             <Typography sx={{ fontWeight:'bold', fontSize:'0.95rem' }} >
               Type:
             </Typography>
           </Grid>
 
-          <Grid item xs={5} >
+          <Grid item xs={9} >
             <Typography color="text.secondary" sx={{ fontWeight:'bold', fontSize:'0.95rem' }} >
               {completedOrder.delivery_pickup === 'D'? 'Delivery': 'Pickup'}
             </Typography>
           </Grid>          
 
-          <Grid item xs={12} >
+          <Grid item xs={3} >
             <Typography sx={{ fontWeight:'bold', fontSize:'0.95rem' }} >
               Items:
             </Typography>
-          </Grid>       
+          </Grid>         
 
-          <Grid item xs={12} >
+          <Grid item xs={9} >
           {completedOrder.items.map((item, idx) => {
             return <FlexBox key={idx} direction='row' justify='space-between'
                     sx={{ width:'25vw', minWidth:'250px'}} >
