@@ -37,6 +37,7 @@ const HomePage = () => {
   const [allStoresList, setAllStoresList] = context.allStoresList; // to store details of ALL stores
   const [orgChippedStores, setOrgChippedStores] = context.orgChippedStores // to store initial list of stores or after search
                                                                // use for adding or removing chipped selections
+  const [closedStores, setClosedStores] = context.closedStores;
   const [isSearched, setIsSearched]  = context.isSearched;
   const [searchedItems, setSearchedItems] = context.searchedItems;
   const [isChipSearched, setIsChipSearched]  = context.isChipSearched;
@@ -54,10 +55,20 @@ const HomePage = () => {
     removeSearch()
 
     // fetching current stores
-    if (allStoresList.length === 0)
+    //if (allStoresList.length === 0)
     fetchAllStores()
     
   }, [])
+
+  const timeAfter = (h1, m1, h2, m2) => { // returns true if (h2, m2) comes after (h1, m1) in a day
+    if (h2 > h1) {
+      return true
+    } else if (h2 === h1) {
+      if (m2 > m1) {
+        return true
+      } else return false
+    } else return false
+  }
   
 
   const fetchAllStores = async (event) => { 
@@ -82,23 +93,36 @@ const HomePage = () => {
             },
             (response, status) => {
               if (status === "OK") {
-                console.log(response.rows[0].elements[0].distance.value, response.rows[0].elements[0].duration.value);
+                //console.log(response.rows[0].elements[0].distance.value, response.rows[0].elements[0].duration.value);
                 storesData[i].distance = (response.rows[0].elements[0].distance.value / 1000).toFixed(1)
                 storesData[i].time = parseInt((response.rows[0].elements[0].duration.value + 1200) / 60)
               }
             }
           )
-        }
-        
-        //for (let i=0; i < storesData.length; i++) console.log(storesData[i].time);
-        
+        }        
         storesData = storesData.filter(store => {return parseInt(store.distance) < 7})
       }
       catch(error) {
         console.log(error)
       }
       
-      console.log(storesData)
+      const currentDate = new Date()
+      console.log(currentDate.getHours(), currentDate.getMinutes())
+      const hours = parseInt(currentDate.getHours())
+      const minutes = parseInt(currentDate.getMinutes())
+
+      for (let i=0; i < storesData.length; i++) {
+        let openHours = parseInt(storesData[i].open.substr(0, 2))
+        let openMinutes = parseInt(storesData[i].open.substr(3, 5))
+        let closeHours = parseInt(storesData[i].close.substr(0, 2))
+        let closeMinutes = parseInt(storesData[i].close.substr(3, 5))
+        if (timeAfter(openHours, openMinutes, hours, minutes) && timeAfter(hours, minutes, closeHours, closeMinutes)) {
+          console.log('Open:', storesData[i].name, openHours, openMinutes, ':', closeHours, closeMinutes)
+        }
+        //console.log(storesData[i].open.substr(0, 2), storesData[i].open.substr(3, 5)) 
+        //console.log(storesData[i].close.substr(0, 2), storesData[i].close.substr(3, 5)) 
+      }
+
       setStoresList(storesData)
       setOrgChippedStores(storesData)
       setAllStoresList(storesData)

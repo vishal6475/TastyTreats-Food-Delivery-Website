@@ -55,6 +55,7 @@ const TastyTreatsAppBar = () => {
   const [searchedItems, setSearchedItems] = context.searchedItems;  
   const [isChipSearched, setIsChipSearched]  = context.isChipSearched;
   const [chippedItems, setChippedItems] = context.chippedItems;
+  
 
   let toSearch = null
 
@@ -71,6 +72,10 @@ const TastyTreatsAppBar = () => {
   const toFirstPage = () => {    
     navigate('/');     
     setIsSearched(0)
+    setIsChipSearched(0)
+    setChippedItems([])
+    setStoresList(allStoresList)
+    setOrgChippedStores(allStoresList)
   }
 
   const checkForTypes = (store) => {

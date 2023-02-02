@@ -149,7 +149,7 @@ cur.execute("INSERT INTO customers values(default, 'Vishal', 'Singh', 'vishalsin
             );")
 
 cur.execute("INSERT INTO stores values(default, 'Dominos Strathfield', '187 The Boulevarde, Strathfield NSW, Australia', '', \
-            '', '', '', 'Pizza,Italian', '11:00', '23:00', 'Y', 5.5, 20, ''\
+            '', '', '', 'Pizza,Italian', '11:00', '23:59', 'Y', 5.5, 20, ''\
             );")
 
 cur.execute("INSERT INTO stores values(default, 'Pizza Hut - Belfield', '26A Burwood Road, Belfield NSW 2191, Australia', '', \
@@ -157,27 +157,27 @@ cur.execute("INSERT INTO stores values(default, 'Pizza Hut - Belfield', '26A Bur
             );")
 
 cur.execute("INSERT INTO stores values(default, 'Guzman y Gomez - Auburn', 'shop a24/100 Parramatta Road, Auburn NSW 2144, Australia', '', \
-            '', '', '', 'Mexican,Fast Food', '11:00', '23:00', 'Y', 5.5, 0, ''\
+            '', '', '', 'Mexican,Fast Food', '11:00', '22:00', 'Y', 5.5, 0, ''\
             );")
 
 cur.execute("INSERT INTO stores values(default, 'McDonald''s - Burwood Westfield', '100 Burwood Road, Burwood NSW 2134, Australia', '', \
-            '', '', '', 'Burgers,Fast Food', '11:00', '23:00', 'Y', 5.5, 20, ''\
+            '', '', '', 'Burgers,Fast Food', '01:00', '21:15', 'Y', 5.5, 20, ''\
             );")
     
 cur.execute("INSERT INTO stores values(default, 'Thousand Spices', '23 The Crescent, Homebush NSW 2140, Australia', '', \
-            '', '', '', 'Indian,South Indian', '11:00', '23:00', 'Y', 5.5, 20, ''\
+            '', '', '', 'Indian,South Indian', '11:00', '23:59', 'Y', 5.5, 20, ''\
             );")
     
 cur.execute("INSERT INTO stores values(default, 'Treat Talk Pizza and Kebab', 'shop 1/41 The Boulevarde, Strathfield NSW 2135, Australia', '', \
-            '', '', '', 'Turkish,Kebab', '11:00', '23:00', 'Y', 5.5, 0, ''\
+            '', '', '', 'Turkish,Kebab', '11:00', '00:15', 'Y', 5.5, 0, ''\
             );")
     
 cur.execute("INSERT INTO stores values(default, 'Oporto - Strathfield Plaza', '11 The Boulevarde, Strathfield NSW 2135, Australia', '', \
-            '', '', '', 'Burgers,Chicken', '11:00', '23:00', 'Y', 5.5, 20, ''\
+            '', '', '', 'Burgers,Chicken', '11:00', '23:30', 'Y', 5.5, 20, ''\
             );")
     
 cur.execute("INSERT INTO stores values(default, 'Subway - Strathfield South', '2/608-612 Liverpool Road, Strathfield South NSW 2136, Australia', '', \
-            '', '', '', 'Sandwiches', '11:00', '23:00', 'Y', 5.5, 20, ''\
+            '', '', '', 'Sandwiches', '11:00', '00:30', 'Y', 5.5, 20, ''\
             );")
     
     
