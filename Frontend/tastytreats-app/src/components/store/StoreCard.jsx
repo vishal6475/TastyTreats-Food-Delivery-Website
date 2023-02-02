@@ -1,3 +1,4 @@
+import { useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ScrollContainer } from '../styles/layouts';
 import { Grid, Card, CardMedia, CardContent, Typography, styled } from '@mui/material'
@@ -5,10 +6,6 @@ import { Grid, Card, CardMedia, CardContent, Typography, styled } from '@mui/mat
 export const StyledCard = styled(Card)`
   height: 255px;
   border: none;
-  cursor: pointer;
-  &:hover {
-    background-color: #dbdbdb;
-  }
 `;
 
 const CardTitle = styled('h3')`
@@ -34,12 +31,40 @@ const TagContainer = styled(ScrollContainer)`
   overflow-x: auto;
 `
 
-const StoreCard = ({ store }) => {
+const StoreCard = ({ store, isDisabled }) => {
   const navigate = useNavigate()
+  const [closingSoon, setClosingSoon] = useState(false)
+
+  useEffect(() => {    
+    isClosingSoon(store.close)    
+  }, [])
+
+  const isClosingSoon = (close) => {
+    const currentDate = new Date()
+    const hours = parseInt(currentDate.getHours())
+    const minutes = parseInt(currentDate.getMinutes())
+    let closeHours = parseInt(close.substr(0, 2))
+    let closeMinutes = parseInt(close.substr(3, 5))
+
+    if (closeHours === 0) {
+      if (hours === 0) {
+        if (minutes < closeMinutes) setClosingSoon(true)
+      } else if (hours === 23) {
+        if (minutes >= closeMinutes) setClosingSoon(true)      
+      }
+    } else if (hours === closeHours) {
+      if (minutes < closeMinutes) setClosingSoon(true)
+    } else if (hours === closeHours - 1) {
+      if (minutes >= closeMinutes) setClosingSoon(true)      
+    }
+  }
 
   return (
-    <Grid item xs={12} sm={6} md={4}>
-      <StyledCard onClick={() => navigate(`/store/${store.id}`)}>
+    <Grid disabled={isDisabled} item xs={12} sm={6} md={4}>
+      <StyledCard disabled={isDisabled} onClick={() => {if (!isDisabled) navigate(`/store/${store.id}`)}}
+      sx={{ '&:hover':{backgroundColor:isDisabled? '':'#dbdbdb'},
+            cursor:isDisabled? 'default': 'pointer', opacity:isDisabled? 0.6: 1 }}      
+      >
         <CardMedia
           component="img"
           height="140"
@@ -49,8 +74,13 @@ const StoreCard = ({ store }) => {
           {store.name}
         </CardTitle>
         <CardContent>
-          <Typography gutterBottom variant="subtitle2" component="div" sx={{ mt: -0.5 }}>
-            {store.types.join(', ')}
+          <Typography gutterBottom variant="subtitle2" component="div" sx={{ display:'flex', direction:'row', mt: -0.5 }}>
+            {store.types.join(', ')} {isDisabled && '(Closed)'} 
+            {(closingSoon === true && isDisabled === false) && 
+            <Typography variant="subtitle2" sx={{ color:'tastytreats.mediumBlue', ml:'5px' }} >
+              (*Closing at {store.close})
+            </Typography>
+            }
           </Typography>
 
           {store.distance && 

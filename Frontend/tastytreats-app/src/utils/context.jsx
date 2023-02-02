@@ -13,7 +13,7 @@ const ContextProvider = ({ children }) => {
   const [storesList, setStoresList] = useState([]);
   const [orgChippedStores, setOrgChippedStores] = useState([]);
   const [allStoresList, setAllStoresList] = useState([]);
-  const [closedStores, setClosedStores] = useState([]);
+  const [closedStoresList, setClosedStoresList] = useState([]);
   const [card, setCard] = useState([]);
   const [storeDetails, setStoreDetails] = useState(null);
   const [logInModal, setLogInModal] = useState(false);
@@ -39,7 +39,7 @@ const ContextProvider = ({ children }) => {
     storesList: [storesList, setStoresList],
     orgChippedStores: [orgChippedStores, setOrgChippedStores],
     allStoresList: [allStoresList, setAllStoresList],
-    closedStores: [closedStores, setClosedStores],
+    closedStoresList: [closedStoresList, setClosedStoresList],
     logInModal: [logInModal, setLogInModal],
     loginOrSignup: [loginOrSignup, setLoginOrSignup],
     addItemModal: [openAddModal, setOpenAddModal],

@@ -11,6 +11,7 @@ import NavigateNextIcon from '@mui/icons-material/NavigateNext';import {
   Autocomplete,
 } from '@react-google-maps/api'
 import { geocodeByAddress } from 'react-places-autocomplete';
+import CircularProgress from '@mui/material/CircularProgress';
 
 const CategoryBox = styled('div')`
   display: flex;
@@ -37,11 +38,12 @@ const HomePage = () => {
   const [allStoresList, setAllStoresList] = context.allStoresList; // to store details of ALL stores
   const [orgChippedStores, setOrgChippedStores] = context.orgChippedStores // to store initial list of stores or after search
                                                                // use for adding or removing chipped selections
-  const [closedStores, setClosedStores] = context.closedStores;
+  const [closedStoresList, setClosedStoresList] = context.closedStoresList;
   const [isSearched, setIsSearched]  = context.isSearched;
   const [searchedItems, setSearchedItems] = context.searchedItems;
   const [isChipSearched, setIsChipSearched]  = context.isChipSearched;
   const [chippedItems, setChippedItems] = context.chippedItems;
+  const [fetchedStores, setFetchedStores] = useState(false)
 
   let [showNoRestaurant, setShowNoRestaurant] = useState(false);
   
@@ -78,9 +80,9 @@ const HomePage = () => {
       const allStoresRes = await storeAPI.getAllStores() 
       let storesData = allStoresRes.data
 
-      setStoresList(storesData)
-      setOrgChippedStores(storesData)
-      setAllStoresList(storesData)
+      //setStoresList(storesData)
+      //setOrgChippedStores(storesData)
+      //setAllStoresList(storesData)
 
       try {
         const service = new window.google.maps.DistanceMatrixService()
@@ -107,10 +109,10 @@ const HomePage = () => {
       }
       
       const currentDate = new Date()
-      console.log(currentDate.getHours(), currentDate.getMinutes())
       const hours = parseInt(currentDate.getHours())
       const minutes = parseInt(currentDate.getMinutes())
       let openStores = []
+      let closedStores = []
 
       for (let i=0; i < storesData.length; i++) {
         let openHours = parseInt(storesData[i].open.substr(0, 2))
@@ -120,42 +122,31 @@ const HomePage = () => {
 
         if (timeAfter(openHours, openMinutes, closeHours, closeMinutes)) { // when closing is on same day
           if (timeAfter(openHours, openMinutes, hours, minutes) && timeAfter(hours, minutes, closeHours, closeMinutes)) {
-            console.log('Open:', storesData[i].name, openHours, openMinutes, ':', closeHours, closeMinutes)
+            //console.log('Open:', storesData[i].name, openHours, openMinutes, ':', closeHours, closeMinutes)
             openStores.push(storesData[i])
           } else {
-            console.log('CLOSED:', storesData[i].name, openHours, openMinutes, ':', closeHours, closeMinutes)
+            //console.log('CLOSED:', storesData[i].name, openHours, openMinutes, ':', closeHours, closeMinutes)
             closedStores.push(storesData[i])
           }
         } else { // when closing is on next day
           if (timeAfter(openHours, openMinutes, hours, minutes)) {
-            console.log('Open:', storesData[i].name, openHours, openMinutes, ':', closeHours, closeMinutes)
+            //console.log('Open:', storesData[i].name, openHours, openMinutes, ':', closeHours, closeMinutes)
             openStores.push(storesData[i])
           } else if (timeAfter(hours, minutes, closeHours, closeMinutes)) {
-            console.log('Open:', storesData[i].name, openHours, openMinutes, ':', closeHours, closeMinutes)
+            //console.log('Open:', storesData[i].name, openHours, openMinutes, ':', closeHours, closeMinutes)
             openStores.push(storesData[i])
           } else {
-            console.log('CLOSED:', storesData[i].name, openHours, openMinutes, ':', closeHours, closeMinutes)
+            //console.log('CLOSED:', storesData[i].name, openHours, openMinutes, ':', closeHours, closeMinutes)
             closedStores.push(storesData[i])
           }
         }
-
-        console.log('Open stores:')
-        console.log(openStores)
-        console.log('Closes stores:')
-        console.log(closedStores)
-
-
-        
-
-
-
-        //console.log(storesData[i].open.substr(0, 2), storesData[i].open.substr(3, 5)) 
-        //console.log(storesData[i].close.substr(0, 2), storesData[i].close.substr(3, 5)) 
       }
 
-      setStoresList(storesData)
-      setOrgChippedStores(storesData)
-      setAllStoresList(storesData)
+      setFetchedStores(true)
+      setStoresList(openStores)
+      setOrgChippedStores(openStores)
+      setAllStoresList(openStores)
+      setClosedStoresList(closedStores)
       setShowNoRestaurant(true)
       setChippedItems([])
       unselectAllChips()    
@@ -291,6 +282,15 @@ const HomePage = () => {
         </FlexBox>
         }
 
+        {(fetchedStores === false && storesList.length === 0) &&
+        <FlexBox direction='column' sx={{ alignItems:'center' }} >
+          <Typography sx={{ fontSize:'2rem', m:'2rem 0 3rem 0' }} >
+            Loading Stores
+          </Typography>
+          <CircularProgress color="inherit" size='80px' />
+        </FlexBox>
+        }
+
         {(storesList.length === 0 && showNoRestaurant) &&
         <FlexBox direction='column' sx={{ alignItems:'center' }} >
           <Typography variant='h4'>
@@ -306,7 +306,12 @@ const HomePage = () => {
         <Grid container spacing={3}>
           {storesList.map((store, idx) => 
             <StoreCard 
-              key={idx} store={store} 
+              key={idx} store={store} isDisabled={false}
+            />
+          )}
+          {closedStoresList.map((store, idx) => 
+            <StoreCard 
+              key={idx} store={store} isDisabled={true}
             />
           )}
         </Grid>
