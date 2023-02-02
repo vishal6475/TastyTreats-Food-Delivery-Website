@@ -110,15 +110,45 @@ const HomePage = () => {
       console.log(currentDate.getHours(), currentDate.getMinutes())
       const hours = parseInt(currentDate.getHours())
       const minutes = parseInt(currentDate.getMinutes())
+      let openStores = []
 
       for (let i=0; i < storesData.length; i++) {
         let openHours = parseInt(storesData[i].open.substr(0, 2))
         let openMinutes = parseInt(storesData[i].open.substr(3, 5))
         let closeHours = parseInt(storesData[i].close.substr(0, 2))
         let closeMinutes = parseInt(storesData[i].close.substr(3, 5))
-        if (timeAfter(openHours, openMinutes, hours, minutes) && timeAfter(hours, minutes, closeHours, closeMinutes)) {
-          console.log('Open:', storesData[i].name, openHours, openMinutes, ':', closeHours, closeMinutes)
+
+        if (timeAfter(openHours, openMinutes, closeHours, closeMinutes)) { // when closing is on same day
+          if (timeAfter(openHours, openMinutes, hours, minutes) && timeAfter(hours, minutes, closeHours, closeMinutes)) {
+            console.log('Open:', storesData[i].name, openHours, openMinutes, ':', closeHours, closeMinutes)
+            openStores.push(storesData[i])
+          } else {
+            console.log('CLOSED:', storesData[i].name, openHours, openMinutes, ':', closeHours, closeMinutes)
+            closedStores.push(storesData[i])
+          }
+        } else { // when closing is on next day
+          if (timeAfter(openHours, openMinutes, hours, minutes)) {
+            console.log('Open:', storesData[i].name, openHours, openMinutes, ':', closeHours, closeMinutes)
+            openStores.push(storesData[i])
+          } else if (timeAfter(hours, minutes, closeHours, closeMinutes)) {
+            console.log('Open:', storesData[i].name, openHours, openMinutes, ':', closeHours, closeMinutes)
+            openStores.push(storesData[i])
+          } else {
+            console.log('CLOSED:', storesData[i].name, openHours, openMinutes, ':', closeHours, closeMinutes)
+            closedStores.push(storesData[i])
+          }
         }
+
+        console.log('Open stores:')
+        console.log(openStores)
+        console.log('Closes stores:')
+        console.log(closedStores)
+
+
+        
+
+
+
         //console.log(storesData[i].open.substr(0, 2), storesData[i].open.substr(3, 5)) 
         //console.log(storesData[i].close.substr(0, 2), storesData[i].close.substr(3, 5)) 
       }
