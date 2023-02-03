@@ -32,6 +32,7 @@ const CheckoutPage = () => {
   const [addressToUpdate, setAddressToUpdate] = useState({});
   const [openAddressModal, setOpenAddressModal] = useState(false);
   const [showUnitBox, setShowUnitBox] = useState(false);
+  const [sectionType, setSectionType] = useState(0); // 0 for intial modal, 1 for new address modal, 2 for edit address modal
   const [openCardModal, setOpenCardModal] = useState(false);
   const [leaveAtDoor, setLeaveAtDoor] = useState(false);
   const [cardOrder, setCardOrder] = context.cardOrder;
@@ -73,15 +74,15 @@ const CheckoutPage = () => {
   const handleAddressModal = () => {
     setNoAddressError(false)
     setAddressToUpdate(address)
-    setShowUnitBox(true)
+    setSectionType(0)
     setOpenAddressModal(true)
-    populateAddr1Interval = setInterval(populateAddr1Field, 100);
+    //populateAddr1Interval = setInterval(populateAddr1Field, 100);
   }
 
   const handleLeaveHandModal = () => {
     setNoAddressError(false)
     setAddressToUpdate(address)
-    setShowUnitBox(true)
+    setSectionType(2)
     setOpenAddressModal(true)
     populateAddr1Interval = setInterval(populateAddr1Field, 100);
   }
@@ -365,8 +366,8 @@ const CheckoutPage = () => {
       <DeliveryAddressModal 
         openAddressModal={openAddressModal} 
         setOpenAddressModal={setOpenAddressModal}
-        showUnitBox={showUnitBox}
-        setShowUnitBox={setShowUnitBox}
+        sectionType={sectionType}
+        setSectionType={setSectionType}
         leaveAtDoor={leaveAtDoor}
         setLeaveAtDoor={setLeaveAtDoor}  
         addressToUpdate={addressToUpdate}      

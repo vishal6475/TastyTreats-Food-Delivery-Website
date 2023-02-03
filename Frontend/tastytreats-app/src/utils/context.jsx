@@ -9,7 +9,7 @@ const ContextProvider = ({ children }) => {
   const [loginOrSignup, setLoginOrSignup] = useState(false);
   const [customer, setCustomer] = useState(false);
   const [address, setAddress] = useState({unitNo: '', addr1: '84 Albert Road, Strathfield NSW, Australia', 
-                                          leaveAtDoor: false, ins: '' });
+                                          leaveAtDoor: false, ins: '', savedAddress: false });
   const [storesList, setStoresList] = useState([]);
   const [orgChippedStores, setOrgChippedStores] = useState([]);
   const [allStoresList, setAllStoresList] = useState([]);

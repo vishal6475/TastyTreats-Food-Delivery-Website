@@ -112,6 +112,7 @@ const AccountMainAddressScreen = ({  }) => {
       document.getElementById('new-address').value = ''
       setUnitNo('')
 
+      if (allAddresses.length === 0) body.primary1 = 'Y';
       allAddresses.push(body)
     }
     

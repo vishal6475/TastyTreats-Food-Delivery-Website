@@ -28,7 +28,7 @@ const StoreMenuPage = () => {
   const steps = ['Order submitted', 'Preparing', 'Packing', 'Delivering', 'Completed'];
 
   useEffect(() => {
-    if (completedOrder == null)
+    //if (completedOrder == null)
       fetchCompletedOrder()
   }, [])
   

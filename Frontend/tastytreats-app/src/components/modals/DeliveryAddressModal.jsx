@@ -17,7 +17,7 @@ import HomeIcon from '@mui/icons-material/Home';
 import Radio from '@mui/material/Radio';
 
 
-const DeliveryAddressModal = ({openAddressModal, setOpenAddressModal, showUnitBox, setShowUnitBox, 
+const DeliveryAddressModal = ({openAddressModal, setOpenAddressModal, sectionType, setSectionType, 
   leaveAtDoor, setLeaveAtDoor, addressToUpdate, setAddressToUpdate}) => {
   const navigate = useNavigate();
   const context = useContext(StoreContext);
@@ -25,9 +25,6 @@ const DeliveryAddressModal = ({openAddressModal, setOpenAddressModal, showUnitBo
   const [address, setAddress] = context.address;  
   const [currentAddress, setCurrentAddress] = useState(''); 
   const [curLeaveAtDoor, setCurLeaveAtDoor] = useState(false);
-
-  
-  const addressRef = useRef();  
 
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
@@ -42,6 +39,8 @@ const DeliveryAddressModal = ({openAddressModal, setOpenAddressModal, showUnitBo
   const handleClose = () => {
     setOpenAddressModal(false);
   }
+
+  
 
   const changeAddr1Field = (e) => {
     setAddressToUpdate((prev) => {return {...prev, addr1: e.target.value }})
@@ -61,7 +60,7 @@ const DeliveryAddressModal = ({openAddressModal, setOpenAddressModal, showUnitBo
     //const results = await geocodeByAddress(addr);
     //console.log(results)
     setCurLeaveAtDoor(leaveAtDoor)
-    setShowUnitBox(true)
+    sectionType(2)
   }
 
   const updateAddress = () => {      
@@ -88,7 +87,6 @@ const DeliveryAddressModal = ({openAddressModal, setOpenAddressModal, showUnitBo
             id='order-delivery-address' 
             name="order-delivery-address"
             placeholder='Enter delivery address' 
-            ref={addressRef}
             required
             sx={{backgroundColor:'white', minWidth: '100%', border: 'none', borderRadius:'0'}}
             InputProps={{
@@ -97,7 +95,15 @@ const DeliveryAddressModal = ({openAddressModal, setOpenAddressModal, showUnitBo
           />
         </Autocomplete>
 
-        {showUnitBox &&
+        {sectionType === 0 &&
+        <FlexBox direction='column' >
+          <Typography variant='subtitle2' sx={{ fontSize:'0.9rem', mb:'1rem' }}  >
+            <b>Saved addresses:</b>
+          </Typography>
+        </FlexBox>
+        }
+
+        {sectionType === 2 &&
 
         <FlexBox direction='column'>
         
