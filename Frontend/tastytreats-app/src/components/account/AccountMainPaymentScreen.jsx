@@ -54,8 +54,7 @@ const AccountMainPaymentScreen = ({  }) => {
 
   
   useEffect(() => {
-    fetchAddedCards()
-    
+    fetchAddedCards()    
   }, [])
 
   

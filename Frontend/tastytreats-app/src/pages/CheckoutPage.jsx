@@ -1,7 +1,7 @@
 import { useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { StoreContext } from '../utils/context';
-import { Grid, Typography, styled, Button } from '@mui/material'
+import { Grid, Typography, TextField, styled, Button } from '@mui/material'
 import { FlexBox, Container } from '../components/styles/layouts';
 import Divider from '@mui/material/Divider';
 import Accordion from '@mui/material/Accordion';
@@ -39,6 +39,9 @@ const CheckoutPage = () => {
   const [completedOrder, setCompletedOrder] = context.completedOrder;
   const [noAddressError, setNoAddressError] = useState(false);
   const [noCardError, setNoCardError] = useState(false);
+  const [noCVVError, setNoCVVError] = useState(false);  
+  const [paymentCardCVV, setPaymentCardCVV] = useState('')
+  const [expanded, setExpanded] = useState(true);
 
   let populateAddr1Interval = null
   
@@ -88,6 +91,15 @@ const CheckoutPage = () => {
     setOpenCardModal(true)
   }
 
+  const isNumbers = (str) => /^[0-9]*$/.test(str);
+
+  const changePaymentCardCVV = (e) => {
+    if (isNumbers(e.target.value)) {
+      setPaymentCardCVV(e.target.value);
+      setNoCVVError(false)
+    }
+  }
+
   const dateFormat = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' };
 
   function formatDate(datetime) {
@@ -101,13 +113,11 @@ const CheckoutPage = () => {
       setNoCardError(false)
     } else if (!cardOrder) {
       setNoCardError(true)
+    } else if (document.getElementById('paymentCardCVV').value.length !== 3) {
+      setNoCVVError(true)
     } else {
 
       try{
-        //console.log(cartItems)
-        //console.log(customer)
-        //console.log(cardOrder)
-
         let currentDate = new Date()
         //currentDate = currentDate.toISOString().slice(0, -5)+"+11:00"
         console.log(formatDate(currentDate))        
@@ -136,9 +146,6 @@ const CheckoutPage = () => {
       catch (error) {
         console.log(error)
       }
-
-      
-
     }
   }
 
@@ -156,8 +163,8 @@ const CheckoutPage = () => {
         
 
         <FlexBox sx={{ minWidth:'50vw', m:'1rem auto 1rem auto' }}>
-          <Accordion sx={{ width:'100%'}} >
-            <AccordionSummary
+          <Accordion expanded={expanded} sx={{ width:'100%'}} >
+            <AccordionSummary onClick={() => {setExpanded(!expanded)}}
               expandIcon={<ExpandMoreIcon />}
               aria-controls="delivery-content"
               id="delivery-header"
@@ -206,8 +213,8 @@ const CheckoutPage = () => {
         </FlexBox>  
 
         <FlexBox sx={{ minWidth:'50vw', m:'1rem auto 1rem auto' }}>
-          <Accordion sx={{ width:'100%'}} >
-            <AccordionSummary
+          <Accordion expanded={!expanded} sx={{ width:'100%'}} >
+            <AccordionSummary onClick={() => {setExpanded(!expanded)}}
               expandIcon={<ExpandMoreIcon />}              
               aria-controls="payment-content"
               id="payment-header"
@@ -217,16 +224,30 @@ const CheckoutPage = () => {
             </AccordionSummary>
             <AccordionDetails>
 
-              <FlexBox direction='row' sx={{ mt:'1.5rem', mb:'0.5rem', cursor:'pointer', justifyContent:'space-between' }} 
-                onClick={handleCardModal} >
-                <FlexBox>
+              <FlexBox direction='row' sx={{ mt:'1.5rem', mb:'0.5rem', justifyContent:'space-between',
+                alignItems:'center' }} 
+                >
+                <FlexBox sx={{ alignItems:'center' }}>
                   <CreditCardIcon/>
                   <Typography sx={{ ml:'0.6rem' }}>
-                  { cardOrder && 'Card ...' + cardOrder.number.substr(-4, 4) }
-                  { !cardOrder && 'Select Credit/Debit Card' }
+                  { cardOrder.number.length === 16 && 'Card ...' + cardOrder.number.substr(-4, 4) }
+                  { cardOrder.number.length !== 16 && 'Select Credit/Debit Card' }
                   </Typography>
+                  { cardOrder.number.length === 16 &&
+                  <TextField
+                    size="small"
+                    id="paymentCardCVV"
+                    type='password'
+                    placeholder="CVV"
+                    value={paymentCardCVV}
+                    onChange={changePaymentCardCVV}
+                    inputProps={{ maxLength: 3}}         
+                    sx={{ ml:'10px', width:'60px' }}           
+                  />  
+                  }
                 </FlexBox>
-                <FlexBox sx={{ border:'solid', borderRadius:'7px', borderWidth:'1px', padding:'1px 5px 1px 5px' }} >
+                <FlexBox onClick={handleCardModal}
+                  sx={{ border:'solid', borderRadius:'7px', borderWidth:'1px', padding:'1px 5px 1px 5px', cursor:'pointer' }} >
                   <Typography variant='subtitle2'>
                     Edit
                   </Typography>
@@ -242,6 +263,7 @@ const CheckoutPage = () => {
           sx={{ color: 'error.main', minHeight:'5vh', m:'0.4rem auto 0 auto', fontSize:'1rem'}}>
           {noAddressError && 'Please enter your delivery address.'}
           {noCardError && 'Please enter your card details.'}
+          {noCVVError && 'Please enter CVV of your card.'}
         </Typography>
 
         <Button variant="contained" onClick={placeOrder} 
@@ -353,7 +375,8 @@ const CheckoutPage = () => {
 
       <PaymentCardModal 
         openCardModal={openCardModal} 
-        setOpenCardModal={setOpenCardModal} />
+        setOpenCardModal={setOpenCardModal}
+        setPaymentCardCVV={setPaymentCardCVV} />
 
     </FlexBox>
   )

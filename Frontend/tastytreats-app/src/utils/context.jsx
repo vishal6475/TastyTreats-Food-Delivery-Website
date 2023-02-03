@@ -22,7 +22,7 @@ const ContextProvider = ({ children }) => {
   const [itemToAddQuantity, setItemToAddQuantity] = useState(1);
   const [itemOrgQuantity, setItemOrgQuantity] = useState(1);
   const [cartItems, setCartItems] = useState(null);
-  const [cardOrder, setCardOrder] = useState(null);
+  const [cardOrder, setCardOrder] = useState({name: '', number: '', expiry: '', cvv: ''});
   const [fromCheckout, setFromCheckout] = useState(false);
   const [isSearched, setIsSearched] = useState(0);
   const [searchedItems, setSearchedItems] = useState('');  
