@@ -46,6 +46,7 @@ const CheckoutPage = () => {
   const [noAddressError, setNoAddressError] = useState(false);
   const [noCardError, setNoCardError] = useState(false);
   const [noCVVError, setNoCVVError] = useState(false);  
+  const [longDistanceError, setLongDistanceError] = useState(false);  
   const [paymentCardCVV, setPaymentCardCVV] = useState('')
   const [expanded, setExpanded] = useState(true);
 
@@ -91,6 +92,7 @@ const CheckoutPage = () => {
   }
 
   const handleAddressModal = () => {
+    setLongDistanceError(false)
     setNoAddressError(false)
     setAddressToUpdate(address)
     setSectionType(0)
@@ -99,6 +101,7 @@ const CheckoutPage = () => {
   }
 
   const handleLeaveHandModal = () => {
+    setLongDistanceError(false)
     setNoAddressError(false)
     setAddressToUpdate(address)
     setSectionType(2)
@@ -131,36 +134,55 @@ const CheckoutPage = () => {
     if (address.addr1.length === 0){
       setNoAddressError(true)
       setNoCardError(false)
-    } else if (!cardOrder) {
+    } else if (cardOrder.number.length !== 16) {
       setNoCardError(true)
     } else if (document.getElementById('paymentCardCVV').value.length !== 3) {
       setNoCVVError(true)
     } else {
 
       try{
-        let currentDate = new Date()
-        //currentDate = currentDate.toISOString().slice(0, -5)+"+11:00"
-        console.log(formatDate(currentDate))        
+        const service = new window.google.maps.DistanceMatrixService()
+        let distance = 0
+        await service.getDistanceMatrix(
+          {
+            origins: [address.addr1],
+            destinations: [storeDetails.addr_1],
+            travelMode: "DRIVING"
+          },
+          (response, status) => {
+            if (status === "OK") {
+              distance = response.rows[0].elements[0].distance.value
+            }
+          }
+        )
 
-        const body = {
-          customer_id: customer.id,
-          store_id: cartItems.storeID,
-          unit_no: address.unitNo,
-          addr_1: address.addr1,
-          customer_name: cardOrder.name,
-          card_number: cardOrder.number,
-          card_expiry: cardOrder.expiry,
-          payment_type: 'Card',
-          delivery_pickup: 'D',
-          total_amount: parseInt((1.06 * total + cartItems.delivery_fee).toFixed(2)),
-          items: cartItems.items,
-          date: currentDate
+        if (distance > 7000) {
+          setLongDistanceError(true)
+        } else {
+          let currentDate = new Date()
+          //currentDate = currentDate.toISOString().slice(0, -5)+"+11:00"
+          console.log(formatDate(currentDate))        
+
+          const body = {
+            customer_id: customer.id,
+            store_id: cartItems.storeID,
+            unit_no: address.unitNo,
+            addr_1: address.addr1,
+            customer_name: cardOrder.name,
+            card_number: cardOrder.number,
+            card_expiry: cardOrder.expiry,
+            payment_type: 'Card',
+            delivery_pickup: 'D',
+            total_amount: parseInt((1.06 * total + cartItems.delivery_fee).toFixed(2)),
+            items: cartItems.items,
+            date: currentDate
+          }
+
+          const response = await orderAPI.createOrder(body)
+          console.log(response.data)
+          setCompletedOrder(response.data)
+          navigate(`/order/${response.data.id}`)
         }
-
-        const response = await orderAPI.createOrder(body)
-        console.log(response.data)
-        setCompletedOrder(response.data)
-        navigate(`/order/${response.data.id}`)
 
       }
       catch (error) {
@@ -284,6 +306,7 @@ const CheckoutPage = () => {
           {noAddressError && 'Please enter your delivery address.'}
           {noCardError && 'Please enter your card details.'}
           {noCVVError && 'Please enter 3-digit CVV of your card.'}
+          {longDistanceError && 'Cannot place order as delivery address is more than 7kms away from the store.'}          
         </Typography>
 
         <Button variant="contained" onClick={placeOrder} 

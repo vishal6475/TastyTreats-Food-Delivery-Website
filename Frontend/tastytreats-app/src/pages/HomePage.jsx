@@ -150,8 +150,14 @@ const HomePage = () => {
 
   useEffect(() => {    
     if (address.addr1.length === 0) navigate('/');  
-    // removing previous stored restaurants
-    removeSearch()
+
+    setStoresList([])
+    setOrgChippedStores([])
+    setAllStoresList([])
+    setClosedStoresList([])       
+    setIsSearched(0)
+    setIsChipSearched(0)
+    unselectAllChips()
 
     // fetching current stores
     //if (allStoresList.length === 0)
@@ -323,7 +329,7 @@ const HomePage = () => {
               key={idx} store={store} isDisabled={false}
             />
           )}
-          {closedStoresList.map((store, idx) => 
+          {(isSearched + isChipSearched) === 0 && closedStoresList.map((store, idx) => 
             <StoreCard 
               key={idx} store={store} isDisabled={true}
             />

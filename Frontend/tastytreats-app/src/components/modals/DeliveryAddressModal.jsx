@@ -135,9 +135,11 @@ const DeliveryAddressModal = ({openAddressModal, setOpenAddressModal, sectionTyp
             <EditIcon></EditIcon> 
           </FlexBox>
           
+          {allAddresses.length > 0 &&
           <Typography variant='subtitle2' sx={{ fontSize:'0.9rem', mb:'0.6rem' }}  >
             <b>Saved addresses:</b>
           </Typography>
+          }
 
           {allAddresses.map((savedAddress, idx) => {
             return <FlexBox key={idx} direction='row' onClick={() => {setFromSavedAddress(savedAddress)}}

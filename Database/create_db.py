@@ -152,7 +152,7 @@ cur.execute("INSERT INTO stores values(default, 'Dominos Strathfield', '187 The 
             '', '', '', 'Pizza,Italian', '11:00', '02:59', 'Y', 5.5, 20, ''\
             );")
 
-cur.execute("INSERT INTO stores values(default, 'Pizza Hut - Belfield', '26A Burwood Road, Belfield NSW 2191, Australia', '', \
+cur.execute("INSERT INTO stores values(default, 'Pizza Hut - Belfield', 'Shop 1-2/450 Elizabeth St, Surry Hills NSW 2010', '', \
             '', '', '', 'Pizza,Italian', '10:00', '23:00', 'Y', 5.5, 20, ''\
             );")
 

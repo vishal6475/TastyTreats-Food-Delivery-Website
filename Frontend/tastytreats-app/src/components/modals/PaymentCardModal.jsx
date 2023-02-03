@@ -143,9 +143,11 @@ const PaymentCardModal = ({openCardModal, setOpenCardModal, setPaymentCardCVV}) 
               Add new card
           </Button>
 
+          {allCards.length > 0 &&
           <Typography variant='subtitle2' sx={{ fontSize:'0.9rem', mb:'1rem' }}  >
             <b>Saved cards:</b>
           </Typography>
+          }
 
           {allCards.map((card, idx) => {
           return  <FlexBox key={idx} direction='row' onClick={() => {setFromSavedCard(card)}}
