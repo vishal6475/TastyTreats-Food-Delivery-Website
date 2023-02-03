@@ -37,7 +37,7 @@ const SearchBar = styled(Paper)`
 
 const TastyTreatsAppBar = () => {
   const navigate = useNavigate()
-  const location = useLocation();
+  const location = useLocation()
   const searchTitle = useRef('')
 
   const context = useContext(StoreContext);  

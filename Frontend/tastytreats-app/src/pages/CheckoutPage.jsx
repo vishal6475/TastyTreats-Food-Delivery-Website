@@ -18,13 +18,18 @@ import {
   IconButton,
   Avatar
 } from '@mui/material';
+import {
+  useJsApiLoader,
+  Autocomplete,
+} from '@react-google-maps/api'
 
 import OrdersAPI from "../utils/OrdersAPIHelper";
 const orderAPI = new OrdersAPI();
 
 const CheckoutPage = () => {
   const context = useContext(StoreContext);
-  const [customer, _] = context.customer;
+  const [customer, _] = context.customer;  
+  const [loggedIn] = context.login;
   const [storesList, setStoresList] = useState([]);
   const [total, setTotal] = useState(0);
   const [cartItems, setCartItems] = context.cartItems;  
@@ -48,20 +53,34 @@ const CheckoutPage = () => {
   
   const navigate = useNavigate()
 
-  useEffect(() => {
-    getTotalAmount()
-  }, [])
-
-  const backToStore = () => {
-    navigate(`/store/${storeDetails.id}`)
-  }
-
   const getTotalAmount = () => {
     let sum = 0
     cartItems?.items.forEach(item => {
       sum += (item.price * item.quantity)
     });
     setTotal(sum)
+  }
+
+  useEffect(() => {
+    if (!loggedIn) {
+      navigate('/home') // if someone typed /checkout in url without login
+    }
+
+    getTotalAmount()
+  }, [])
+
+  const { isLoaded } = useJsApiLoader({
+    id: 'google-map-script',
+    googleMapsApiKey: 'AIzaSyC_MgNdagqfz1e-bpG0Vnxfey8WEOSnzvo',
+    libraries: ['places'],
+  })
+
+  if (!isLoaded) {
+    return <div></div>;
+  } 
+
+  const backToStore = () => {
+    navigate(`/store/${storeDetails.id}`)
   }
 
   const populateAddr1Field = () => {
@@ -264,7 +283,7 @@ const CheckoutPage = () => {
           sx={{ color: 'error.main', minHeight:'5vh', m:'0.4rem auto 0 auto', fontSize:'1rem'}}>
           {noAddressError && 'Please enter your delivery address.'}
           {noCardError && 'Please enter your card details.'}
-          {noCVVError && 'Please enter CVV of your card.'}
+          {noCVVError && 'Please enter 3-digit CVV of your card.'}
         </Typography>
 
         <Button variant="contained" onClick={placeOrder} 

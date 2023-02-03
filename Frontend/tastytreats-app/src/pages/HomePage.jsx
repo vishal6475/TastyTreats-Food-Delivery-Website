@@ -1,4 +1,5 @@
 import { useContext, useState, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { StoreContext } from '../utils/context';
 import { Grid, Typography, styled } from '@mui/material'
 import { FlexBox, Container } from '../components/styles/layouts';
@@ -31,6 +32,7 @@ const ChipBox = styled(FlexBox)`
 const storeAPI = new StoresAPI();
 
 const HomePage = () => {
+  const navigate = useNavigate()
   const context = useContext(StoreContext);
   const [customer] = context.customer;
   const [address, setAddress] = context.address;
@@ -51,27 +53,16 @@ const HomePage = () => {
     'Sandwiches', 'Kebab', 'Turkish', 'South Indian', 'Pizza', 'Burgers', 'Italian', 'Fast Food', 'Indian', 'Chicken', 'Mexican', 
     'Sandwiches', 'Kebab', 'Turkish', 'South Indian' ]
   
-
-  useEffect(() => {    
-    // removing previous stored restaurants
-    removeSearch()
-
-    // fetching current stores
-    //if (allStoresList.length === 0)
-    fetchAllStores()
-    
-  }, [])
-
-  const timeAfter = (h1, m1, h2, m2) => { // returns true if (h2, m2) comes after (h1, m1) in a day
-    if (h2 > h1) {
-      return true
-    } else if (h2 === h1) {
-      if (m2 > m1) {
-        return true
-      } else return false
-    } else return false
+  const removeSearch = () => {    
+    setIsSearched(0)
+    setIsChipSearched(0)
+    setChippedItems([])
+    setStoresList(allStoresList)
+    setOrgChippedStores(allStoresList)
+    unselectAllChips()    
+    let search = document.getElementById('SearchBar')
+    search.value = ''
   }
-  
 
   const fetchAllStores = async (event) => { 
 
@@ -156,22 +147,35 @@ const HomePage = () => {
     }
   }
 
-  const removeSearch = () => {    
-    setIsSearched(0)
-    setIsChipSearched(0)
-    setChippedItems([])
-    setStoresList(allStoresList)
-    setOrgChippedStores(allStoresList)
-    unselectAllChips()    
-    let search = document.getElementById('SearchBar')
-    search.value = ''
-  }
 
+  useEffect(() => {    
+    if (address.addr1.length === 0) navigate('/');  
+    // removing previous stored restaurants
+    removeSearch()
+
+    // fetching current stores
+    //if (allStoresList.length === 0)
+    fetchAllStores()
+    
+  }, [])
+
+  const timeAfter = (h1, m1, h2, m2) => { // returns true if (h2, m2) comes after (h1, m1) in a day
+    if (h2 > h1) {
+      return true
+    } else if (h2 === h1) {
+      if (m2 > m1) {
+        return true
+      } else return false
+    } else return false
+  }
+  
   const unselectAllChips = () => {
     for (let i=0; i < categories.length; i++) {
       let element = document.getElementById(`category-chip-${i}`)
-      element.style.color = 'black'
-      element.style.backgroundColor = '#F0F0F0'
+      if (element) {
+        element.style.color = 'black'
+        element.style.backgroundColor = '#F0F0F0'
+      }
     }
   }
 
@@ -223,6 +227,16 @@ const HomePage = () => {
     }
     //console.log(chippedItems)
   }
+
+  const { isLoaded } = useJsApiLoader({
+    id: 'google-map-script',
+    googleMapsApiKey: 'AIzaSyC_MgNdagqfz1e-bpG0Vnxfey8WEOSnzvo',
+    libraries: ['places'],
+  })
+
+  if (!isLoaded) {
+    return <div></div>;
+  } 
 
   return (
       <div style={{ margin:'20px auto 20px auto', width:'75vw', minHeight:'88vh' }}>
@@ -292,9 +306,9 @@ const HomePage = () => {
         }
 
         {(storesList.length === 0 && showNoRestaurant) &&
-        <FlexBox direction='column' sx={{ alignItems:'center' }} >
+        <FlexBox direction='column' sx={{ alignItems:'center', mb:'1rem' }} >
           <Typography variant='h4'>
-            No restaurants found
+            No open restaurants found
           </Typography>
           {isSearched === 1 &&          
           <Typography variant='subtitle2' color="text.secondary" sx={{fontSize:'1rem'}} >

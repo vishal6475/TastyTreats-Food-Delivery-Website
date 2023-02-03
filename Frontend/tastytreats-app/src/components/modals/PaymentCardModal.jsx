@@ -149,7 +149,7 @@ const PaymentCardModal = ({openCardModal, setOpenCardModal, setPaymentCardCVV}) 
 
           {allCards.map((card, idx) => {
           return  <FlexBox key={idx} direction='row' onClick={() => {setFromSavedCard(card)}}
-                    sx={{border:'solid', borderColor:'tastytreats.dull', borderWidth:'1px', borderRadius:'15px',
+                    sx={{border:'solid', borderColor:'tastytreats.dull', borderWidth:'1px', borderRadius:'5px',
                       m:'0 auto 1rem auto', p:'0.5rem 1rem 0.5rem 1rem', justifyContent:'space-between', alignItems:'center',
                       width:'50vw', maxWidth:'400px',
                       cursor:'pointer', '&:hover':{backgroundColor: 'tastytreats.lightGrey'} }} >
@@ -158,8 +158,7 @@ const PaymentCardModal = ({openCardModal, setOpenCardModal, setPaymentCardCVV}) 
                     </Typography>    
                     <Radio
                     checked={card.card_number === cardOrder.number}
-                    value="a"
-                    name="radio-buttons"
+                    name="saved-cards-radio-buttons"
                     color="default" 
                     inputProps={{ 'aria-label': 'Payment card radio buttons' }}
                   />                

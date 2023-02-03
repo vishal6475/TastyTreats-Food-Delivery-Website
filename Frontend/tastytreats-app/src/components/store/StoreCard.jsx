@@ -54,7 +54,7 @@ const StoreCard = ({ store, isDisabled }) => {
       }
     } else if (hours === closeHours) {
       if (minutes < closeMinutes) setClosingSoon(true)
-    } else if (hours === closeHours - 1) {
+    } else if (hours === (closeHours - 1)) {
       if (minutes >= closeMinutes) setClosingSoon(true)      
     }
   }

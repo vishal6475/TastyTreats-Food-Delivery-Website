@@ -1,5 +1,5 @@
 import { useState, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { StoreContext } from '../../utils/context';
 import { StandardModal, ModalBody, ModalTitle } from '../styles/modals';
 import { FlexBox } from '../styles/layouts';
@@ -10,6 +10,7 @@ const custAPI = new CustomersAPI();
 
 const LogInModal = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const context = useContext(StoreContext);
   const [nextPage, setRedirect] = context.redirect;
   const [loggedIn, setLoggedIn] = context.login;
@@ -19,6 +20,7 @@ const LogInModal = () => {
   const [loginOrSignup, setLoginOrSignup] = context.loginOrSignup;
   const [customer, setCustomer] = context.customer;
   const [fromCheckout, setFromCheckout] = context.fromCheckout;
+  const [address, setAddress] = context.address;  
   
   const [formErrors, setFormErrors] = useState({
     error: false,
@@ -95,6 +97,16 @@ const LogInModal = () => {
         setLoggedIn(true)
         handleClose()
         if (fromCheckout) navigate('/checkout'); 
+        
+        if (location.pathname === '/' && address.addr1.length === 0) {
+          for (let i=0; i < loginResults.data.addresses.length; i++) {
+            if (loginResults.data.addresses[i].primary1 === 'Y') {
+              setAddress(prev => {return {...prev, addr1: loginResults.data.addresses[i].addr_1, 
+                                                   unitNo: loginResults.data.addresses[i].unit_no}})
+              navigate('/home')
+            }
+          }
+        }
         
       }
       catch(error) {

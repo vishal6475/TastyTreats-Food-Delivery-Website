@@ -27,7 +27,11 @@ const StoreMenuPage = () => {
 
   const steps = ['Order submitted', 'Preparing', 'Packing', 'Delivering', 'Completed'];
 
-  useEffect(() => {
+  useEffect(() => {    
+    if (!loggedIn) {
+      navigate('/home') // if someone typed /order in url without login
+    }
+
     //if (completedOrder == null)
       fetchCompletedOrder()
   }, [])

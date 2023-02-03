@@ -14,7 +14,7 @@ const AccountScreen = () => {
 
   useEffect(() => {
     if (!loggedIn) {
-      navigate('/') // if someone typed /account in url without login
+      navigate('/home') // if someone typed /account in url without login
     }
   }, [])
 

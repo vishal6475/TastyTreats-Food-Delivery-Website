@@ -15,6 +15,10 @@ import InputAdornment from '@mui/material/InputAdornment';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import HomeIcon from '@mui/icons-material/Home';
 import Radio from '@mui/material/Radio';
+import EditIcon from '@mui/icons-material/Edit';
+
+import CustomersAPI from "../../utils/CustomersAPIHelper";
+const custAPI = new CustomersAPI();
 
 
 const DeliveryAddressModal = ({openAddressModal, setOpenAddressModal, sectionType, setSectionType, 
@@ -22,9 +26,28 @@ const DeliveryAddressModal = ({openAddressModal, setOpenAddressModal, sectionTyp
   const navigate = useNavigate();
   const context = useContext(StoreContext);
   const [loggedIn, setLoggedIn] = context.login;
+  const [customer, setcustomer] = context.customer;
   const [address, setAddress] = context.address;  
   const [currentAddress, setCurrentAddress] = useState(''); 
   const [curLeaveAtDoor, setCurLeaveAtDoor] = useState(false);
+  const [allAddresses, setAllAddresses] = useState([]);
+
+  const handleClose = () => {
+    setOpenAddressModal(false);
+  }
+
+   const fetchExistingAddresses = async () => {
+    try {
+    const addrResponse = await custAPI.getAddresses(customer.id)
+    setAllAddresses(addrResponse.data)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  useEffect(() => {
+    fetchExistingAddresses()
+  }, [])
 
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
@@ -35,12 +58,6 @@ const DeliveryAddressModal = ({openAddressModal, setOpenAddressModal, sectionTyp
   if (!isLoaded) {
     return <div></div>;
   } 
-
-  const handleClose = () => {
-    setOpenAddressModal(false);
-  }
-
-  
 
   const changeAddr1Field = (e) => {
     setAddressToUpdate((prev) => {return {...prev, addr1: e.target.value }})
@@ -54,39 +71,45 @@ const DeliveryAddressModal = ({openAddressModal, setOpenAddressModal, sectionTyp
     setAddressToUpdate((prev) => {return {...prev, ins: e.target.value }})
   }  
 
-  const gotDeliveryAddress = async () => {
-    //const addr = document.getElementById('order-delivery-address').value
-    //setAddress((prev) => {return { ...prev, addr1: addr }})
-    //const results = await geocodeByAddress(addr);
-    //console.log(results)
-    setCurLeaveAtDoor(leaveAtDoor)
-    sectionType(2)
+  const setFromSavedAddress = (savedAddress) => {
+    setAddress((prev) => {return { ...prev, unitNo: savedAddress.unit_no, addr1: savedAddress.addr_1, isSavedAddress: true}})
+    handleClose()
+  }
+
+  const gotDeliveryAddress = () => {
+    setAddressToUpdate(prev => {return {...prev, unitNo:'', ins:''}})
+    setCurLeaveAtDoor(false)
+    setSectionType(1)
+  }
+
+  const editAddress = () => {
+    document.getElementById('order-delivery-address').value = address.addr1
+    setSectionType(2)
   }
 
   const updateAddress = () => {      
-    const delivery_unit = document.getElementById('order-delivery-unit').value
     const delivery_addr = document.getElementById('order-delivery-address').value
-    const delivery_ins = document.getElementById('order-delivery-ins').value
-    //console.log(addressToUpdate)
+
     setAddress((prev) => {return { ...prev, unitNo: addressToUpdate.unitNo, addr1: delivery_addr, 
-      leaveAtDoor: curLeaveAtDoor, ins: addressToUpdate.ins}})
+      leaveAtDoor: curLeaveAtDoor, ins: addressToUpdate.ins, isSavedAddress: false}})
     setLeaveAtDoor(curLeaveAtDoor)
     handleClose()
-    //console.log(address)
   }
-
-
 
   return (
     <AddressModal open={openAddressModal} onClose={handleClose} aria-labelledby="login modal" maxWidth='lg'>
       <ModalItemTitle title='Update Address' close={handleClose} />
       <ModalBody justifyContent='center'>
 
+        <Typography variant='subtitle2' sx={{ fontSize:'0.9rem', mb:'0.6rem' }}  >
+          <b>Add new address:</b>
+        </Typography>
+
         <Autocomplete onPlaceChanged={gotDeliveryAddress} >
           <TextField 
             id='order-delivery-address' 
             name="order-delivery-address"
-            placeholder='Enter delivery address' 
+            placeholder='Add new delivery address' 
             required
             sx={{backgroundColor:'white', minWidth: '100%', border: 'none', borderRadius:'0'}}
             InputProps={{
@@ -96,14 +119,50 @@ const DeliveryAddressModal = ({openAddressModal, setOpenAddressModal, sectionTyp
         </Autocomplete>
 
         {sectionType === 0 &&
+        <Typography variant='subtitle2' sx={{ fontSize:'0.9rem', m:'1rem 0 0.6rem 0' }}  >
+          <b>Edit address:</b>
+        </Typography>
+        }
+        {sectionType === 0 &&
         <FlexBox direction='column' >
-          <Typography variant='subtitle2' sx={{ fontSize:'0.9rem', mb:'1rem' }}  >
+          <FlexBox direction='row' onClick={editAddress}
+            sx={{border:'solid', borderColor:'tastytreats.dull', borderWidth:'1px', borderRadius:'5px',
+            justifyContent:'space-between', alignItems:'center',m:'0 1rem 1rem 1rem', p:'0.5rem 1rem 0.5rem 1rem',
+            cursor:'pointer', '&:hover':{backgroundColor: 'tastytreats.lightGrey'}  }} >
+            <Typography color="text.secondary" sx={{ fontWeight:'bold', fontSize:'0.95rem' }} >
+            {(address.unitNo? address.unitNo + ', ' : '') + address.addr1}
+            </Typography>
+            <EditIcon></EditIcon> 
+          </FlexBox>
+          
+          <Typography variant='subtitle2' sx={{ fontSize:'0.9rem', mb:'0.6rem' }}  >
             <b>Saved addresses:</b>
           </Typography>
+
+          {allAddresses.map((savedAddress, idx) => {
+            return <FlexBox key={idx} direction='row' onClick={() => {setFromSavedAddress(savedAddress)}}
+                      sx={{border:'solid', borderColor:'tastytreats.dull', borderWidth:'1px', borderRadius:'5px',
+                      justifyContent:'space-between', alignItems:'center',m:'0 1rem 1rem 1rem', p:'0.5rem 1rem 0.5rem 1rem',
+                      cursor:'pointer', '&:hover':{backgroundColor: 'tastytreats.lightGrey'}  }} >
+                      <Typography color="text.secondary" sx={{ fontWeight:'bold', fontSize:'0.95rem' }} >
+                      {(savedAddress.unit_no? savedAddress.unit_no + ', ' : '') + savedAddress.addr_1}
+                      </Typography>
+                      <Radio
+                        checked={savedAddress.addr_1 === address.addr1 && 
+                          (address.unitNo.length === 0 || address.unitNo === savedAddress.unit_no)}
+                        value="a"
+                        name="saved-addresses-radio-buttons"
+                        color="default" 
+                        sx={{ m:'0', p:'0' }}
+                        inputProps={{ 'aria-label': 'Saved addresses radio buttons' }}
+                      />   
+                </FlexBox>
+          })}
+
         </FlexBox>
         }
 
-        {sectionType === 2 &&
+        {(sectionType === 1 || sectionType === 2) &&
 
         <FlexBox direction='column'>
         

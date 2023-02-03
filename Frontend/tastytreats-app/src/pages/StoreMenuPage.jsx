@@ -57,6 +57,7 @@ const StoreMenuPage = () => {
   const navigate = useNavigate()
 
   const [customer] = context.customer;
+  const [address, setAddress] = context.address; 
   const [store, setStore] = useState([]);
   const [storeTags, setStoreTags] = useState('');
   const [cartItems, setCartItems] = context.cartItems;
@@ -72,6 +73,10 @@ const StoreMenuPage = () => {
   };
 
   useEffect(() => {
+    if (address.addr1.length === 0) {
+      navigate('/home') // if someone typed /store in url without entering address or logging in
+    }
+
     fetchStoreMenu()
   }, [])
 

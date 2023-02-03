@@ -287,6 +287,8 @@ def login_customer(email, password):  # noqa: E501
             customer['profile_pic'] = str(record[7])
             customer['token'] = new_token
             customer['points'] = float(record[9])
+            customer['addresses'] = get_addresses_by_id(int(record[0]))[0]
+            customer['cards'] = get_cards_by_id(int(record[0]))[0]
 
             for item in customer.keys():
                 if customer[item] == "None":
