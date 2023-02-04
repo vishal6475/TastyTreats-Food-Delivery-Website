@@ -35,6 +35,28 @@ class TestCustomersController(BaseTestCase):
         self.assert200(response,
                        'Response body is : ' + response.data.decode('utf-8'))
 
+    def test_delete_address(self):
+        """Test case for delete_address
+
+        Delete customer address
+        """
+        response = self.client.open(
+            '/v1/customers/{customer_id}/addresses/{address_id}'.format(customer_id='customer_id_example', address_id='address_id_example'),
+            method='DELETE')
+        self.assert200(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+
+    def test_delete_card(self):
+        """Test case for delete_card
+
+        Delete customer card
+        """
+        response = self.client.open(
+            '/v1/customers/{customer_id}/cards/{card_id}'.format(customer_id='customer_id_example', card_id='card_id_example'),
+            method='DELETE')
+        self.assert200(response,
+                       'Response body is : ' + response.data.decode('utf-8'))
+
     def test_get_addresses_by_id(self):
         """Test case for get_addresses_by_id
 

@@ -388,8 +388,10 @@ def update_address(customer_id, body=None, address_id=None):  # noqa: E501
     """
 
     try:
+        print('before', customer_id, address_id, body)
         if connexion.request.is_json:
             body = Address.from_dict(connexion.request.get_json())  # noqa: E501
+        print('before', customer_id, address_id, body)
         
         if (body.addr_1 == None):
             error = InvalidInputError(code=400, type="InvalidInputError", 
@@ -615,6 +617,107 @@ def update_customer(customer_id, body=None):  # noqa: E501
         con.close()                    
         return body, 200, {'Access-Control-Allow-Origin': '*'}
 
+
+    except Exception as e:
+        # catch any unexpected runtime error and return as 500 error 
+        error = UnexpectedServiceError(code="500", type="UnexpectedServiceError", message=str(e))
+        return error, 500, {'Access-Control-Allow-Origin': '*'}
+
+def delete_address(customer_id, address_id):  # noqa: E501
+    """Delete customer address
+
+    Delete the provided address_id from the database. # noqa: E501
+
+    :param customer_id: Customer id of a customer
+    :type customer_id: str
+    :param address_id: Address id that needs to be deleted
+    :type address_id: str
+
+    :rtype: Address
+    """
+    
+    try:
+        con = psycopg2.connect(database= database, user=user, password=db_password, host=host, port=port)
+        con.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
+        cur = con.cursor()
+
+        # to check if the customer id exists or not
+        cur.execute('SELECT * FROM customers where id = ' + str(customer_id))
+        record = cur.fetchone()
+        if record == None:
+            error = InvalidInputError(code=400, type="InvalidInputError", 
+                    message="The provided customer ID does not exists")
+            cur.close()
+            con.close()
+            return error, 400, {'Access-Control-Allow-Origin': '*'}
+
+        # to check if the address id exists or not
+        cur.execute('SELECT * FROM addresses where id = ' + str(address_id))
+        record = cur.fetchone()
+        if record == None:
+            error = AddressNotFoundError(code=404, type="AddressNotFoundError", 
+                    message="The following Address ID does not exist: " + str(address_id))
+            cur.close()
+            con.close()
+            return error, 404, {'Access-Control-Allow-Origin': '*'}
+
+        delete_string = "delete from addresses where customer_id = %s and id = %s ;"
+        cur.execute(delete_string, (customer_id, address_id)) 
+
+        cur.close()
+        con.close()
+        return 'Deletion completed successfully.', 200, {'Access-Control-Allow-Origin': '*'}
+
+    except Exception as e:
+        # catch any unexpected runtime error and return as 500 error 
+        error = UnexpectedServiceError(code="500", type="UnexpectedServiceError", message=str(e))
+        return error, 500, {'Access-Control-Allow-Origin': '*'}
+
+
+def delete_card(customer_id, card_id):  # noqa: E501
+    """Delete customer card
+
+    Delete the provided card_id from the database. # noqa: E501
+
+    :param customer_id: Customer id of a customer
+    :type customer_id: str
+    :param card_id: Card id that needs to be deleted
+    :type card_id: str
+
+    :rtype: Card
+    """
+    
+    try:
+        con = psycopg2.connect(database= database, user=user, password=db_password, host=host, port=port)
+        con.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
+        cur = con.cursor()
+
+        # to check if the customer id exists or not
+        cur.execute('SELECT * FROM customers where id = ' + str(customer_id))
+        record = cur.fetchone()
+        if record == None:
+            error = InvalidInputError(code=400, type="InvalidInputError", 
+                    message="The provided customer ID does not exists")
+            cur.close()
+            con.close()
+            return error, 400, {'Access-Control-Allow-Origin': '*'}
+
+        # to check if the card id exists or not
+        cur.execute('SELECT * FROM cards where id = ' + str(card_id))
+        record = cur.fetchone()
+        if record == None:
+            error = CardNotFoundError(code=404, type="CardNotFoundError", 
+                    message="The following Card ID does not exist: " + str(card_id))
+            cur.close()
+            con.close()
+            return error, 404, {'Access-Control-Allow-Origin': '*'}
+
+        delete_string = "delete from cards where customer_id = %s and id = %s ;"
+        cur.execute(delete_string, (customer_id, card_id)) 
+
+        cur.close()
+        con.close()
+        return 'Deletion completed successfully.', 200, {'Access-Control-Allow-Origin': '*'}
 
     except Exception as e:
         # catch any unexpected runtime error and return as 500 error 

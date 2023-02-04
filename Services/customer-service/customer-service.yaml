@@ -290,6 +290,51 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/UnexpectedServiceError"
+  /customers/{customer_id}/addresses/{address_id}:
+    delete:
+      tags:
+        - customers
+      summary: Delete customer address
+      description: Delete the provided address_id from the database.
+      operationId: deleteAddress
+      parameters:
+        - name: customer_id
+          in: path
+          description: Customer id of a customer
+          required: true
+          schema:
+            type: string
+        - name: address_id
+          in: path
+          description: Address id that needs to be deleted
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Address details deleted successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Address'
+        '400':
+          description: Invalid input details provided.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InvalidInputError"
+        '404':
+          description: Address Not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AddressNotFoundError"
+        '500':
+          description: Unexpected failure in the service layer.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnexpectedServiceError"
   /customers/{customer_id}/cards:
     get:
       tags:
@@ -351,6 +396,51 @@ paths:
       responses:
         '200':
           description: Customer's card details updated successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Card'
+        '400':
+          description: Invalid input details provided.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InvalidInputError"
+        '404':
+          description: Card Not found.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CardNotFoundError"
+        '500':
+          description: Unexpected failure in the service layer.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UnexpectedServiceError"
+  /customers/{customer_id}/cards/{card_id}:
+    delete:
+      tags:
+        - customers
+      summary: Delete customer card
+      description: Delete the provided card_id from the database.
+      operationId: deleteCard
+      parameters:
+        - name: customer_id
+          in: path
+          description: Customer id of a customer
+          required: true
+          schema:
+            type: string
+        - name: card_id
+          in: path
+          description: Card id that needs to be deleted
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Card details deleted successfully.
           content:
             application/json:
               schema:

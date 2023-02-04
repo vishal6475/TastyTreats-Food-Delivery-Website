@@ -7,6 +7,8 @@ import Button from '@mui/material/Button';
 import { useNavigate } from "react-router-dom";
 import InfoHeader from './styles/InfoHeader';
 import AddCardModal from '../modals/AddCardModal';
+import { IconButton } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 import CustomersAPI from "../../utils/CustomersAPIHelper";
 const custAPI = new CustomersAPI();
@@ -41,6 +43,7 @@ const AccountMainPaymentScreen = ({  }) => {
   const [customer, setcustomer] = context.customer;  
   const [openCardModal, setOpenCardModal] = useState(false);
   const [allCards, setAllCards] = useState([]);
+  const [fetchCards, setFetchCards] = useState(false);  
   
   const fetchAddedCards = async () => {
     try {
@@ -51,12 +54,15 @@ const AccountMainPaymentScreen = ({  }) => {
       console.log(error)
     }
   }
-
   
   useEffect(() => {
     fetchAddedCards()    
-  }, [])
+  }, [fetchCards])
 
+  const handleDeleteCard = async (card, idx) => {
+    const deleteResponse = await custAPI.deleteCard(customer.id, card.id)
+    setFetchCards(prev => !prev)  
+  }
   
   return (
     <FlexBox direction='column'>
@@ -67,12 +73,16 @@ const AccountMainPaymentScreen = ({  }) => {
       <InfoHeader title='Added cards:' sx={{ mt:'2rem' }} />
 
       {allCards.map((card, idx) => {
-        return  <FlexBox key={idx} direction='column'
-                  sx={{border:'solid', borderColor:'tastytreats.dull', borderWidth:'1px', borderRadius:'15px',
-                    m:'0 1rem 1rem 1rem', p:'0.5rem 1rem 0.5rem 1rem', width:'200px' }} >
+        return  <FlexBox key={idx} direction='row' justify='space-between'
+                  sx={{border:'solid', borderColor:'tastytreats.dull', borderWidth:'1px', borderRadius:'10px',
+                    m:'0 1rem 1rem 1rem', p:'0.5rem 1rem 0.5rem 1rem', maxWidth:'350px' }} >
                   <Typography sx={{ fontWeight:'bold', fontSize:'0.95rem' }} >
                       Card ending with ...{card.card_number.substr(-4, 4)}
-                  </Typography>                    
+                  </Typography>    
+                  <IconButton onClick={() => {handleDeleteCard(card, idx)}}
+                    sx={{height:'20px', alignItems:'right'}} >
+                    <DeleteIcon/>
+                  </IconButton>                
                 </FlexBox>
       })}
 

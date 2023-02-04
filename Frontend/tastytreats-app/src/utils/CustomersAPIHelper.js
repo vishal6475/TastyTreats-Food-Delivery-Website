@@ -44,6 +44,10 @@ export default class CustomersAPI {
 
   updateAddress = (customer_id, params, body) => {
     return this.init().put(`/customers/${customer_id}/addresses`, body, {params: params});
+  }; 
+
+  deleteAddress = (customer_id, address_id) => {
+    return this.init().delete(`/customers/${customer_id}/addresses/${address_id}`);
   };   
 
   getCards = (customer_id) => {
@@ -54,5 +58,8 @@ export default class CustomersAPI {
     return this.init().put(`/customers/${customer_id}/cards`, body);
   }; 
 
+  deleteCard = (customer_id, card_id) => {
+    return this.init().delete(`/customers/${customer_id}/cards/${card_id}`);
+  };  
 
 }

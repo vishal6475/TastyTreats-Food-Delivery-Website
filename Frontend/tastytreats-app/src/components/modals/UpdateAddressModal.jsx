@@ -54,8 +54,6 @@ const UpdateAddressModal = ({openUpdateModal, setOpenUpdateModal, addressToUpdat
   }
 
   const updateAddress = async () => {      
-    console.log(addressToUpdate)
-
     const params = {
       address_id: addressToUpdate.id
     }
@@ -66,7 +64,7 @@ const UpdateAddressModal = ({openUpdateModal, setOpenUpdateModal, addressToUpdat
       primary1: addressToUpdate.primary1
     }
 
-    const UpdateResponse = await custAPI.updateAddress(customer.id, params, body)
+    const updateResponse = await custAPI.updateAddress(customer.id, params, body)
     setFetchAddresses(prev => !prev)    
     handleClose()
   }

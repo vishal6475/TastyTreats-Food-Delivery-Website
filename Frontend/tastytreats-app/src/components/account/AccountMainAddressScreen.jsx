@@ -7,7 +7,9 @@ import { json, useNavigate } from "react-router-dom";
 import InfoHeader from './styles/InfoHeader';
 import { IconButton } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 import UpdateAddressModal from '../modals/UpdateAddressModal';
+import DeleteAddressErrorModal from '../modals/DeleteAddressErrorModal';
 import {
   useJsApiLoader,
   Autocomplete,
@@ -51,6 +53,7 @@ const AccountMainAddressScreen = ({  }) => {
   const [openUpdateModal, setOpenUpdateModal] = useState(false);  
   const [addressToUpdate, setAddressToUpdate] = useState({});
   const [fetchAddresses, setFetchAddresses] = useState(false);  
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);  
 
   let populateAddr1Interval = null
 
@@ -140,6 +143,15 @@ const AccountMainAddressScreen = ({  }) => {
     populateAddr1Interval = setInterval(() => {populateAddr1Field(address.addr_1)}, 100);
   }
 
+  const handleDeleteAddress = async (address, idx) => {
+    if (address.primary1 === 'Y') {
+      setOpenDeleteModal(true)
+    } else {
+      const deleteResponse = await custAPI.deleteAddress(customer.id, address.id)
+      setFetchAddresses(prev => !prev)  
+    }
+  }
+
   
   return (
     <FlexBox direction='column' sx={{ justifyContent:'center' }} >
@@ -193,7 +205,7 @@ const AccountMainAddressScreen = ({  }) => {
 
       {allAddresses.map((address, idx) => {
         return  <FlexBox key={idx} direction='column'
-                  sx={{border:'solid', borderColor:'tastytreats.dull', borderWidth:'1px', borderRadius:'15px',
+                  sx={{border:'solid', borderColor:'tastytreats.dull', borderWidth:'1px', borderRadius:'5px',
                     m:'0 1rem 1rem 1rem', p:'0.5rem 1rem 0.5rem 1rem' }} >
                     <Grid container spacing={2}>
                       <Grid item xs={2} >
@@ -202,17 +214,23 @@ const AccountMainAddressScreen = ({  }) => {
                         </Typography>
                       </Grid>
 
-                      <Grid item xs={9} >
+                      <Grid item xs={7.5} >
                         <Typography color="text.secondary" sx={{ fontWeight:'bold', fontSize:'0.95rem' }} >
                         {address.unit_no}
                         </Typography>
                       </Grid>
 
-                      <Grid item xs={1} >
-                        <IconButton onClick={() => {handleUpdateAddress(address, idx)}}
-                          sx={{height:'20px', alignItems:'right', ml:'auto' }} >
-                          <EditIcon/>
-                        </IconButton>
+                      <Grid item xs={2.5} >
+                        <FlexBox>
+                          <IconButton onClick={() => {handleUpdateAddress(address, idx)}}
+                            sx={{height:'20px', alignItems:'right', ml:'auto' }} >
+                            <EditIcon/>
+                          </IconButton>
+                          <IconButton onClick={() => {handleDeleteAddress(address, idx)}}
+                            sx={{height:'20px', alignItems:'right'}} >
+                            <DeleteIcon/>
+                          </IconButton>
+                        </FlexBox>
                       </Grid>
 
                       <Grid item xs={2} >
@@ -256,6 +274,10 @@ const AccountMainAddressScreen = ({  }) => {
         addressToUpdate={addressToUpdate}      
         setAddressToUpdate={setAddressToUpdate}
         setFetchAddresses={setFetchAddresses}
+      />
+      <DeleteAddressErrorModal
+      openDeleteModal={openDeleteModal}
+      setOpenDeleteModal={setOpenDeleteModal}      
       />
     </FlexBox>
   )
