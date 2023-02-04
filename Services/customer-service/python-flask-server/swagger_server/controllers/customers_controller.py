@@ -109,7 +109,7 @@ def get_addresses_by_id(customer_id):  # noqa: E501
             con.close()
             return error, 404, {'Access-Control-Allow-Origin': '*'}
 
-        cur.execute('SELECT * FROM addresses where customer_id = ' + str(customer_id))
+        cur.execute('SELECT * FROM addresses where customer_id = ' + str(customer_id) + ' order by id')
         records = cur.fetchall()
         address_list = []
         for record in records:
@@ -166,7 +166,7 @@ def get_cards_by_id(customer_id):  # noqa: E501
             con.close()
             return error, 404, {'Access-Control-Allow-Origin': '*'}
 
-        cur.execute('SELECT * FROM cards where customer_id = ' + str(customer_id))
+        cur.execute('SELECT * FROM cards where customer_id = ' + str(customer_id) + ' order by id')
         records = cur.fetchall()
         cards_list = []
         for record in records:
@@ -440,6 +440,11 @@ def update_address(customer_id, body=None, address_id=None):  # noqa: E501
             cur.execute(update_string, (body.unit_no, body.addr_1, body.addr_2, body.city, body.state, body.pincode, \
                 body.primary1, address_id, customer_id))
             cust_id = cur.fetchone()[0]
+
+            if body.primary1 == 'Y': # setting all other addresses to non-primary
+                update_string = "UPDATE addresses set primary1='N' where id != %s and customer_id = %s"
+                cur.execute(update_string, (address_id, customer_id))
+
         
         cur.close()
         con.close() 

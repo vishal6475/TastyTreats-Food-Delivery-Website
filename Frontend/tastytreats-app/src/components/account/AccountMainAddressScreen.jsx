@@ -3,7 +3,7 @@ import { StoreContext } from '../../utils/context';
 import { FlexBox } from "../styles/layouts"
 import { Grid, Typography, styled, TextField } from '@mui/material'
 import Button from '@mui/material/Button';
-import { useNavigate } from "react-router-dom";
+import { json, useNavigate } from "react-router-dom";
 import InfoHeader from './styles/InfoHeader';
 import { IconButton } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
@@ -50,6 +50,9 @@ const AccountMainAddressScreen = ({  }) => {
   const [allAddresses, setAllAddresses] = useState([]);
   const [openUpdateModal, setOpenUpdateModal] = useState(false);  
   const [addressToUpdate, setAddressToUpdate] = useState({});
+  const [fetchAddresses, setFetchAddresses] = useState(false);  
+
+  let populateAddr1Interval = null
 
   const [formErrors, setFormErrors] = useState({
     error: false,
@@ -67,7 +70,7 @@ const AccountMainAddressScreen = ({  }) => {
 
   useEffect(() => {
     fetchExistingAddresses()
-  }, [])
+  }, [fetchAddresses])
 
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
@@ -124,9 +127,17 @@ const AccountMainAddressScreen = ({  }) => {
     }
   }
 
+  const populateAddr1Field = (addr_1) => {
+    if (document.getElementById('update-address-street')) {
+      document.getElementById('update-address-street').value = addr_1
+      clearInterval(populateAddr1Interval);
+    }
+  }
+
   const handleUpdateAddress = (address, idx) => {
     setAddressToUpdate({id: address.id, idx: idx, unit_no: address.unit_no, addr_1: address.addr_1, primary1: address.primary1})
     setOpenUpdateModal(true)
+    populateAddr1Interval = setInterval(() => {populateAddr1Field(address.addr_1)}, 100);
   }
 
   
@@ -244,6 +255,7 @@ const AccountMainAddressScreen = ({  }) => {
         setOpenUpdateModal={setOpenUpdateModal}
         addressToUpdate={addressToUpdate}      
         setAddressToUpdate={setAddressToUpdate}
+        setFetchAddresses={setFetchAddresses}
       />
     </FlexBox>
   )

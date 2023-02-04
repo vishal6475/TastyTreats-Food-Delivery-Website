@@ -43,7 +43,7 @@ export default class CustomersAPI {
   }; 
 
   updateAddress = (customer_id, params, body) => {
-    return this.init().put(`/customers/${customer_id}/addresses`, {params:params, body:body});
+    return this.init().put(`/customers/${customer_id}/addresses`, body, {params: params});
   };   
 
   getCards = (customer_id) => {
