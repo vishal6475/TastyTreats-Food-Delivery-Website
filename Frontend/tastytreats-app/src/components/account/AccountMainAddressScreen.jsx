@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import InfoHeader from './styles/InfoHeader';
 import { IconButton } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
+import UpdateAddressModal from '../modals/UpdateAddressModal';
 import {
   useJsApiLoader,
   Autocomplete,
@@ -47,6 +48,8 @@ const AccountMainAddressScreen = ({  }) => {
   const [gotNew, setGotNew] = useState(false);
   const [unitNo, setUnitNo] = useState('');
   const [allAddresses, setAllAddresses] = useState([]);
+  const [openUpdateModal, setOpenUpdateModal] = useState(false);  
+  const [addressToUpdate, setAddressToUpdate] = useState({});
 
   const [formErrors, setFormErrors] = useState({
     error: false,
@@ -121,6 +124,11 @@ const AccountMainAddressScreen = ({  }) => {
     }
   }
 
+  const handleUpdateAddress = (address, idx) => {
+    setAddressToUpdate({id: address.id, idx: idx, unit_no: address.unit_no, addr_1: address.addr_1, primary1: address.primary1})
+    setOpenUpdateModal(true)
+  }
+
   
   return (
     <FlexBox direction='column' sx={{ justifyContent:'center' }} >
@@ -190,7 +198,8 @@ const AccountMainAddressScreen = ({  }) => {
                       </Grid>
 
                       <Grid item xs={1} >
-                        <IconButton sx={{height:'20px', alignItems:'right', ml:'auto' }} >
+                        <IconButton onClick={() => {handleUpdateAddress(address, idx)}}
+                          sx={{height:'20px', alignItems:'right', ml:'auto' }} >
                           <EditIcon/>
                         </IconButton>
                       </Grid>
@@ -230,6 +239,12 @@ const AccountMainAddressScreen = ({  }) => {
                 </FlexBox>
       })}
      
+      <UpdateAddressModal 
+        openUpdateModal={openUpdateModal} 
+        setOpenUpdateModal={setOpenUpdateModal}
+        addressToUpdate={addressToUpdate}      
+        setAddressToUpdate={setAddressToUpdate}
+      />
     </FlexBox>
   )
 }
