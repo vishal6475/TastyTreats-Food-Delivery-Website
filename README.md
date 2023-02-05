@@ -27,8 +27,7 @@ Once all the dependencies have been installed in step 5, you can start the syste
 
 
 ## Steps for installation (without Docker):
-**Pre-requisites:**
-•	Docker
+**Pre-requisites:**  
 •	Python (version 3+)
 •	PostgreSQL
 •	npm
@@ -84,3 +83,61 @@ host = "localhost"     # when running the service directly from command prompt
 
 
 ## Website working screenshots:
+
+Below are the steps and screenshots for using this website.
+
+### Search store and placing store:
+
+First page to enter your delivery address
+![image](https://user-images.githubusercontent.com/86712652/216825183-db581144-8b0e-4333-b5cf-ce9e6a0e992c.png)
+
+After entering delivery address, website will show the stores in a 7km radius
+![image](https://user-images.githubusercontent.com/86712652/216825657-ab39e379-dda7-48a7-9cf1-567222f9425e.png)
+
+You can search for a particular type of store or select from the categories mentioned.
+![image](https://user-images.githubusercontent.com/86712652/216825633-e82dad88-cf83-4af5-a8f6-ebbb38ca9348.png)
+
+Click on a store to see details of that store.
+![image](https://user-images.githubusercontent.com/86712652/216825717-5a962141-1a08-4462-8e77-1b873b58b602.png)
+
+Scroll down to see all the available items in the store.
+![image](https://user-images.githubusercontent.com/86712652/216825738-c7bdacd9-aaa2-4275-b6a0-0bc1112be986.png)
+
+Click on an item and select quantity to add that item to the cart.
+![image](https://user-images.githubusercontent.com/86712652/216825746-a4d1f8bb-71c6-4c73-a561-923f14dc4c9d.png)
+
+After selecting all the items, click on 'Checkout' button to go to next screen.
+![image](https://user-images.githubusercontent.com/86712652/216825775-2b53664e-8e25-4df6-880a-aa1bc81adb0e.png)
+
+If the user is not logged in, they will be asked to login or register.
+![image](https://user-images.githubusercontent.com/86712652/216825803-66419f96-9b69-46ee-bffa-a49e73fddc93.png)
+
+On the checkout page, user will be shown options to finalize the address and payment details.
+![image](https://user-images.githubusercontent.com/86712652/216825963-a87293a4-56bd-497e-95f9-2a5967d2eb6a.png)
+
+Click on address section to enter a new address, edit the current delivery address or select from the saved addresses.
+![image](https://user-images.githubusercontent.com/86712652/216825980-f28b689b-5ed3-4646-8849-21d9a2b029f4.png)
+
+You can also edit the current address and delivery instructions.
+![image](https://user-images.githubusercontent.com/86712652/216825996-8943c385-e29f-4ea2-b93b-6101dffd8eb0.png)
+
+Click on card section to enter the modal to enter new card details or choose from saved cards.
+![image](https://user-images.githubusercontent.com/86712652/216826028-cda65c0f-935f-491d-9d2a-77b676ac38a6.png)
+
+Finally, click on 'Place Order' button to go to the order confirmed page.
+![image](https://user-images.githubusercontent.com/86712652/216826049-5ba3cc42-5a2b-4fde-978e-323c7e59f1b4.png)
+
+
+### Customer account pages:
+
+Account profile page-
+![image](https://user-images.githubusercontent.com/86712652/216826133-f500cb0a-a3fa-4c18-a98b-9b1344369ca8.png)
+
+Orders page-
+![image](https://user-images.githubusercontent.com/86712652/216826159-40c2534b-3113-4e5a-a04d-f0b05987acba.png)
+
+Addresses page-
+![image](https://user-images.githubusercontent.com/86712652/216826205-a26f9d8a-0a61-4375-b6b8-c4da3b8f12ac.png)
+
+Payment/cards page-
+![image](https://user-images.githubusercontent.com/86712652/216826238-7618e687-5965-4eba-8cc6-6a6b5b36b18f.png)
