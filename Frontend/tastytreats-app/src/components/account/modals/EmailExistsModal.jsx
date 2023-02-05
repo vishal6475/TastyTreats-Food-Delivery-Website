@@ -17,6 +17,7 @@ const EmailExistsModal = ({ open, setOpen, email }) => {
             and try submit again.
         </Box>
       </ModalBody>
+      
       <FlexBox justify='end'>
         <Button
           onClick={handleClose}

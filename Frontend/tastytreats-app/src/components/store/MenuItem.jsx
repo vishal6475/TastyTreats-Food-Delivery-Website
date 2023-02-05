@@ -1,6 +1,5 @@
 import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ScrollContainer } from '../styles/layouts';
 import { Grid, Card, CardMedia, CardContent, Typography, styled } from '@mui/material'
 import AddItemModal from '../../components/modals/AddItemModal';
 import { StoreContext } from '../../utils/context';
@@ -43,22 +42,26 @@ const MenuItem = ({ menu, idx }) => {
   const [itemToAddQuantity, setItemToAddQuantity] = context.itemToAddQuantity;
 
   const openAddModalBox = (item) => {
-    setOpenAddModal(true)
-    setItemToAdd(item)
+    try {
+      setOpenAddModal(true)
+      setItemToAdd(item)
 
-    let found = 0
-    if (cartItems !== null) 
-      cartItems.items.forEach((cartItem) =>{
-        if (item.id === cartItem.id) {
-          console.log('This->', cartItem)
-          found = 1
-          setItemOrgQuantity(cartItem.quantity)
-          setItemToAddQuantity(cartItem.quantity)
-        }
-      })
-    if (found === 0) {
-      setItemOrgQuantity(1)
-      setItemToAddQuantity(1)
+      let found = 0
+      if (cartItems !== null) 
+        cartItems.items.forEach((cartItem) =>{
+          if (item.id === cartItem.id) {
+            console.log('This->', cartItem)
+            found = 1
+            setItemOrgQuantity(cartItem.quantity)
+            setItemToAddQuantity(cartItem.quantity)
+          }
+        })
+      if (found === 0) {
+        setItemOrgQuantity(1)
+        setItemToAddQuantity(1)
+      }
+    } catch (error) {
+      console.log(error)
     }
   }
 
@@ -73,8 +76,7 @@ const MenuItem = ({ menu, idx }) => {
 
             <StyledCard sx={{display:'flex', flexDirection:'row'}} onClick={() => {openAddModalBox(item)}} >
               
-              <div>
-                
+              <div>                
                 <CardTitle>
                   {item.name}
                 </CardTitle>
@@ -90,8 +92,8 @@ const MenuItem = ({ menu, idx }) => {
                   </Typography>
 
                 </StyledCardContent>
-
               </div>
+              
               <div>
                 {item.photo &&
                 <CardMedia

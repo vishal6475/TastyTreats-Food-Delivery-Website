@@ -50,8 +50,12 @@ const HomePage = () => {
   let [showNoRestaurant, setShowNoRestaurant] = useState(false);
   
   const categories = ['Pizza', 'Burgers', 'Italian', 'Fast Food', 'Indian', 'Chicken', 'Mexican', 
-    'Sandwiches', 'Kebab', 'Turkish', 'South Indian', 'Pizza', 'Burgers', 'Italian', 'Fast Food', 'Indian', 'Chicken', 'Mexican', 
-    'Sandwiches', 'Kebab', 'Turkish', 'South Indian' ]
+    'Sandwiches', 'Kebab', 'Turkish', 'South Indian', 'American', 'Australian', 'Asian', 'Bakery',
+    'BBQ', 'Breakfast', 'Bubble Tea', 'Cafe', 'Cake', 'Chinese', 'Comfort Food', 'Dessert', 'Drinks',
+    'European', 'Fish & Chips', 'Fusion', 'Greek', 'Halal', 'Healthy', 'Ice Cream/Gelato', 'Indonesian', 
+    'Japanese', 'Juice', 'Korean', 'Lebanese', 'Malaysian', 'Middle Eastern', 'Nepalese', 'Pasta', 'Salad', 
+    'Seafood', 'Smoothies', 'Snack', 'Steak', 'Sushi', 'Thai', 'Vegan', 'Vegetarian', 'Wings'
+   ]
   
   const removeSearch = () => {    
     setIsSearched(0)

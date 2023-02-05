@@ -1,8 +1,8 @@
 import { useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { StoreContext } from '../utils/context';
-import { Grid, Typography, TextField, styled, Button } from '@mui/material'
-import { FlexBox, Container } from '../components/styles/layouts';
+import { Typography, TextField, Button } from '@mui/material'
+import { FlexBox } from '../components/styles/layouts';
 import Divider from '@mui/material/Divider';
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
@@ -15,12 +15,7 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
 import CreditCardIcon from '@mui/icons-material/CreditCard';
 import {
-  IconButton,
-  Avatar
-} from '@mui/material';
-import {
   useJsApiLoader,
-  Autocomplete,
 } from '@react-google-maps/api'
 
 import OrdersAPI from "../utils/OrdersAPIHelper";
@@ -30,13 +25,11 @@ const CheckoutPage = () => {
   const context = useContext(StoreContext);
   const [customer, _] = context.customer;  
   const [loggedIn] = context.login;
-  const [storesList, setStoresList] = useState([]);
   const [total, setTotal] = useState(0);
   const [cartItems, setCartItems] = context.cartItems;  
   const [address, setAddress] = context.address; 
   const [addressToUpdate, setAddressToUpdate] = useState({});
   const [openAddressModal, setOpenAddressModal] = useState(false);
-  const [showUnitBox, setShowUnitBox] = useState(false);
   const [sectionType, setSectionType] = useState(0); // 0 for intial modal, 1 for new address modal, 2 for edit address modal
   const [openCardModal, setOpenCardModal] = useState(false);
   const [leaveAtDoor, setLeaveAtDoor] = useState(false);
@@ -55,11 +48,15 @@ const CheckoutPage = () => {
   const navigate = useNavigate()
 
   const getTotalAmount = () => {
-    let sum = 0
-    cartItems?.items.forEach(item => {
-      sum += (item.price * item.quantity)
-    });
-    setTotal(sum)
+    try {
+      let sum = 0
+      cartItems?.items.forEach(item => {
+        sum += (item.price * item.quantity)
+      });
+      setTotal(sum)
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   useEffect(() => {
@@ -85,41 +82,58 @@ const CheckoutPage = () => {
   }
 
   const populateAddr1Field = () => {
-    if (document.getElementById('order-delivery-address')) {
-      document.getElementById('order-delivery-address').value = address.addr1
-      clearInterval(populateAddr1Interval);
+    try {
+      if (document.getElementById('order-delivery-address')) {
+        document.getElementById('order-delivery-address').value = address.addr1
+        clearInterval(populateAddr1Interval);
+      }
+    } catch (error) {
+      console.error(error)
     }
   }
 
   const handleAddressModal = () => {
-    setLongDistanceError(false)
-    setNoAddressError(false)
-    setAddressToUpdate(address)
-    setSectionType(0)
-    setOpenAddressModal(true)
-    //populateAddr1Interval = setInterval(populateAddr1Field, 100);
+    try {
+      setLongDistanceError(false)
+      setNoAddressError(false)
+      setAddressToUpdate(address)
+      setSectionType(0)
+      setOpenAddressModal(true)
+      //populateAddr1Interval = setInterval(populateAddr1Field, 100);
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   const handleLeaveHandModal = () => {
-    setLongDistanceError(false)
-    setNoAddressError(false)
-    setAddressToUpdate(address)
-    setSectionType(2)
-    setOpenAddressModal(true)
-    populateAddr1Interval = setInterval(populateAddr1Field, 100);
+    try {
+      setLongDistanceError(false)
+      setNoAddressError(false)
+      setAddressToUpdate(address)
+      setSectionType(2)
+      setOpenAddressModal(true)
+      populateAddr1Interval = setInterval(populateAddr1Field, 100);
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   const handleCardModal = () => {
     setNoCardError(false)
+    setNoCVVError(false)
     setOpenCardModal(true)
   }
 
   const isNumbers = (str) => /^[0-9]*$/.test(str);
 
   const changePaymentCardCVV = (e) => {
-    if (isNumbers(e.target.value)) {
-      setPaymentCardCVV(e.target.value);
-      setNoCVVError(false)
+    try {
+      if (isNumbers(e.target.value)) {
+        setPaymentCardCVV(e.target.value);
+        setNoCVVError(false)
+      }
+    } catch (error) {
+      console.error(error)
     }
   }
 
@@ -160,8 +174,6 @@ const CheckoutPage = () => {
           setLongDistanceError(true)
         } else {
           let currentDate = new Date()
-          //currentDate = currentDate.toISOString().slice(0, -5)+"+11:00"
-          console.log(formatDate(currentDate))        
 
           const body = {
             customer_id: customer.id,
@@ -179,14 +191,13 @@ const CheckoutPage = () => {
           }
 
           const response = await orderAPI.createOrder(body)
-          console.log(response.data)
           setCompletedOrder(response.data)
           navigate(`/order/${response.data.id}`)
         }
 
       }
       catch (error) {
-        console.log(error)
+        console.error(error)
       }
     }
   }
@@ -201,8 +212,7 @@ const CheckoutPage = () => {
           onClick={backToStore} >
           <ArrowBackIcon/>
           <Typography sx={{ml:'0.4rem' }} >Back to store</Typography>
-        </FlexBox>
-        
+        </FlexBox>        
 
         <FlexBox sx={{ minWidth:'50vw', m:'1rem auto 1rem auto' }}>
           <Accordion expanded={expanded} sx={{ width:'100%'}} >
@@ -230,8 +240,7 @@ const CheckoutPage = () => {
                   </Typography>
                 </FlexBox>
               </FlexBox>
-              <Divider sx={{ mb:'1rem' }} />
-              
+              <Divider sx={{ mb:'1rem' }} />              
 
               <FlexBox direction='row' sx={{ mt:'2rem', mb:'0.5rem', cursor:'pointer', justifyContent:'space-between' }} 
                 onClick={handleLeaveHandModal} >

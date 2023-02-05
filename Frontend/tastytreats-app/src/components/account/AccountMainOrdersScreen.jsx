@@ -1,16 +1,14 @@
 import { useContext, useEffect, useState } from "react"
 import { StoreContext } from '../../utils/context';
 import { FlexBox } from "../styles/layouts"
-import { Grid, Typography, styled, TextField } from '@mui/material'
+import { Grid, Typography, styled } from '@mui/material'
 import Button from '@mui/material/Button';
-import { useNavigate } from "react-router-dom";
 import SeeItemsModal from '../modals/SeeItemsModal';
 
 import OrdersAPI from "../../utils/OrdersAPIHelper";
 import StoresAPI from "../../utils/StoresAPIHelper";
 
 const orderAPI = new OrdersAPI();
-const storeAPI = new StoresAPI();
 
 const MainBox = styled('div')`
   display: flex;
@@ -46,11 +44,15 @@ const AccountMainOrdersScreen = ({  }) => {
   
 
   const fetchOrders = async () => {
-    let params = {
-      customer_id: customer.id
+    try {
+      let params = {
+        customer_id: customer.id
+      }
+      const orderResponse = await orderAPI.getOrders(params)
+      setAllOrders(orderResponse.data)
+    } catch (error) {
+      console.log(error)
     }
-    const orderResponse = await orderAPI.getOrders(params)
-    setAllOrders(orderResponse.data)
   }
   
   useEffect(() => {
@@ -74,8 +76,7 @@ const AccountMainOrdersScreen = ({  }) => {
               <Typography color="text.secondary" sx={{ fontWeight:'bold', fontSize:'1.1rem' }} >
               {order.store_name}
               </Typography>
-            </Grid>
-            
+            </Grid>            
 
             <Grid item xs={3} >
               <Typography sx={{ fontWeight:'bold', fontSize:'0.95rem' }} >

@@ -3,7 +3,6 @@ import { StoreContext } from '../../utils/context';
 import { FlexBox } from "../styles/layouts"
 import { Grid, Typography, styled, TextField } from '@mui/material'
 import Button from '@mui/material/Button';
-import { json, useNavigate } from "react-router-dom";
 import InfoHeader from './styles/InfoHeader';
 import { IconButton } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
@@ -14,7 +13,6 @@ import {
   useJsApiLoader,
   Autocomplete,
 } from '@react-google-maps/api'
-import { geocodeByAddress } from 'react-places-autocomplete';
 
 import CustomersAPI from "../../utils/CustomersAPIHelper";
 const custAPI = new CustomersAPI();
@@ -107,48 +105,55 @@ const AccountMainAddressScreen = ({  }) => {
   }
 
   const addAddress = async () => {
-    try {
-      
+    try {      
       let body = {
         unit_no: unitNo,
         addr_1: document.getElementById('new-address').value  ,
         primary1: 'N'      
       }
       const response = await custAPI.addAddress(customer.id, body)
-      console.log(response)
       
       setGotNew(false)
       document.getElementById('new-address').value = ''
       setUnitNo('')
 
-      if (allAddresses.length === 0) body.primary1 = 'Y';
-      allAddresses.push(body)
-    }
-    
-    catch (err) {
+      setFetchAddresses(prev => !prev)  
+    } catch (err) {
       console.log(err)
     }
   }
 
   const populateAddr1Field = (addr_1) => {
-    if (document.getElementById('update-address-street')) {
-      document.getElementById('update-address-street').value = addr_1
-      clearInterval(populateAddr1Interval);
+    try {
+      if (document.getElementById('update-address-street')) {
+        document.getElementById('update-address-street').value = addr_1
+        clearInterval(populateAddr1Interval);
+      }
+    } catch (error) {
+      console.log(error)
     }
   }
 
   const handleUpdateAddress = (address, idx) => {
-    setAddressToUpdate({id: address.id, idx: idx, unit_no: address.unit_no, addr_1: address.addr_1, primary1: address.primary1})
-    setOpenUpdateModal(true)
-    populateAddr1Interval = setInterval(() => {populateAddr1Field(address.addr_1)}, 100);
+    try {
+      setAddressToUpdate({id: address.id, idx: idx, unit_no: address.unit_no, addr_1: address.addr_1, primary1: address.primary1})
+      setOpenUpdateModal(true)
+      populateAddr1Interval = setInterval(() => {populateAddr1Field(address.addr_1)}, 100);
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   const handleDeleteAddress = async (address, idx) => {
-    if (address.primary1 === 'Y') {
-      setOpenDeleteModal(true)
-    } else {
-      const deleteResponse = await custAPI.deleteAddress(customer.id, address.id)
-      setFetchAddresses(prev => !prev)  
+    try {
+      if (address.primary1 === 'Y') {
+        setOpenDeleteModal(true)
+      } else {
+        const deleteResponse = await custAPI.deleteAddress(customer.id, address.id)
+        setFetchAddresses(prev => !prev)  
+      }
+    } catch (error) {
+      console.log(error)
     }
   }
 
@@ -166,6 +171,7 @@ const AccountMainAddressScreen = ({  }) => {
             />
         </Autocomplete>
       </FlexBox>
+
       {gotNew &&
       <FlexBox direction='column'>
         <FlexBox sx={{ width:'30vw', m:'0 auto 1rem auto', alignItems:'center' }}>
@@ -276,8 +282,8 @@ const AccountMainAddressScreen = ({  }) => {
         setFetchAddresses={setFetchAddresses}
       />
       <DeleteAddressErrorModal
-      openDeleteModal={openDeleteModal}
-      setOpenDeleteModal={setOpenDeleteModal}      
+        openDeleteModal={openDeleteModal}
+        setOpenDeleteModal={setOpenDeleteModal}      
       />
     </FlexBox>
   )

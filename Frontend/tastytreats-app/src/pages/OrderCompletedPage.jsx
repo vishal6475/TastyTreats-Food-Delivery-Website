@@ -1,8 +1,8 @@
 import { useContext, useState, useEffect } from 'react';
-import { useParams, useLocation, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { StoreContext } from '../utils/context';
-import { Button, Grid, Card, CardMedia, CardContent, Typography, styled } from '@mui/material'
-import { FlexBox, Container } from '../components/styles/layouts';
+import { Grid, Card, CardMedia, Typography } from '@mui/material'
+import { FlexBox } from '../components/styles/layouts';
 
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
@@ -16,13 +16,9 @@ const StoreMenuPage = () => {
   const context = useContext(StoreContext);
   const navigate = useNavigate()
 
-  const [customer] = context.customer;
   const [store, setStore] = useState([]);
   const [orderFound, setOrderFound] = useState(true);
-  const [cartItems, setCartItems] = context.cartItems;
   const [loggedIn, setLoggedIn] = context.login;
-  const [loginOrSignup, setLoginOrSignup] = context.loginOrSignup;
-  const [storeDetails, setStoreDetails] = context.storeDetails;
   const [completedOrder, setCompletedOrder] = context.completedOrder;
 
   const steps = ['Order submitted', 'Preparing', 'Packing', 'Delivering', 'Completed'];
@@ -43,10 +39,13 @@ const StoreMenuPage = () => {
     return d.toLocaleDateString("en-US", dateFormat)
   }
 
-  const fetchCompletedOrder = async (event) => { 
-    const orderRes = await orderAPI.getOrderByID(o_id)
-    setCompletedOrder(orderRes.data)
-    console.log(orderRes.data)
+  const fetchCompletedOrder = async () => { 
+    try {
+      const orderRes = await orderAPI.getOrderByID(o_id)
+      setCompletedOrder(orderRes.data)
+    } catch (error) {
+      console.error(error)
+    }
   } 
 
 

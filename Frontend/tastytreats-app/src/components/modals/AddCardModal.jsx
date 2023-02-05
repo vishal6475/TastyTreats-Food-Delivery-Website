@@ -1,10 +1,9 @@
-import { useState, useContext, useEffect } from 'react';
+import { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { StoreContext } from '../../utils/context';
 import { StandardModal, ModalBody, ModalItemTitle } from '../styles/modals';
 import { FlexBox } from '../styles/layouts';
-import { Button, TextField, Typography, Grid, CardMedia } from '@mui/material';
-import { IconButton } from '@mui/material';
+import { Button, TextField } from '@mui/material';
 
 import CustomersAPI from "../../utils/CustomersAPIHelper";
 const custAPI = new CustomersAPI();
@@ -26,7 +25,6 @@ const AddCardModal = ({allCards, setAllCards, openCardModal, setOpenCardModal}) 
     cardExpiry: false,
     cardCVV: false
   })
-
 
   const handleClose = () => {
     setOpenCardModal(false);
@@ -84,10 +82,7 @@ const AddCardModal = ({allCards, setAllCards, openCardModal, setOpenCardModal}) 
           primary1: ''
         }
         const cardsResponse = await custAPI.addCard(customer.id, body)
-        //console.log(cardsResponse)
-
-        allCards.push(cardsResponse.data)       
-        //console.log('here', allCards)
+        allCards.push(cardsResponse.data)    
 
         setCardName('')
         setCardNumber('')
@@ -107,86 +102,87 @@ const AddCardModal = ({allCards, setAllCards, openCardModal, setOpenCardModal}) 
       <ModalItemTitle title='Add Card' close={handleClose} />
       <ModalBody justifyContent='center'>
 
-          <div style={{  marginBottom: '20px'}}>
-            <b>Card Details:</b>
-          </div>
-          <div>
-          <TextField
-            name="cardName"
-            required
-            fullWidth
-            inputProps={{ maxLength: 50 }}
-            value={cardName}
-            id="cardName"
-            label="Card holder name"
-            InputLabelProps={{ shrink: true }}
-            onChange={changeCardName}
-            error={formErrors.cardName}
-            helperText={formErrors.cardName ? 'Must be a valid card holder name (at least 1 character long)' : ''}
-          />
-          <TextField style={{marginTop: '20px'}}
-            name="cardNumber"
-            required
-            fullWidth
-            inputProps={{ maxLength: 16 }}
-            value={cardNumber}
-            id="cardNumber"
-            label="Card number"
-            InputLabelProps={{ shrink: true }}
-            onChange={changeCardNumber}
-            error={formErrors.cardNumber}
-            helperText={formErrors.cardNumber ? 'Must be a valid 16-digit card number' : ''}
-          />
-          <FlexBox sx={{marginTop: '20px'}}  >
-            <TextField sx={{ mr:'1rem' }}
-              name="cardExpiry"
-              required
-              fullWidth
-              inputProps={{ maxLength: 4 }}
-              value={cardExpiry}
-              id="cardExpiry"
-              label="Card expiry"
-              InputLabelProps={{ shrink: true }}
-              onChange={changeCardExpiry}
-              error={formErrors.cardExpiry}
-              helperText={formErrors.cardExpiry ? 'Must be a valid card expiry date of format MM/YY' : ''}
-            />
-            <TextField sx={{ ml:'1rem' }}
-              name="cardCVV"
-              required
-              fullWidth
-              type='password'
-              inputProps={{ maxLength: 3 }}
-              value={cardCVV}
-              id="cardCVV"
-              label="Card CVV"
-              InputLabelProps={{ shrink: true }}
-              onChange={changeCardCVV}
-              error={formErrors.cardCVV}
-              helperText={formErrors.cardCVV ? 'Must be valid CVV of 3 digits' : ''}
-            />
+        <div style={{  marginBottom: '20px'}}>
+          <b>Card Details:</b>
+        </div>
+        <div>
+        <TextField
+          name="cardName"
+          required
+          fullWidth
+          inputProps={{ maxLength: 50 }}
+          value={cardName}
+          id="cardName"
+          label="Card holder name"
+          InputLabelProps={{ shrink: true }}
+          onChange={changeCardName}
+          error={formErrors.cardName}
+          helperText={formErrors.cardName ? 'Must be a valid card holder name (at least 1 character long)' : ''}
+        />
+        <TextField style={{marginTop: '20px'}}
+          name="cardNumber"
+          required
+          fullWidth
+          inputProps={{ maxLength: 16 }}
+          value={cardNumber}
+          id="cardNumber"
+          label="Card number"
+          InputLabelProps={{ shrink: true }}
+          onChange={changeCardNumber}
+          error={formErrors.cardNumber}
+          helperText={formErrors.cardNumber ? 'Must be a valid 16-digit card number' : ''}
+        />
 
-          </FlexBox>
+        <FlexBox sx={{marginTop: '20px'}}  >
+          <TextField sx={{ mr:'1rem' }}
+            name="cardExpiry"
+            required
+            fullWidth
+            inputProps={{ maxLength: 4 }}
+            value={cardExpiry}
+            id="cardExpiry"
+            label="Card expiry"
+            InputLabelProps={{ shrink: true }}
+            onChange={changeCardExpiry}
+            error={formErrors.cardExpiry}
+            helperText={formErrors.cardExpiry ? 'Must be a valid card expiry date of format MM/YY' : ''}
+          />
+          <TextField sx={{ ml:'1rem' }}
+            name="cardCVV"
+            required
+            fullWidth
+            type='password'
+            inputProps={{ maxLength: 3 }}
+            value={cardCVV}
+            id="cardCVV"
+            label="Card CVV"
+            InputLabelProps={{ shrink: true }}
+            onChange={changeCardCVV}
+            error={formErrors.cardCVV}
+            helperText={formErrors.cardCVV ? 'Must be valid CVV of 3 digits' : ''}
+          />
+
+        </FlexBox>
           
-          </div>
+        </div>
 
-          <FlexBox>
+        <FlexBox>
 
-            <Button variant="contained" onClick={handleClose}
-              sx={{ mb:'1rem', width:'14vw', height:'7vh', m:'1rem auto 1rem auto', 
-              fontSize:'1.2rem',
-              backgroundColor: 'grey', '&:hover':{backgroundColor: 'grey'} }} >
-                Cancel
-            </Button>
+          <Button variant="contained" onClick={handleClose}
+            sx={{ mb:'1rem', width:'14vw', height:'7vh', m:'1rem auto 1rem auto', 
+            fontSize:'1.2rem',
+            backgroundColor: 'grey', '&:hover':{backgroundColor: 'grey'} }} >
+              Cancel
+          </Button>
 
-            <Button variant="contained" onClick={addCard}
-              sx={{ mb:'1rem', width:'14vw', height:'7vh', m:'1rem auto 1rem auto', 
-              fontSize:'1.2rem',
-              backgroundColor: 'tastytreats.mediumBlue', '&:hover':{backgroundColor: 'tastytreats.mediumBlue'} }} >
-                Add
-            </Button>
+          <Button variant="contained" onClick={addCard}
+            sx={{ mb:'1rem', width:'14vw', height:'7vh', m:'1rem auto 1rem auto', 
+            fontSize:'1.2rem',
+            backgroundColor: 'tastytreats.mediumBlue', '&:hover':{backgroundColor: 'tastytreats.mediumBlue'} }} >
+              Add
+          </Button>
 
-          </FlexBox>
+        </FlexBox>
       </ModalBody>
     </StandardModal>
   )

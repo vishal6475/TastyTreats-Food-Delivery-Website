@@ -34,6 +34,7 @@ export const AddressModal = styled(Dialog)`
   };
   z-index: 100;
 `
+
 export const CardModal  = styled(Dialog)`
   & .MuiDialog-container {
     align-items: flex-start;
@@ -83,10 +84,10 @@ export const ItemTitleBox = styled(FlexBox)`
   align-items: center;
   justify-content: center;
 `
+
 export const CloseIconBox = styled(FlexBox)`
   min-width: 4%;
 `
-
 
 export const ModalItemTitle = ( {title, close} ) => {
   return (

@@ -2,10 +2,9 @@ import { useContext, useEffect, useState, useRef } from 'react';
 import { fileToDataUrl } from '../../utils/helpers';
 import { StoreContext } from '../../utils/context';
 import AccountUpdatedModal from './modals/AccountUpdatedModal'
-import { PageContainer, FlexBox } from '../styles/layouts'
+import { FlexBox } from '../styles/layouts'
 import InfoHeader from './styles/InfoHeader';
 import {
-  Box,
   Button,
   Grid,
   TextField,
@@ -14,10 +13,8 @@ import {
 } from '@mui/material';
 import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
 
-
 import CustomersAPI from "../../utils/CustomersAPIHelper";
 const custAPI = new CustomersAPI();
-
 
 const ImageHolder = styled(Button)`
   border: 1px solid black;
@@ -71,10 +68,6 @@ const AccountDetailsPage = ({ change, setChange }) => {
     }
   }
 
-  const scrollTo = () => {
-    ref?.current?.scrollIntoView()
-  }
-
   const cancelUpdatePic = () => {
     setChangeProfilePic(false)
     setImageUpload(false)
@@ -87,7 +80,6 @@ const AccountDetailsPage = ({ change, setChange }) => {
         profile_pic: imgUpload
       }
       const response = await custAPI.updateCustomer(customer.id, body)
-      console.log(response.data)
       setcustomer((prev) => {return {...prev, profile_pic: imgUpload }})
 
     } catch (error) {
@@ -103,7 +95,6 @@ const AccountDetailsPage = ({ change, setChange }) => {
   const updateEmail = async () => {
 
     const email = document.getElementById('email').value
-    console.log(email)
 
     formErrors.error = false;
     
@@ -116,7 +107,6 @@ const AccountDetailsPage = ({ change, setChange }) => {
           email: email
         }
         const response = await custAPI.updateCustomer(customer.id, body)
-        console.log(response.data)
         setcustomer((prev) => {return {...prev, email: email }})  
         setChangeEmail(false)   
       }
@@ -180,9 +170,7 @@ const AccountDetailsPage = ({ change, setChange }) => {
         if (password.length > 0) {
           body.password = password
         }
-        console.log(body)
         const response = await custAPI.updateCustomer(customer.id, body)
-        console.log(response)
         setcustomer((prev) => {return {...prev, first_name: firstName, last_name: lastName, mobile_no: mobile,password: password }}) 
         setChangeBasics(false)
       }
@@ -193,9 +181,9 @@ const AccountDetailsPage = ({ change, setChange }) => {
   };
 
   useEffect(() => {
-       setChange(false)
-    console.log(customer)
+    setChange(false)
   }, [])
+
 
   return (
     <FlexBox direction='column' >
@@ -249,6 +237,7 @@ const AccountDetailsPage = ({ change, setChange }) => {
         </FlexBox>
         
       <InfoHeader title='Account basics:' sx={{ mt:'2rem' }} />
+
       <Grid component="form" container spacing={2} sx={{ mt: 0 }}>
 
         <Grid item xs={5} sm={5} md={4} sx={{ height:'58px'}} >
@@ -258,7 +247,6 @@ const AccountDetailsPage = ({ change, setChange }) => {
         </Grid>
 
         <Grid item xs={6} sm={6} md={4}>
-
           {!changeBasics &&          
           <Typography color="text.secondary" sx={{ fontWeight:'bold' }} >
             {customer.first_name}
@@ -282,8 +270,6 @@ const AccountDetailsPage = ({ change, setChange }) => {
             helperText={formErrors.firstName ? 'Must be a valid firstname.' : ''}
           />
           }
-
-
         </Grid>
 
         <Grid item xs={1} sm={1} md={4}>
@@ -295,8 +281,7 @@ const AccountDetailsPage = ({ change, setChange }) => {
           </Typography>
         </Grid>
 
-        <Grid item xs={6} sm={6} md={4}>         
-
+        <Grid item xs={6} sm={6} md={4}>    
           {!changeBasics &&          
           <Typography color="text.secondary" sx={{ fontWeight:'bold' }}>
             {customer.last_name}
@@ -331,7 +316,6 @@ const AccountDetailsPage = ({ change, setChange }) => {
         </Grid>
         
         <Grid item xs={6} sm={6} md={4}>
-
           {!changeBasics &&          
           <Typography color="text.secondary" sx={{ fontWeight:'bold' }}>
             {customer.mobile_no}
@@ -366,7 +350,6 @@ const AccountDetailsPage = ({ change, setChange }) => {
         </Grid>
 
         <Grid item xs={6} sm={6} md={4}>          
-
           {!changeBasics &&          
           <Typography color="text.secondary" sx={{ fontWeight:'bold' }}>
             ******
@@ -421,6 +404,7 @@ const AccountDetailsPage = ({ change, setChange }) => {
       }
 
       <InfoHeader title='Account email:' />
+      
       <Grid container spacing={2} sx={{ mt: 0 }}>
 
         <Grid item xs={5} sm={5} md={4} sx={{ height:'58px'}} >

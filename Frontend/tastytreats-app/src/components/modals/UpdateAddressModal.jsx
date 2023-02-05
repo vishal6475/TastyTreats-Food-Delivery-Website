@@ -1,21 +1,16 @@
-import { useState, useContext, useEffect } from 'react';
+import { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { StoreContext } from '../../utils/context';
 import { AddressModal, ModalBody, ModalItemTitle } from '../styles/modals';
 import { FlexBox } from '../styles/layouts';
-import { Button, TextField, Typography, Grid, CardMedia, styled } from '@mui/material';
-import { IconButton } from '@mui/material';
+import { Button, TextField, Typography} from '@mui/material';
 import {
   useJsApiLoader,
   Autocomplete,
 } from '@react-google-maps/api'
-import { geocodeByAddress } from 'react-places-autocomplete';
-import { useRef } from 'react'
 import InputAdornment from '@mui/material/InputAdornment';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
-import HomeIcon from '@mui/icons-material/Home';
 import Radio from '@mui/material/Radio';
-import EditIcon from '@mui/icons-material/Edit';
 
 import CustomersAPI from "../../utils/CustomersAPIHelper";
 const custAPI = new CustomersAPI();
@@ -24,12 +19,7 @@ const custAPI = new CustomersAPI();
 const UpdateAddressModal = ({openUpdateModal, setOpenUpdateModal, addressToUpdate, setAddressToUpdate, setFetchAddresses}) => {
   const navigate = useNavigate();
   const context = useContext(StoreContext);
-  const [loggedIn, setLoggedIn] = context.login;
   const [customer, setcustomer] = context.customer;
-  const [address, setAddress] = context.address;  
-  const [currentAddress, setCurrentAddress] = useState(''); 
-  const [curLeaveAtDoor, setCurLeaveAtDoor] = useState(false);
-  const [allAddresses, setAllAddresses] = useState([]);
 
   const handleClose = () => {
     setOpenUpdateModal(false);
@@ -54,19 +44,23 @@ const UpdateAddressModal = ({openUpdateModal, setOpenUpdateModal, addressToUpdat
   }
 
   const updateAddress = async () => {      
-    const params = {
-      address_id: addressToUpdate.id
-    }
+    try {
+      const params = {
+        address_id: addressToUpdate.id
+      }
 
-    const body = {
-      unit_no: addressToUpdate.unit_no,
-      addr_1: addressToUpdate.addr_1,
-      primary1: addressToUpdate.primary1
-    }
+      const body = {
+        unit_no: addressToUpdate.unit_no,
+        addr_1: addressToUpdate.addr_1,
+        primary1: addressToUpdate.primary1
+      }
 
-    const updateResponse = await custAPI.updateAddress(customer.id, params, body)
-    setFetchAddresses(prev => !prev)    
-    handleClose()
+      const updateResponse = await custAPI.updateAddress(customer.id, params, body)
+      setFetchAddresses(prev => !prev)    
+      handleClose()
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   return (

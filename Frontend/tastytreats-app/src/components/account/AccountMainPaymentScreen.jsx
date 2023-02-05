@@ -4,7 +4,6 @@ import { StoreContext } from '../../utils/context';
 import { FlexBox } from "../styles/layouts"
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
-import { useNavigate } from "react-router-dom";
 import InfoHeader from './styles/InfoHeader';
 import AddCardModal from '../modals/AddCardModal';
 import { IconButton } from '@mui/material';
@@ -49,7 +48,6 @@ const AccountMainPaymentScreen = ({  }) => {
     try {
     const cardsResponse = await custAPI.getCards(customer.id)
     setAllCards(cardsResponse.data)
-    console.log(cardsResponse.data)
     } catch (error) {
       console.log(error)
     }
@@ -60,8 +58,12 @@ const AccountMainPaymentScreen = ({  }) => {
   }, [fetchCards])
 
   const handleDeleteCard = async (card, idx) => {
-    const deleteResponse = await custAPI.deleteCard(customer.id, card.id)
-    setFetchCards(prev => !prev)  
+    try {
+      const deleteResponse = await custAPI.deleteCard(customer.id, card.id)
+      setFetchCards(prev => !prev)  
+    } catch (error) {
+      console.log(error)
+    }
   }
   
   return (

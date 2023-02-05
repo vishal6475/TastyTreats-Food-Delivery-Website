@@ -1,16 +1,12 @@
-import { useState, useContext, useEffect } from 'react';
+import { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { StoreContext } from '../../utils/context';
 import { ItemModal, ModalBody, ModalItemTitle } from '../styles/modals';
-import { FlexBox, ScrollContainer } from '../styles/layouts';
-import { Button, TextField, Typography, Grid, CardMedia, experimentalStyled } from '@mui/material';
-
+import { FlexBox } from '../styles/layouts';
+import { Typography } from '@mui/material';
 
 
 const SeeItemsModal = ({items, openSeeItems, setOpenSeeItems}) => {
-  const navigate = useNavigate();
-  const context = useContext(StoreContext);
-  const [loggedIn, setLoggedIn] = context.login;
 
 
   const handleClose = () => {
@@ -27,8 +23,7 @@ const SeeItemsModal = ({items, openSeeItems, setOpenSeeItems}) => {
                   <Typography gutterBottom variant="subtitle2" color="text.primary" 
                     sx={{ p:'0', m:'0', fontSize:'1rem' }}>
                     {item.quantity} x {item.name}
-                  </Typography> 
-    
+                  </Typography>     
     
                   <Typography variant="subtitle2" color="text.secondary" 
                     sx={{ p:'0', m:'0', fontSize:'0.9rem' }} >

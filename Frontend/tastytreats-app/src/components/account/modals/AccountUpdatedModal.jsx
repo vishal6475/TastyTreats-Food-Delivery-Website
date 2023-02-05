@@ -12,6 +12,7 @@ const AccountUpdatedModal = ({ open, setOpen }) => {
       <ModalBody>
         Your account has been updated!
       </ModalBody>
+      
       <FlexBox justify='end'>
         <Button
           onClick={handleClose}

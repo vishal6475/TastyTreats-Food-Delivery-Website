@@ -1,6 +1,6 @@
-import { useContext, useState, useEffect } from 'react';
+import { useContext } from 'react';
 import { StoreContext } from '../utils/context';
-import { Grid, Typography, styled, TextField } from '@mui/material'
+import { styled, TextField } from '@mui/material'
 import {
   useJsApiLoader,
   Autocomplete,
@@ -8,8 +8,6 @@ import {
 import { geocodeByAddress } from 'react-places-autocomplete';
 import { useRef } from 'react'
 import { useNavigate } from 'react-router';
-import InputAdornment from '@mui/material/InputAdornment';
-import LocationOnIcon from '@mui/icons-material/LocationOn';
 
 const ImageBanner = styled('div')`
   width: 100%;
@@ -26,10 +24,8 @@ const BoxDeliveryAdd = styled('div')`
   padding-left: 35vw;
 `
 
-
 const FirstPage = () => {
   const context = useContext(StoreContext);
-  const [customer] = context.customer;
   const [address, setAddress] = context.address;
 
   const addressRef = useRef();  
@@ -46,13 +42,14 @@ const FirstPage = () => {
   } 
 
   const gotDeliveryAddress = async () => {
-    const addr = document.getElementById('delivery-address').value
-    //console.log(addr)
-    setAddress((prev) => {return { ...prev, addr1: addr }})
-    navigate('/home'); 
-
-    const results = await geocodeByAddress(addr);
-    console.log(results)
+    try {
+      const addr = document.getElementById('delivery-address').value
+      setAddress((prev) => {return { ...prev, addr1: addr }})
+      navigate('/home'); 
+      const results = await geocodeByAddress(addr);
+    } catch (error) {
+      console.error(error)
+    }
   }
 
 

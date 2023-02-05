@@ -1,7 +1,7 @@
-import { useContext, useEffect, useState, useRef  } from 'react';
+import { useContext, useRef  } from 'react';
 import { StoreContext } from '../../utils/context';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { FlexBox, Container } from '../styles/layouts';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { FlexBox } from '../styles/layouts';
 import AppBar from '@mui/material/AppBar';
 import { Typography, styled } from '@mui/material';
 import CustomerMenu from '../customer/CustomerMenu';
@@ -79,40 +79,50 @@ const TastyTreatsAppBar = () => {
   }
 
   const checkForTypes = (store) => {
-    for (let i=0; i<store.types.length; i++)
-      for (let j=0; j<toSearch.length; j++)
-        if (store.types[i].toLowerCase().includes(toSearch[j])) {
+    try {
+      for (let j=0; j<toSearch.length; j++) // checking for store name
+        if (store.name.toLowerCase().includes(toSearch[j])) {
           return true
-        }      
-    return false
+        }  
+
+      for (let i=0; i<store.types.length; i++) //  checking for store categories
+        for (let j=0; j<toSearch.length; j++)
+          if (store.types[i].toLowerCase().includes(toSearch[j])) {
+            return true
+          }      
+      return false
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   const handleSearch = (event) => {
-    event.preventDefault()
-    toSearch = searchTitle.current.value
-    toSearch = toSearch.trim().toLowerCase()
-    while (toSearch.includes('  ')) {
-      toSearch = toSearch.replaceAll('  ', ' ')
-    }
-    setSearchedItems(toSearch)
-    toSearch = toSearch.split(' ')
-    //console.log(toSearch)
+    try {
+      event.preventDefault()
+      toSearch = searchTitle.current.value
+      toSearch = toSearch.trim().toLowerCase()
+      while (toSearch.includes('  ')) {
+        toSearch = toSearch.replaceAll('  ', ' ')
+      }
+      setSearchedItems(toSearch)
+      toSearch = toSearch.split(' ')
 
-    setIsChipSearched(0)
-    setChippedItems([])    
-    for (let i=0; i < categories.length; i++) {
-      let element = document.getElementById(`category-chip-${i}`)
-      element.style.color = 'black'
-      element.style.backgroundColor = '#F0F0F0'
-    }
+      setIsChipSearched(0)
+      setChippedItems([])    
+      for (let i=0; i < categories.length; i++) {
+        let element = document.getElementById(`category-chip-${i}`)
+        element.style.color = 'black'
+        element.style.backgroundColor = '#F0F0F0'
+      }
 
-    let currentStores = allStoresList
-    currentStores = currentStores.filter(checkForTypes)
-    //console.log(currentStores)
-    setStoresList(currentStores)
-    setOrgChippedStores(currentStores)
-    //searchTitle.current.value = ''
-    setIsSearched(1)
+      let currentStores = allStoresList
+      currentStores = currentStores.filter(checkForTypes)
+      setStoresList(currentStores)
+      setOrgChippedStores(currentStores)
+      setIsSearched(1)
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   const toHomePage = () => {    

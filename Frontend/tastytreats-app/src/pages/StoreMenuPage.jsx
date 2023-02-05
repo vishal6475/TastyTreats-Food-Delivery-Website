@@ -1,11 +1,11 @@
 import { useContext, useState, useEffect } from 'react';
-import { useParams, useLocation, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { StoreContext } from '../utils/context';
-import { Button, Grid, Card, CardMedia, CardContent, Typography, styled } from '@mui/material'
+import { Button, Card, CardMedia, CardContent, Typography, styled } from '@mui/material'
 import StoresAPI from "../utils/StoresAPIHelper";
 import MenuItem from '../components/store/MenuItem'
 import Box from '@mui/material/Box';
-import { FlexBox, Container } from '../components/styles/layouts';
+import { FlexBox } from '../components/styles/layouts';
 import Divider from '@mui/material/Divider';
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import { IconButton } from '@mui/material';
@@ -56,14 +56,12 @@ const StoreMenuPage = () => {
   const context = useContext(StoreContext);
   const navigate = useNavigate()
 
-  const [customer] = context.customer;
   const [address, setAddress] = context.address; 
   const [store, setStore] = useState([]);
   const [storeTags, setStoreTags] = useState('');
   const [cartItems, setCartItems] = context.cartItems;
   const [loggedIn, setLoggedIn] = context.login;
   const [open, setOpen] = context.logInModal;
-  const [loginOrSignup, setLoginOrSignup] = context.loginOrSignup;
   const [fromCheckout, setFromCheckout] = context.fromCheckout;
   const [storeDetails, setStoreDetails] = context.storeDetails;
 
@@ -80,57 +78,73 @@ const StoreMenuPage = () => {
     fetchStoreMenu()
   }, [])
 
-  const fetchStoreMenu = async (event) => { 
-    const storeMenuRes = await storeAPI.getStoreById(s_id)
-    //console.log(storeMenuRes.data)
-    setStore(storeMenuRes.data)
-    setStoreTags(storeMenuRes.data.types.join(' - '))
+  const fetchStoreMenu = async () => { 
+    try {
+      const storeMenuRes = await storeAPI.getStoreById(s_id)
+      setStore(storeMenuRes.data)
+      setStoreTags(storeMenuRes.data.types.join(' - '))
 
-    let store = {
-      id: storeMenuRes.data.id,
-      name: storeMenuRes.data.name,
-      photo: storeMenuRes.data.photo,
-      delivery_fee: storeMenuRes.data.delivery_fee,
-      addr_1: storeMenuRes.data.addr_1
+      let store = {
+        id: storeMenuRes.data.id,
+        name: storeMenuRes.data.name,
+        photo: storeMenuRes.data.photo,
+        delivery_fee: storeMenuRes.data.delivery_fee,
+        addr_1: storeMenuRes.data.addr_1
+      }
+      setStoreDetails(store)
+
+    } catch (error) {
+      console.error(error)
     }
-
-    setStoreDetails(store)
-    //console.log(store)
   } 
 
   const scrollToCategory = (e) => {
-    let element = document.getElementById(`menu-${e.target.id}`);
-    //console.log('Element', e.target.id)
-    element.scrollIntoView({behavior:"smooth"});
+    try {
+      let element = document.getElementById(`menu-${e.target.id}`);
+      //console.log('Element', e.target.id)
+      element.scrollIntoView({behavior:"smooth"});
+    } catch (error) {
+      console.error(error)
+    }
   }
 
-  {store.categories?.map((category, idx) => {
-    window.addEventListener('scroll', () => { 
-      var element = document.getElementById(`menu-${idx}`);
-      var position = element.getBoundingClientRect();
-      //console.log(position.top)
-      //if (idx===2) console.log(position.top)
-      if (position.top && position.top <= 350) setTabValue(idx)
-    });
-  }    
-  )}
+  try {
+    {store.categories?.map((category, idx) => {
+      window.addEventListener('scroll', () => { 
+        var element = document.getElementById(`menu-${idx}`);
+        if (element) {
+          var position = element.getBoundingClientRect();
+          if (position.top && position.top <= 350) setTabValue(idx)
+        }
+      });
+    }    
+    )}
+  } catch (error) {
+    console.log(error)
+  }
 
 
   const DecreaseQuantity = (idx) => {
-    let newCart = cartItems
-    newCart.items[idx].quantity -= 1
-    if (newCart.items[idx].quantity === 0) {
-      newCart.items.splice(idx, 1)
+    try {
+      let newCart = cartItems
+      newCart.items[idx].quantity -= 1
+      if (newCart.items[idx].quantity === 0) {
+        newCart.items.splice(idx, 1)
+      }
+      setCartItems(JSON.parse(JSON.stringify(newCart)))  
+    } catch (error) {
+      console.log(error)
     }
-    setCartItems(JSON.parse(JSON.stringify(newCart)))  
   } 
 
   const IncreaseQuantity = (idx) => { 
-    let newCart = cartItems
-    let newQuantity = newCart.items[idx].quantity + 1
-    newCart.items[idx].quantity += 1
-    setCartItems(JSON.parse(JSON.stringify(newCart)))   
-    //setCartItems(prevState => { return { ...prevState, items: {...prevState.items, [idx]:{...prevState.items[idx], quantity: newQuantity } } } })
+    try {
+      let newCart = cartItems
+      newCart.items[idx].quantity += 1
+      setCartItems(JSON.parse(JSON.stringify(newCart)))   
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   const GoToCheckout = () => {
@@ -157,8 +171,8 @@ const StoreMenuPage = () => {
             <CardTitle>
               {store.name}
             </CardTitle>
-
           </div> 
+
           <StyledCardContent>
             <Typography gutterBottom variant="h6" component="div" sx={{ mt: -1 }}>
               <b>{storeTags}</b>
@@ -288,12 +302,10 @@ const StoreMenuPage = () => {
 
               </FlexBox>
               )}          
-
             </FlexBox>
             }
 
             <FlexBox sx={{minHeight:'50px'}} ></FlexBox>
-
 
           </FlexBox>
         </FlexBox>

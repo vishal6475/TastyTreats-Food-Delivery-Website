@@ -1,12 +1,11 @@
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 import { FlexBox } from '../styles/layouts';
 import AccountMainDetailsScreen from './AccountMainDetailsScreen';
 import AccountMainOrdersScreen from './AccountMainOrdersScreen'
 import AccountMainAddressScreen from './AccountMainAddressScreen'
 import AccountMainPaymentScreen from './AccountMainPaymentScreen'
 
-import { Button, Divider, Typography, styled } from '@mui/material';
+import { Divider, Typography, styled } from '@mui/material';
 
 export const AccountContainer = styled('div')`
   flex-grow: 7;
@@ -22,7 +21,6 @@ const PageTitles = {
 }
 
 const AccountMain = ({ accountPage, changePage }) => {
-  const navigate = useNavigate();
   const [accountChange, setAccountChange] = useState(false);
 
  
@@ -33,8 +31,6 @@ const AccountMain = ({ accountPage, changePage }) => {
           {PageTitles[accountPage]}
         </Typography>
       </FlexBox>
-
-
 
       <Divider sx={{ mb: 2 }} />
 

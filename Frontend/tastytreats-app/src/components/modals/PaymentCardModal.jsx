@@ -3,18 +3,15 @@ import { useNavigate } from 'react-router-dom';
 import { StoreContext } from '../../utils/context';
 import { CardModal, ModalBody, ModalItemTitle } from '../styles/modals';
 import { FlexBox } from '../styles/layouts';
-import { Button, TextField, Typography, Grid, CardMedia } from '@mui/material';
+import { Button, TextField, Typography } from '@mui/material';
 import Radio from '@mui/material/Radio';
-import { IconButton } from '@mui/material';
 
 import CustomersAPI from "../../utils/CustomersAPIHelper";
-import SelectInput from '@mui/material/Select/SelectInput';
 const custAPI = new CustomersAPI();
 
 const PaymentCardModal = ({openCardModal, setOpenCardModal, setPaymentCardCVV}) => {
   const navigate = useNavigate();
   const context = useContext(StoreContext);
-  const [loggedIn, setLoggedIn] = context.login;
   const [customer, setcustomer] = context.customer;  
   const [allCards, setAllCards] = useState([]);
   const [addCardModal, setAddCardModal] = useState(false);
@@ -50,14 +47,18 @@ const PaymentCardModal = ({openCardModal, setOpenCardModal, setPaymentCardCVV}) 
  }
 
   const handleClose = async () => {
-    setOpenCardModal(false);
-    await sleep(300)
-    setAddCardModal(false)
-    setCardName('')
-    setCardNumber('')
-    setCardExpiry('')
-    setCardCVV('')
-    setFormErrors(prev => {return {...prev, cardName:false, cardNumber:false, cardExpiry:false, cardCVV:false}})
+    try {
+      setOpenCardModal(false);
+      await sleep(300)
+      setAddCardModal(false)
+      setCardName('')
+      setCardNumber('')
+      setCardExpiry('')
+      setCardCVV('')
+      setFormErrors(prev => {return {...prev, cardName:false, cardNumber:false, cardExpiry:false, cardCVV:false}})
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   const handleAddCardSection = () => {

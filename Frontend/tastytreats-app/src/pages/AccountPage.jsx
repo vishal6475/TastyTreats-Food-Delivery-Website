@@ -1,13 +1,12 @@
 import { useContext, useEffect, useState } from 'react';
 import { StoreContext } from '../utils/context';
-import { useNavigate, useLocation } from 'react-router';
-import { PageContainer, FlexBox } from '../components/styles/layouts'
+import { useNavigate } from 'react-router';
+import { FlexBox } from '../components/styles/layouts'
 import AccountSideBar from '../components/account/AccountSideBar'
 import AccountMainScreen from '../components/account/AccountMainScreen'
 
 const AccountScreen = () => {
   const navigate = useNavigate();
-  const location = useLocation();
   const context = useContext(StoreContext);
   const [loggedIn] = context.login;
   const [accountPage, setAccountPage] = useState('account');

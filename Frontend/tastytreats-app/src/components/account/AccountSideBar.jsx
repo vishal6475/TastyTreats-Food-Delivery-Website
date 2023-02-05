@@ -1,12 +1,11 @@
 import { useContext } from 'react';
 import { StoreContext } from '../../utils/context';
-import { FlexBox } from '../styles/layouts';
 import { SideBar, SideBarTitle, SideBarItem } from '../styles/sidebar';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import LocalActivityIcon from '@mui/icons-material/LocalActivity';
 import PlaceIcon from '@mui/icons-material/Place';
 import PaymentsIcon from '@mui/icons-material/Payments';
-import { Button, Divider, List} from '@mui/material';
+import { Divider, List} from '@mui/material';
 
 const AccountSideBar = ({ accountPage, setAccountPage }) => {
   const context = useContext(StoreContext);
@@ -21,6 +20,7 @@ const AccountSideBar = ({ accountPage, setAccountPage }) => {
         Account menu
       </SideBarTitle>
       <Divider variant="middle" sx={{ mb: 2 }} />
+      
       <List component='nav'>
         <SideBarItem
           title='Account details'
@@ -52,12 +52,8 @@ const AccountSideBar = ({ accountPage, setAccountPage }) => {
           onClick={() => handleChangePage('payment')}
         >
           <PaymentsIcon />
-        </SideBarItem>
-
-        
+        </SideBarItem>        
       </List>
-      
-      
     </SideBar>
   )
 }

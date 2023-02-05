@@ -1,4 +1,4 @@
-import { useContext, useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ScrollContainer } from '../styles/layouts';
 import { Grid, Card, CardMedia, CardContent, Typography, styled } from '@mui/material'
@@ -40,22 +40,26 @@ const StoreCard = ({ store, isDisabled }) => {
   }, [])
 
   const isClosingSoon = (close) => {
-    const currentDate = new Date()
-    const hours = parseInt(currentDate.getHours())
-    const minutes = parseInt(currentDate.getMinutes())
-    let closeHours = parseInt(close.substr(0, 2))
-    let closeMinutes = parseInt(close.substr(3, 5))
+    try {
+      const currentDate = new Date()
+      const hours = parseInt(currentDate.getHours())
+      const minutes = parseInt(currentDate.getMinutes())
+      let closeHours = parseInt(close.substr(0, 2))
+      let closeMinutes = parseInt(close.substr(3, 5))
 
-    if (closeHours === 0) {
-      if (hours === 0) {
+      if (closeHours === 0) {
+        if (hours === 0) {
+          if (minutes < closeMinutes) setClosingSoon(true)
+        } else if (hours === 23) {
+          if (minutes >= closeMinutes) setClosingSoon(true)      
+        }
+      } else if (hours === closeHours) {
         if (minutes < closeMinutes) setClosingSoon(true)
-      } else if (hours === 23) {
+      } else if (hours === (closeHours - 1)) {
         if (minutes >= closeMinutes) setClosingSoon(true)      
       }
-    } else if (hours === closeHours) {
-      if (minutes < closeMinutes) setClosingSoon(true)
-    } else if (hours === (closeHours - 1)) {
-      if (minutes >= closeMinutes) setClosingSoon(true)      
+    } catch (error) {
+      console.log(error)
     }
   }
 

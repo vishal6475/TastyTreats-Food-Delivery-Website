@@ -12,7 +12,6 @@ const LogInModal = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const context = useContext(StoreContext);
-  const [nextPage, setRedirect] = context.redirect;
   const [loggedIn, setLoggedIn] = context.login;
   const [open, setOpen] = context.logInModal;
   const [logInFail, setLogInFail] = useState(null);
@@ -39,17 +38,21 @@ const LogInModal = () => {
   })
 
   const removeAllErrors = () => {
-    let loginErrors = formErrors;
-    for (const key of Object.keys(loginErrors)) {
-      loginErrors[key] = false
-    }
+    try {
+      let loginErrors = formErrors;
+      for (const key of Object.keys(loginErrors)) {
+        loginErrors[key] = false
+      }
 
-    let signupErr = signupErrors;
-    for (const key of Object.keys(signupErrors)) {
-      signupErrors[key] = false
+      let signupErr = signupErrors;
+      for (const key of Object.keys(signupErrors)) {
+        signupErrors[key] = false
+      }
+      setFormErrors(loginErrors)
+      setSignupErrors(signupErr)
+    } catch (error) {
+      console.log(error)
     }
-    setFormErrors(loginErrors)
-    setSignupErrors(signupErr)
   }
 
   const handleClose = () => {
@@ -146,27 +149,6 @@ const LogInModal = () => {
       setSignupErrors(prevState => { return { ...prevState, password1: true } })
       signupErrors.error = true
     }
-    /*
-    if (password1 !== password2) {
-      setFormErrors(prevState => { return { ...prevState, password2: true } })
-      formErrors.error = true
-    }
-    if (mobileNo && mobileNo[0] === '+') {
-      if (/\D+/.test(mobileNo.slice(1)) || mobileNo.length < 9) {
-        setSignupErrors(prevState => { return { ...prevState, mobileNo: true } })
-        signupErrors.error = true
-      }
-    }
-    else if (mobileNo) {
-      if (/\D+/.test(mobileNo) || mobileNo.length < 9) {
-        setSignupErrors(prevState => { return { ...prevState, mobileNo: true } })
-        signupErrors.error = true
-      }
-    }
-    else {
-      setSignupErrors(prevState => { return { ...prevState, mobileNo: true } })
-      signupErrors.error = true
-    }*/
 
     if (!signupErrors.error) {
       const body = {
@@ -321,24 +303,7 @@ const LogInModal = () => {
                     helperText={signupErrors.email ? 'Invalid email.' : ''}
                   />
                 </Grid>
-                {/*
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    name="mobileNo"
-                    required={true}
-                    fullWidth
-                    id="mobileNo"
-                    label="Mobile number"
-                    type="tel"
-                    inputProps={{ maxLength: 20 }}
-                    onChange={() => {
-                      signupErrors.mobileNo && setSignupErrors(prevState => { return { ...prevState, mobileNo: false } })
-                    }}
-                    error={signupErrors.mobileNo}
-                    helperText={signupErrors.mobileNo ? 'Must be a valid mobile number.' : ''}
-                  />
-                </Grid>
-                  */}
+                
                 <Grid item xs={12} sm={6}>
                   <TextField
                     name="password1"
@@ -355,24 +320,7 @@ const LogInModal = () => {
                     helperText={signupErrors.password1 ? 'Cannot be empty. Must contain at least 8 characters.' : ''}
                   />
                 </Grid>
-                {/* 
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    name="password2"
-                    required
-                    fullWidth
-                    type="password"
-                    id="password2"
-                    label="Confirm password"
-                    inputProps={{ maxLength: 50 }}
-                    onChange={() => {
-                      signupErrors.password2 && setSignupErrors(prevState => { return { ...prevState, password2: false } })
-                    }}
-                    error={signupErrors.password2}
-                    helperText={signupErrors.password2 ? 'Passwords must match.' : ''}
-                  />
-                </Grid>
-                */}
+                
               </Grid> 
 
               <Typography variant='subtitle2' sx={{ color: 'error.main', minHeight:'5vh', mt:'0.4rem'}}>

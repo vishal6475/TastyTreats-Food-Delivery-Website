@@ -3,14 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import { StoreContext } from '../../utils/context';
 import { AddressModal, ModalBody, ModalItemTitle } from '../styles/modals';
 import { FlexBox } from '../styles/layouts';
-import { Button, TextField, Typography, Grid, CardMedia, styled } from '@mui/material';
-import { IconButton } from '@mui/material';
+import { Button, TextField, Typography } from '@mui/material';
 import {
   useJsApiLoader,
   Autocomplete,
 } from '@react-google-maps/api'
-import { geocodeByAddress } from 'react-places-autocomplete';
-import { useRef } from 'react'
 import InputAdornment from '@mui/material/InputAdornment';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import HomeIcon from '@mui/icons-material/Home';
@@ -59,10 +56,6 @@ const DeliveryAddressModal = ({openAddressModal, setOpenAddressModal, sectionTyp
     return <div></div>;
   } 
 
-  const changeAddr1Field = (e) => {
-    setAddressToUpdate((prev) => {return {...prev, addr1: e.target.value }})
-  }  
-
   const changeUnitField = (e) => {
     setAddressToUpdate((prev) => {return {...prev, unitNo: e.target.value }})
   }  
@@ -87,13 +80,17 @@ const DeliveryAddressModal = ({openAddressModal, setOpenAddressModal, sectionTyp
     setSectionType(2)
   }
 
-  const updateAddress = () => {      
-    const delivery_addr = document.getElementById('order-delivery-address').value
+  const updateAddress = () => {     
+    try { 
+      const delivery_addr = document.getElementById('order-delivery-address').value
 
-    setAddress((prev) => {return { ...prev, unitNo: addressToUpdate.unitNo, addr1: delivery_addr, 
-      leaveAtDoor: curLeaveAtDoor, ins: addressToUpdate.ins, isSavedAddress: false}})
-    setLeaveAtDoor(curLeaveAtDoor)
-    handleClose()
+      setAddress((prev) => {return { ...prev, unitNo: addressToUpdate.unitNo, addr1: delivery_addr, 
+        leaveAtDoor: curLeaveAtDoor, ins: addressToUpdate.ins, isSavedAddress: false}})
+      setLeaveAtDoor(curLeaveAtDoor)
+      handleClose()
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   return (
@@ -183,6 +180,7 @@ const DeliveryAddressModal = ({openAddressModal, setOpenAddressModal, sectionTyp
           <Typography sx={{ ml:'8px', mt:'1rem'}} >
             Delivery type
           </Typography>
+
           <FlexBox direction='row' sx={{alignItems:'center'}} >
             <Radio
               checked={!curLeaveAtDoor}
@@ -204,8 +202,7 @@ const DeliveryAddressModal = ({openAddressModal, setOpenAddressModal, sectionTyp
               inputProps={{ 'aria-label': 'Leave at door' }}
             />
             Leave at door
-          </FlexBox>
-          
+          </FlexBox>          
         
           <TextField 
             id='order-delivery-ins' 
@@ -219,7 +216,6 @@ const DeliveryAddressModal = ({openAddressModal, setOpenAddressModal, sectionTyp
           />
 
           <FlexBox>
-
             <Button variant="contained" onClick={handleClose}
               sx={{ mb:'1rem', width:'14vw', height:'7vh', m:'1rem auto 1rem auto', 
               fontSize:'1.2rem',
@@ -233,13 +229,11 @@ const DeliveryAddressModal = ({openAddressModal, setOpenAddressModal, sectionTyp
               backgroundColor: 'tastytreats.mediumBlue', '&:hover':{backgroundColor: 'tastytreats.mediumBlue'} }} >
                 Save
             </Button>
-
           </FlexBox>
-
+          
         </FlexBox>
         }
 
-    
       </ModalBody>
     </AddressModal>
   )

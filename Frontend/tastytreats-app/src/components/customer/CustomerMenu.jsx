@@ -3,9 +3,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import { StoreContext } from '../../utils/context';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
 import LogoutIcon from '@mui/icons-material/Logout';
-import HomeIcon from '@mui/icons-material/Home';
-import EventIcon from '@mui/icons-material/Event';
-import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import {
   IconButton,
   Avatar,
@@ -18,11 +15,9 @@ import {
 
 const CustomerMenu = () => {
   const context = useContext(StoreContext);
-  const [, setRedirect] = context.redirect;
   const [loggedIn, setLoggedIn] = context.login;
   const [customer, setCustomer] = context.customer;
   const [address, setAddress] = context.address;
-  const [open, setOpen] = context.logInModal;
   const [anchor, setAnchor] = useState(null);
 
   const navigate = useNavigate();
