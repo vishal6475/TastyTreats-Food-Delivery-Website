@@ -22,6 +22,7 @@ const ContextProvider = ({ children }) => {
   const [itemToAddQuantity, setItemToAddQuantity] = useState(1);
   const [itemOrgQuantity, setItemOrgQuantity] = useState(1);
   const [cartItems, setCartItems] = useState(null);
+  const [hasItemsChanged, setHasItemsChanged] = useState(false);
   const [cardOrder, setCardOrder] = useState({name: '', number: '', expiry: '', cvv: ''});
   const [fromCheckout, setFromCheckout] = useState(false);
   const [isSearched, setIsSearched] = useState(0);
@@ -47,6 +48,7 @@ const ContextProvider = ({ children }) => {
     itemToAddQuantity: [itemToAddQuantity, setItemToAddQuantity],
     itemOrgQuantity: [itemOrgQuantity, setItemOrgQuantity],
     cartItems: [cartItems, setCartItems],
+    hasItemsChanged: [hasItemsChanged, setHasItemsChanged],
     storeDetails: [storeDetails, setStoreDetails],
     cardOrder: [cardOrder, setCardOrder],
     fromCheckout: [fromCheckout, setFromCheckout],

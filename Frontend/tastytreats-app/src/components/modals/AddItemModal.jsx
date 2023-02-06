@@ -17,6 +17,7 @@ const AddItemModal = () => {
   const [cartItems, setCartItems] = context.cartItems;
   const [itemToAddQuantity, setItemToAddQuantity] = context.itemToAddQuantity;
   const [storeDetails, setStoreDetails] = context.storeDetails;
+  const [hasItemsChanged, setHasItemsChanged] = context.hasItemsChanged;
 
   const handleClose = () => {
     setOpenAddModal(false);
@@ -44,21 +45,24 @@ const AddItemModal = () => {
         // checking if adding items from new store or old store
         if (cartItems.storeID !== storeDetails.id) { // new store
           setCartItems(storeAdd)
+          setHasItemsChanged(prev => !prev)
         } else { // old store
           for (const i in cartItems.items) { // checking if item is already in cart
             if (itemToAdd.id === cartItems.items[i].id) {
               found = 1
               cartItems.items[i].quantity = itemToAddQuantity
+              setHasItemsChanged(prev => !prev)
             }
           }
           if (found === 0) { // item not in cart, adding it now
             cartItems.items.push(item)
+            setHasItemsChanged(prev => !prev)
           }
         }
       } else { //cart is experimentalStyled, adding all details
         setCartItems(storeAdd)
-      }    
-      
+        setHasItemsChanged(prev => !prev)
+      }          
       setOpenAddModal(false);
     } catch (error) {
       console.log(error)

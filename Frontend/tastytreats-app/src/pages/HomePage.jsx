@@ -1,17 +1,15 @@
 import { useContext, useState, useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { StoreContext } from '../utils/context';
 import { Grid, Typography, styled } from '@mui/material'
-import { FlexBox, Container } from '../components/styles/layouts';
+import { FlexBox } from '../components/styles/layouts';
 import StoresAPI from "../utils/StoresAPIHelper";
 import StoreCard from '../components/store/StoreCard'
 import { IconButton } from '@mui/material';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';import {
   useJsApiLoader,
-  Autocomplete,
 } from '@react-google-maps/api'
-import { geocodeByAddress } from 'react-places-autocomplete';
 import CircularProgress from '@mui/material/CircularProgress';
 
 const CategoryBox = styled('div')`
@@ -26,7 +24,7 @@ const CategoryBox = styled('div')`
 `
 
 const ChipBox = styled(FlexBox)`
-  backgroundColor: #F0F0F0;
+  backgroundColor: #E0E0E0;
 `
 
 const storeAPI = new StoresAPI();
@@ -74,10 +72,6 @@ const HomePage = () => {
 
       const allStoresRes = await storeAPI.getAllStores() 
       let storesData = allStoresRes.data
-
-      //setStoresList(storesData)
-      //setOrgChippedStores(storesData)
-      //setAllStoresList(storesData)
 
       try {
         const service = new window.google.maps.DistanceMatrixService()
@@ -184,7 +178,7 @@ const HomePage = () => {
       let element = document.getElementById(`category-chip-${i}`)
       if (element) {
         element.style.color = 'black'
-        element.style.backgroundColor = '#F0F0F0'
+        element.style.backgroundColor = '#E0E0E0'
       }
     }
   }
@@ -232,7 +226,7 @@ const HomePage = () => {
       let removeIndex = chippedItems.indexOf(categories[idx])
       chippedItems.splice(removeIndex, 1)
       element.style.color = 'black'
-      element.style.backgroundColor = '#F0F0F0'
+      element.style.backgroundColor = '#E0E0E0'
       if (chippedItems.length > 0) handleChipSelections()
     }
     //console.log(chippedItems)
@@ -249,7 +243,7 @@ const HomePage = () => {
   } 
 
   return (
-      <div style={{ margin:'20px auto 20px auto', width:'75vw', minHeight:'88vh' }}>
+      <div style={{ margin:'0 auto 0 auto', padding:'20px 0 20px 0', width:'75vw', minHeight:'88vh', backgroundColor:'#fafafa' }}>
 
         <FlexBox sx={{ alignItems:'center', mb:'1rem'}}>
             <IconButton onClick={rightScroll} >
@@ -261,7 +255,7 @@ const HomePage = () => {
               return <ChipBox key={idx} id={`category-chip-${idx}`} value={idx}
               
                 style={{ margin:'0 8px 0 8px', padding:'2px 6px 2px 6px', cursor:'pointer', 
-                backgroundColor:'#F0F0F0', color:'black', '&:hover': {backgroundColor: '#D8D8D8'}, borderRadius:'20px' }}
+                backgroundColor:'#E0E0E0', color:'black', borderRadius:'20px' }}
                 onClick={() => {selectTypeChip(idx)}}
                 >
                   <Typography variant='subtitle2'>

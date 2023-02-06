@@ -43,7 +43,7 @@ const CustomerMenu = () => {
 
   return (
     <>
-      <Tooltip title="Open menu" enterDelay={10}>
+      <Tooltip title="Open menu" enterDelay={10} >
         <IconButton onClick={handleOpenMenu} sx={{ p: 0, mr: { xs: '0.25rem', md: '1rem' } }}>
           <Avatar
             src={customer.profile_pic}

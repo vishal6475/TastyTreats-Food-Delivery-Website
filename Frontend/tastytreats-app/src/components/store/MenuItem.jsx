@@ -50,7 +50,6 @@ const MenuItem = ({ menu, idx }) => {
       if (cartItems !== null) 
         cartItems.items.forEach((cartItem) =>{
           if (item.id === cartItem.id) {
-            console.log('This->', cartItem)
             found = 1
             setItemOrgQuantity(cartItem.quantity)
             setItemToAddQuantity(cartItem.quantity)

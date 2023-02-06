@@ -60,6 +60,8 @@ const StoreMenuPage = () => {
   const [store, setStore] = useState([]);
   const [storeTags, setStoreTags] = useState('');
   const [cartItems, setCartItems] = context.cartItems;
+  const [hasItemsChanged, setHasItemsChanged] = context.hasItemsChanged;
+  const [total, setTotal] = useState(0);
   const [loggedIn, setLoggedIn] = context.login;
   const [open, setOpen] = context.logInModal;
   const [fromCheckout, setFromCheckout] = context.fromCheckout;
@@ -69,6 +71,22 @@ const StoreMenuPage = () => {
   const handleTabChange = (event, newValue) => {
     setTabValue(newValue);
   };
+
+  const getTotalAmount = () => {
+    try {
+      let sum = 0
+      cartItems?.items.forEach(item => {
+        sum += (item.price * item.quantity)
+      });
+      setTotal(sum)
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  useEffect(() => {
+    getTotalAmount()
+  }, [hasItemsChanged])
 
   useEffect(() => {
     if (address.addr1.length === 0) {
@@ -132,6 +150,7 @@ const StoreMenuPage = () => {
         newCart.items.splice(idx, 1)
       }
       setCartItems(JSON.parse(JSON.stringify(newCart)))  
+      setHasItemsChanged(prev => !prev)
     } catch (error) {
       console.log(error)
     }
@@ -142,6 +161,7 @@ const StoreMenuPage = () => {
       let newCart = cartItems
       newCart.items[idx].quantity += 1
       setCartItems(JSON.parse(JSON.stringify(newCart)))   
+      setHasItemsChanged(prev => !prev)
     } catch (error) {
       console.log(error)
     }
@@ -231,7 +251,7 @@ const StoreMenuPage = () => {
 
           <FlexBox direction='column' sx={{overflowY:'auto', height:'100vh'}}>
 
-            {cartItems === null &&
+            {(!cartItems || cartItems?.items?.length === 0) &&
             <FlexBox direction='column' sx={{ width:'24vw', alignItems:'center'}}>    
               <ShoppingCartOutlinedIcon sx={{width:'200px', height:'200px', mt: 5}} />
               <Typography variant="h5" sx={{ mt: 5}} >
@@ -243,7 +263,7 @@ const StoreMenuPage = () => {
             </FlexBox>
             }
 
-            {cartItems !== null &&
+            {cartItems?.items?.length > 0 &&
             <FlexBox direction='column' sx={{ width:'24vw', alignItems:'left', p:'20px 30px 20px 20px' }}>   
               
               <FlexBox sx={{ mb:'1rem' }} >
@@ -277,14 +297,14 @@ const StoreMenuPage = () => {
                   </Typography> 
 
                   
-                  <FlexBox direction='row' sx={{}}>
+                  <FlexBox direction='row' sx={{ alignItems:'center' }}>
                     <IconButton id={`remove-btn-${idx}`} disabled={cartItems.items[idx].quantity === 0} 
                     sx={{color:'black', p:'0'}} onClick={() => {DecreaseQuantity(idx)}} >
                       <RemoveSharpIcon sx={{cursor:'pointer'}} />
                     </IconButton> 
 
                     <Typography id={`cart-item-quantity-${idx}`} variant="subtitle2" color="text.secondary" 
-                      sx={{m:'0 10px 0 10px', p:'0', fontSize:'1.2rem'  }}>
+                      sx={{m:'0 10px 0 10px', p:'0', fontSize:'1.1rem' }}>
                       {cartItems.items[idx].quantity}    
                     </Typography>
 
@@ -296,12 +316,49 @@ const StoreMenuPage = () => {
                 </FlexBox>
 
                 <Typography id={`cart-item-price-${idx}`} variant="subtitle2" color="text.secondary" 
-                  sx={{ p:'0', m:'-0.3rem 0 0 0', fontSize:'1rem' }} >
+                  sx={{ p:'0', m:'-0.3rem 0 0 0', fontSize:'0.9rem' }} >
                   ${(item.price * cartItems.items[idx].quantity).toFixed(2)}
                 </Typography>
 
               </FlexBox>
-              )}          
+              )}    
+
+              {cartItems?.items?.length > 0 &&
+              <FlexBox direction='column'>
+                <FlexBox  direction='row' justify='space-between' sx={{mt:'2rem'}} >
+                  <Typography gutterBottom variant="subtitle2" color="text.primary" 
+                    sx={{ p:'0', m:'0', fontSize:'1rem' }}>
+                    Delivery fee
+                  </Typography> 
+                  <Typography variant="subtitle2" color="text.secondary" 
+                    sx={{ p:'0', m:'0', fontSize:'0.9rem' }} >
+                    <b>${cartItems? (cartItems.delivery_fee).toFixed(2): '0.00'}</b> 
+                  </Typography>          
+                </FlexBox>    
+
+                <FlexBox direction='row' justify='space-between'>
+                  <Typography gutterBottom variant="subtitle2" color="text.primary" 
+                    sx={{ p:'0', m:'0', fontSize:'1rem' }}>
+                    Service fee
+                  </Typography> 
+                  <Typography variant="subtitle2" color="text.secondary" 
+                    sx={{ p:'0', m:'0', fontSize:'0.9rem' }} >
+                    <b>${(0.06 * total).toFixed(2)}</b> 
+                  </Typography>          
+                </FlexBox>    
+
+                <FlexBox direction='row' justify='space-between' sx={{mt:'2rem'}} >
+                  <Typography gutterBottom variant="subtitle2" color="text.primary" 
+                    sx={{ p:'0', m:'0', fontSize:'1rem' }}>
+                    Total Amount
+                  </Typography> 
+                  <Typography variant="subtitle2" color="text.secondary" 
+                    sx={{ p:'0', m:'0', fontSize:'0.9rem' }} >
+                    <b>${cartItems? (1.06 * total + cartItems.delivery_fee).toFixed(2): '0.00'}</b> 
+                  </Typography>          
+                </FlexBox>  
+              </FlexBox>  
+              }       
             </FlexBox>
             }
 

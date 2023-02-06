@@ -29,7 +29,7 @@ const AppTitle = styled(Typography)`
 
 const SearchBar = styled(Paper)`
   width: 400px;
-  height: 5vh;
+  height: 4.2vh;
   border-radius: 20px;
   display: flex;
   margin: auto 0 auto 0;
@@ -130,18 +130,18 @@ const TastyTreatsAppBar = () => {
   }
 
   return (
-    <AppBar id='appbar' position="static" sx={{ backgroundColor: 'tastytreats.mediumBlue', minHeight: '7vh', pl:0 }}>
+    <AppBar id='appbar' position="static" sx={{ backgroundColor: 'tastytreats.mediumBlue', minHeight: '5.5vh', pl:0 }}>
 
       <FlexBox justify='space-between' sx={{ mt:'auto', mb:'auto'}}>
         <FlexBox>
-          <AppTitle variant="h4"  sx={{ mt:'auto', mb:'auto', ml:'20px', p:'0', cursor: 'pointer'}}
+          <AppTitle sx={{ mt:'auto', mb:'auto', ml:'20px', p:'0', fontSize:'1.5rem', cursor: 'pointer'}}
           onClick={toHomePage}
           >
             TastyTreats
           </AppTitle>
           {address?.addr1 &&
-          <FlexBox sx={{ m:'auto 1rem auto 1rem', p:'0.4rem 1.5rem 0.4rem 1.5rem',
-            backgroundColor: 'white', color: 'black', maxWidth:'30vw',
+          <FlexBox sx={{ m:'auto 1rem auto 1rem', p:'0.2rem 1.5rem 0.2rem 1.5rem',
+            backgroundColor: 'white', color: 'black', maxWidth:'30vw', maxHeight:'3.5vh',
             borderRadius: '30px', cursor: 'pointer', '&:hover': {backgroundColor: '#C8C8C8'} }}
             id='userAddress' onClick={toFirstPage} >       
             {address.addr1.split(',')[0]}
@@ -173,9 +173,9 @@ const TastyTreatsAppBar = () => {
         <FlexBox>
           {!loggedIn &&
           <FlexBox sx={{ mt:'auto', mb:'auto', ml:'1rem', mr:'1rem', pl:'1rem', pr:'1rem',
-            borderRadius: '30px', cursor: 'pointer', '&:hover': {backgroundColor: '#2486DB'} }}
+            borderRadius: '30px', cursor: 'pointer'}}
             onClick={openLoginModal} >
-            <Typography variant='h6'>
+            <Typography variant='h6' sx={{ fontSize:'1.2rem' }} >
               Login
             </Typography>
           </FlexBox>

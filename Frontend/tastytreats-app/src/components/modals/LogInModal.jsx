@@ -181,7 +181,7 @@ const LogInModal = () => {
 
   return (
     <StandardModal open={open} onClose={handleClose} aria-labelledby="login modal" maxWidth='lg'>
-      <ModalTitle title='TastyTreats!' close={handleClose} />
+      <ModalTitle title={loginOrSignup? 'Sign Up' : 'Sign In'} close={handleClose} />
       <ModalBody justifyContent='center'>
 
         <FlexBox sx={{ mb:'2rem'}} justifyContent='center'>
