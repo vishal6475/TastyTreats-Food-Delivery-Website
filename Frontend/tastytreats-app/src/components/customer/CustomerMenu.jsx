@@ -36,7 +36,7 @@ const CustomerMenu = () => {
   }
 
   const handleLogout = () => {
-    setAddress('')
+    setAddress({unitNo: '', addr1: '', leaveAtDoor: false, ins: '', isSavedAddress: false })
     handleCloseMenu();
     setLoggedIn(false);
   };

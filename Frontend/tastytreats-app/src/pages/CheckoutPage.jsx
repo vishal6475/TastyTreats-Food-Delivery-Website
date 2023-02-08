@@ -193,6 +193,7 @@ const CheckoutPage = () => {
           const response = await orderAPI.createOrder(body)
           setCompletedOrder(response.data)
           navigate(`/order/${response.data.id}`)
+          setCartItems(null)
         }
 
       }
