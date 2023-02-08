@@ -49,7 +49,7 @@ function App() {
       <ContextProvider>
         <Router>
           <TastyTreatsAppBar />
-          <div style={{ backgroundColor:'#fafafa' }}>            
+          <div style={{ backgroundColor:'#f1f2f6' }}>            
             <Routes>
               <Route path='/' element={<FirstPage/>}/>
               <Route path='/home' element={<HomePage/>}/>

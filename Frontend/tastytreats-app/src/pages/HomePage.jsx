@@ -243,7 +243,7 @@ const HomePage = () => {
   } 
 
   return (
-      <div style={{ margin:'0 auto 0 auto', padding:'20px 0 20px 0', width:'75vw', minHeight:'88vh', backgroundColor:'#fafafa' }}>
+      <div style={{ margin:'0 auto 0 auto', padding:'20px 0 20px 0', width:'75vw', minHeight:'88vh' }}>
 
         <FlexBox sx={{ alignItems:'center', mb:'1rem'}}>
             <IconButton onClick={rightScroll} >
