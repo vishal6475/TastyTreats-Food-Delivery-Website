@@ -18,12 +18,12 @@ This is a project for a restaurant website with both front end and backend servi
 4. Go to project directory by running command `cd TastyTreats-Restaurant-Website` on terminal.
 
 ### Install the dependencies and start the system:
-5. Run command `./deploy.sh` to install all the dependencies. It could take 10-15 minutes as postgres and node.js images are downloaded from docker hub. It will also start the backend and frontend services and populate the database.
+5. Run command `.\deploy.sh` to install all the dependencies. It could take 10-15 minutes as postgres and node.js images are downloaded from docker hub. It will also start the backend and frontend services and populate the database.
 6. Open the browser and open link http://localhost:3000 to start browsing the TastyTreats website.
-7. Run the command `./stop.sh` to shut down all the services.
+7. Run the command `.\stop.sh` to shut down all the services.
 
 ### Starting and stopping the system:
-Once all the dependencies have been installed in step 5, you can start the system by running command `./start.sh` and stop the system by running command `./stop.sh`.
+Once all the dependencies have been installed in step 5, you can start the system by running command `.\start.sh` and stop the system by running command `.\stop.sh`.
 
 
 ## Steps for installation (without Docker):
@@ -47,7 +47,7 @@ If your postgreSQL does not have the above mentioned port number, user or passwo
 5. Open a terminal and go to working directory 'TastyTreats'. 
 6. Run the command `cd TastyTreats-Restaurant-Website\Database` to go to Database folder.
 7. Run the command `pip3 install -r requirements.txt` to install the dependencies for the database.
-8. Run the command `python3 create_db.py` (or `python create_db.py` if python3 is not working) to populate the database.
+8. Run the command `python3 create_db.py` to populate the database.
 
 ### Update the settings to run the backend services directly:
 9. Ensure that in the below 3 files, the line `host = "localhost"` is not commented (do *NOT* have # before it) and the line `host='tastytreats-db'` is commented (do have the # before it). First line is required only when running the services directly and the second line is required when running the services via Docker.
@@ -65,13 +65,13 @@ host = "localhost"     # when running the service directly from command prompt
 10. Open a terminal and go to working directory 'TastyTreats'. 
 11. Run the command `cd TastyTreats-Restaurant-Website\Services\customer-service\python-flask-server` to go to customer service folder.
 12. Run the command `pip3 install -r requirements.txt` to install the dependencies for this service.
-13. Run the command `python3 -m swagger_server` (or `python -m swagger_server`) to start the customer service.
+13. Run the command `python3 -m swagger_server` to start the customer service.
 
 ### Start the backend store service:
 14. Open a terminal and go to working directory 'TastyTreats'. 
 15. Run the command `cd TastyTreats-Restaurant-Website\Services\store-service\python-flask-server` to go to store service folder.
 16. Run the command `pip3 install -r requirements.txt` to install the dependencies for this service.
-17. Run the command `python3 -m swagger_server` (or `python -m swagger_server`) to start the store service.
+17. Run the command `python3 -m swagger_server` to start the store service.
 
 ### Start the frontend React app:
 18. Open a terminal and go to working directory 'TastyTreats'. 
