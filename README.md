@@ -7,6 +7,7 @@ This is a project for a restaurant website with both front end and backend servi
 •	Docker
 •	Python (version 3+)
 •	npm
+•	node
 
 ### Create the initial folder to contain project:
 1. Create a folder named 'TastyTreats' on your laptop. This will be your project working directory.
@@ -31,6 +32,7 @@ Once all the dependencies have been installed in step 5, you can start the syste
 •	Python (version 3+)
 •	PostgreSQL
 •	npm
+•	node
 
 If you don't have postgreSQL, you can install it using the instructions given at link (https://commandprompt.com/education/how-to-download-and-install-postgresql/). Please make sure that the postgresql server is running on port **5432**, user is '**postgres**' and the password is '**postgrespw**'. 
 
