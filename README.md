@@ -59,7 +59,7 @@ TastyTreats\TastyTreats-Restaurant-Website\Services\customer-service\python-flas
 TastyTreats\TastyTreats-Restaurant-Website\Services\store-service\python-flask-server\swagger_server\controllers\orders_controller.py
 TastyTreats\TastyTreats-Restaurant-Website\Services\store-service\python-flask-server\swagger_server\controllers\stores_controller.py
 
-**Settings required:**  
+**Settings required-**  
 host = "localhost"     # when running the service directly from command prompt  
 #host='tastytreats-db' # when running the service through Docker
 
